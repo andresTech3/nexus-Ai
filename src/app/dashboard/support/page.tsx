@@ -1,7 +1,5 @@
 'use client'
 
-import Link from 'next/link'
-
 export default function SupportPage() {
   return (
     <div id="support-page" style={{ maxWidth: 900 }}>
@@ -17,38 +15,27 @@ export default function SupportPage() {
 
       {/* Quick Access Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
-        <Link
-          href="/dashboard/api-tester"
+        <div
           style={{
             background: 'rgba(255, 255, 255, 0.02)',
             border: '1px solid rgba(147, 51, 234, 0.25)',
             borderRadius: '1rem',
             padding: '1.5rem',
-            textDecoration: 'none',
             display: 'flex',
             flexDirection: 'column',
-            transition: 'border-color 0.2s, transform 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.5)'
-            e.currentTarget.style.transform = 'translateY(-2px)'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.25)'
-            e.currentTarget.style.transform = 'none'
           }}
         >
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>⚡</div>
+          <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>🚀</div>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '0.25rem' }}>
-            Consola API Tester (v1)
+            Guía de Inicio Rápido
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, flex: 1 }}>
-            Prueba en vivo los endpoints REST para autenticación, CRM, proyectos y cuotas con tokens de sesión reales.
+            Aprende a configurar tu primer cliente, crear agentes autónomos y conectar automatizaciones paso a paso.
           </p>
           <div style={{ color: 'var(--color-purple-400)', fontSize: '0.8rem', fontWeight: 600, marginTop: '1rem' }}>
-            Abrir Consola →
+            Tutoriales para Agencia AI
           </div>
-        </Link>
+        </div>
 
         <div
           style={{

@@ -47,7 +47,6 @@ const sidebarSections: NavSection[] = [
   {
     section: 'Sistema',
     links: [
-      { id: 'dash-api-tester', icon: '⚡', label: 'API Tester (v1)', href: '/dashboard/api-tester' },
       { id: 'dash-settings', icon: '⚙', label: 'Configuración', href: '/dashboard/settings' },
       { id: 'dash-support', icon: '?', label: 'Soporte & Ayuda', href: '/dashboard/support' },
     ],
