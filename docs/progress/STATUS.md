@@ -9,10 +9,10 @@
 
 | MVP | Nombre | Estado |
 |-----|--------|--------|
-| MVP-00 | Base técnica y control | **verificado** (código, tests y server) / **implementado sin verificar** (daemon Supabase) |
-| MVP-01 | Identidad y acceso | **en curso** |
-| MVP-02 | Clientes y CRM | `pendiente` |
-| MVP-03 | Proyectos, tareas y panel | `pendiente` |
+| MVP-00 | Base técnica y control | **verificado** (código, tests y server) |
+| MVP-01 | Identidad y acceso | **verificado** (auth, triggers, RLS, sesiones y cookies) |
+| MVP-02 | Clientes y CRM | **verificado** (API /crm/clients, filtros, modal y persistencia en Supabase) |
+| MVP-03 | Proyectos, tareas y panel | **verificado** (API /projects, presupuestos, clientes asociados y panel reactivo) |
 | MVP-04 | Catálogo y cotizaciones | `pendiente` |
 | MVP-05 | Colaboración y portal | `pendiente` |
 | MVP-06 | Gemini y agentes | `pendiente` |
