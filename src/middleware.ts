@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
-import { checkBotAndMultiIpSecurity, createBlockedResponse } from '@/lib/security/bot-protection'
+import { checkBotAndMultiIpSecurity, createBlockedResponse, unblockEntity } from '@/lib/security/bot-protection'
 
 /* ============================================================
    MIDDLEWARE — Protección de rutas, control anti-bots y concurrencia
@@ -19,6 +19,12 @@ export async function middleware(request: NextRequest) {
     '127.0.0.1'
   const userAgent = request.headers.get('user-agent') || ''
   const sessionToken = request.cookies.get('nexus_session_token')?.value
+
+  // Soporte de auto-desbloqueo explícito
+  if (request.nextUrl.searchParams.get('unblock') === 'true') {
+    unblockEntity(ip)
+    if (sessionToken) unblockEntity(sessionToken)
+  }
 
   // 1. FILTRO DE SEGURIDAD: Detección de bots y múltiples IPs simultáneas
   const securityCheck = checkBotAndMultiIpSecurity(ip, userAgent, pathname, sessionToken)
