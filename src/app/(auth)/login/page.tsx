@@ -1,14 +1,24 @@
 'use client'
 
 import Link from 'next/link'
-import { useActionState, useEffect, useRef } from 'react'
+import { useActionState, useEffect, useRef, useState } from 'react'
 import { loginAction, oauthAction, type ActionResult } from '../actions'
 
 const initialState: ActionResult | null = null
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, initialState)
+  const [authError, setAuthError] = useState<string | null>(null)
   const emailRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('auth_error') === 'session_displaced') {
+        setAuthError('Tu sesión anterior se cerró automáticamente porque se inició sesión en esta cuenta desde otro dispositivo.')
+      }
+    }
+  }, [])
 
   // Foco en campo con error
   useEffect(() => {
@@ -52,8 +62,26 @@ export default function LoginPage() {
         <h1 className="auth-title">Bienvenido de vuelta</h1>
         <p className="auth-subtitle">Inicia sesión en tu cuenta para continuar</p>
 
-        {/* Error general */}
-        {state && !state.success && !state.field && (
+        {/* Notificación de sesión cerrada remotamente */}
+        {authError && (
+          <div id="login-displaced-notice" role="alert" style={{
+            padding: '0.75rem 1rem',
+            background: 'rgba(56, 189, 248, 0.12)',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            borderRadius: '0.75rem',
+            color: '#7dd3fc',
+            fontSize: '0.85rem',
+            marginBottom: '1.25rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+          }}>
+            <span>ℹ</span> {authError}
+          </div>
+        )}
+
+        {/* Error general estándar (no conflicto) */}
+        {state && !state.success && !state.field && !state.isConflict && (
           <div id="login-error-banner" role="alert" style={{
             padding: '0.75rem 1rem',
             background: 'rgba(248,113,113,0.1)',
@@ -71,6 +99,29 @@ export default function LoginPage() {
         )}
 
         <form id="login-form" action={formAction} noValidate>
+          {/* Conflicto de sesión en otro dispositivo */}
+          {state && !state.success && state.isConflict && (
+            <div id="login-conflict-card" role="alert" style={{
+              padding: '1rem',
+              background: 'rgba(234, 179, 8, 0.12)',
+              border: '1px solid rgba(234, 179, 8, 0.4)',
+              borderRadius: '0.75rem',
+              marginBottom: '1.25rem',
+            }}>
+              <div style={{ color: '#facc15', fontSize: '0.875rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                <span>🔒</span> Sesión Activa en Otro Dispositivo
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.825rem', lineHeight: 1.5, margin: 0 }}>
+                {state.error}
+              </p>
+              <div style={{ marginTop: '0.75rem', paddingTop: '0.65rem', borderTop: '1px solid rgba(234, 179, 8, 0.2)' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.8rem', color: '#fef08a' }}>
+                  <input type="checkbox" name="forceLogin" value="true" style={{ width: 16, height: 16, accentColor: '#eab308' }} />
+                  <span>Cerrar la sesión en el otro dispositivo e ingresar aquí</span>
+                </label>
+              </div>
+            </div>
+          )}
           {/* Email */}
           <div className="form-group">
             <label className="label" htmlFor="login-email">Correo electrónico</label>
