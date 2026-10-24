@@ -34,6 +34,7 @@ yarn-error.log*
 .env*
 .agents/
 *mcp_config*.json
+scripts/*.mjs
 
 # vercel
 .vercel

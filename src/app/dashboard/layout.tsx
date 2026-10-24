@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Sidebar } from '@/components/dashboard/Sidebar'
 
 export const metadata: Metadata = {
   title: 'Dashboard — NexusAI',
@@ -6,5 +7,12 @@ export const metadata: Metadata = {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return (
+    <div className="dashboard" id="dashboard">
+      <Sidebar />
+      <main className="main-content" id="dashboard-main">
+        {children}
+      </main>
+    </div>
+  )
 }

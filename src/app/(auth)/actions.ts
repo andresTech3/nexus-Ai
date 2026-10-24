@@ -43,10 +43,12 @@ export async function loginAction(
 
   if (error) {
     console.error('[loginAction Supabase Error]:', error.message, 'Status:', error.status)
-    const message =
-      error.status === 400
-        ? 'Correo o contraseña incorrectos'
-        : (error.message || 'Error al iniciar sesión. Intenta de nuevo.')
+    let message = error.message || 'Error al iniciar sesión. Intenta de nuevo.'
+    if (error.message?.toLowerCase().includes('email not confirmed')) {
+      message = 'Tu correo electrónico aún no ha sido confirmado en Supabase.'
+    } else if (error.status === 400) {
+      message = 'Correo o contraseña incorrectos'
+    }
     return { success: false, error: message }
   }
 

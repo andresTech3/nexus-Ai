@@ -2,44 +2,6 @@
 
 import Link from 'next/link'
 
-const sidebarLinks = [
-  {
-    section: 'Principal',
-    links: [
-      { id: 'dash-overview', icon: '◉', label: 'Resumen', href: '/dashboard', active: true },
-      { id: 'dash-projects', icon: '◈', label: 'Proyectos', href: '/dashboard/projects' },
-      { id: 'dash-tasks', icon: '✓', label: 'Tareas', href: '/dashboard/tasks' },
-      { id: 'dash-clients', icon: '◎', label: 'Clientes', href: '/dashboard/clients' },
-    ],
-  },
-  {
-    section: 'IA & Automatización',
-    links: [
-      { id: 'dash-agents', icon: '⚡', label: 'Agentes IA', href: '/dashboard/agents' },
-      { id: 'dash-chatbot', icon: '◐', label: 'Chatbot', href: '/dashboard/chatbot' },
-      { id: 'dash-automations', icon: '↻', label: 'Automatizaciones', href: '/dashboard/automations' },
-      { id: 'dash-campaigns', icon: '◻', label: 'Campañas', href: '/dashboard/campaigns' },
-    ],
-  },
-  {
-    section: 'Finanzas',
-    links: [
-      { id: 'dash-catalog', icon: '$', label: 'Catálogo', href: '/dashboard/catalog' },
-      { id: 'dash-quotes', icon: '❑', label: 'Cotizaciones', href: '/dashboard/quotes' },
-      { id: 'dash-orders', icon: '◉', label: 'Órdenes', href: '/dashboard/orders' },
-      { id: 'dash-reports', icon: '▤', label: 'Informes', href: '/dashboard/reports' },
-    ],
-  },
-  {
-    section: 'Sistema',
-    links: [
-      { id: 'dash-api-tester', icon: '⚡', label: 'API Tester (v1)', href: '/dashboard/api-tester' },
-      { id: 'dash-settings', icon: '⚙', label: 'Configuración', href: '/dashboard/settings' },
-      { id: 'dash-support', icon: '?', label: 'Soporte', href: '/dashboard/support' },
-    ],
-  },
-]
-
 const metrics = [
   { id: 'metric-projects', label: 'Proyectos activos', value: '12', change: '+3 este mes', positive: true, icon: '◈' },
   { id: 'metric-clients', label: 'Clientes totales', value: '47', change: '+8 este mes', positive: true, icon: '◎' },
@@ -63,82 +25,9 @@ const statusColors: Record<string, string> = {
 
 export default function DashboardPage() {
   return (
-    <div className="dashboard" id="dashboard">
-      {/* Sidebar */}
-      <aside className="sidebar" id="dashboard-sidebar">
-        {/* Logo */}
-        <div className="sidebar-logo">
-          <Link href="/" id="sidebar-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.125rem', color: 'white' }}>
-            <div className="nav-logo-icon" style={{ width: 28, height: 28 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            Nexus<span className="gradient-text-purple">AI</span>
-          </Link>
-        </div>
-
-        {/* Navigation */}
-        <nav className="sidebar-nav" id="sidebar-nav">
-          {sidebarLinks.map((section) => (
-            <div key={section.section}>
-              <div className="sidebar-section-title">{section.section}</div>
-              {section.links.map((link) => (
-                <Link
-                  key={link.id}
-                  href={link.href}
-                  className={`sidebar-link ${link.active ? 'active' : ''}`}
-                  id={link.id}
-                >
-                  <span style={{ width: 20, textAlign: 'center', fontSize: '1rem' }}>{link.icon}</span>
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          ))}
-        </nav>
-
-        {/* User profile */}
-        <div
-          style={{
-            marginTop: 'auto',
-            paddingTop: '1rem',
-            borderTop: '1px solid rgba(147,51,234,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-          }}
-          id="sidebar-user"
-        >
-          <div style={{
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #9333ea, #7c3aed)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.9rem',
-            fontWeight: 700,
-            color: 'white',
-            flexShrink: 0,
-          }}>
-            A
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Admin</div>
-            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>Administrador</div>
-          </div>
-          <Link href="/login" id="sidebar-logout" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }} title="Cerrar sesión">
-            ↩
-          </Link>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="main-content" id="dashboard-main">
-        {/* Header */}
-        <div className="dashboard-header" id="dashboard-header">
+    <div id="dashboard-overview">
+      {/* Header */}
+      <div className="dashboard-header" id="dashboard-header">
           <div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 800, color: 'white', marginBottom: '0.25rem' }}>
               Panel de Control
@@ -277,9 +166,9 @@ export default function DashboardPage() {
         {/* Quick actions row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }} id="quick-actions">
           {[
-            { id: 'qa-new-client', label: 'Nuevo cliente', icon: '◎', href: '/dashboard/clients/new' },
-            { id: 'qa-new-quote', label: 'Nueva cotización', icon: '$', href: '/dashboard/quotes/new' },
-            { id: 'qa-new-agent', label: 'Nuevo agente IA', icon: '⚡', href: '/dashboard/agents/new' },
+            { id: 'qa-new-client', label: 'Clientes CRM', icon: '◎', href: '/dashboard/clients' },
+            { id: 'qa-new-quote', label: 'Cotizaciones', icon: '$', href: '/dashboard/quotes' },
+            { id: 'qa-new-agent', label: 'Agentes IA', icon: '⚡', href: '/dashboard/agents' },
             { id: 'qa-view-reports', label: 'Ver informes', icon: '▤', href: '/dashboard/reports' },
           ].map((action) => (
             <Link
@@ -315,7 +204,6 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
-      </main>
     </div>
   )
 }
