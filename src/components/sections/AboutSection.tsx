@@ -1,57 +1,39 @@
+'use client'
+
+import Link from 'next/link'
+
 const stats = [
-  { value: '42', suffix: '+', label: 'Años de experiencia combinada' },
-  { value: '204', suffix: '', label: 'Proyectos completados' },
-  { value: '24M', suffix: '+', label: 'Mensajes de IA procesados' },
-  { value: '112', suffix: '', label: 'Clientes satisfechos' },
+  { value: '42', suffix: '+', label: 'Especialistas e Ingenieros IA' },
+  { value: '300', suffix: '+', label: 'Empresas Transformadas' },
+  { value: '24M', suffix: '+', label: 'Mensajes & Decisiones Procesadas' },
+  { value: '99.4', suffix: '%', label: 'Retención de Clientes' },
 ]
 
-const features = [
+const pillars = [
   {
-    id: 'feat-exclusive',
     icon: '✦',
-    title: 'Creaciones Exclusivas',
-    description:
-      'Desarrollamos soluciones de IA únicas, diseñadas específicamente para tu negocio y que no encontrarás en ningún otro lugar.',
+    title: 'Soberanía Absoluta del Código',
+    description: 'Tus datos, tus modelos y tus prompts son 100% de tu propiedad. Sin dependencias opacas ni contratos cautivos.',
   },
   {
-    id: 'feat-ownership',
-    icon: '🔐',
-    title: 'Propiedad Total',
-    description:
-      'Cuando adquieres nuestros servicios, eres el dueño absoluto de todo: código, modelos, datos y estrategias.',
+    icon: '⚡',
+    title: 'Despliegues en Semanas, no Años',
+    description: 'Arquitectura modular prediseñada que se integra a tus canales en días, garantizando tracción comercial inmediata.',
   },
   {
-    id: 'feat-artists',
-    icon: '🚀',
-    title: 'Apoyo a tu Crecimiento',
-    description:
-      'Elegir NexusAI significa invertir en el futuro de tu empresa, con soporte continuo y actualización constante.',
+    icon: '🎯',
+    title: 'ROI Medido al Centavo',
+    description: 'Cada automatización y cada agente está anclado a un KPI comercial: aumento de margen, ahorro de horas o conversión.',
   },
 ]
 
 export default function AboutSection() {
   return (
-    <section className="section" id="nosotros" style={{ position: 'relative' }}>
-      {/* Background */}
-      <div className="bg-gradient-section" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
-      <div
-        className="glow-orb glow-orb-pink"
-        style={{ width: 400, height: 300, top: '50%', right: '10%', opacity: 0.07 }}
-      />
-
-      <div className="container" style={{ position: 'relative' }}>
-        {/* Stats banner */}
-        <div
-          style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(147,51,234,0.15)',
-            borderRadius: '1.5rem',
-            marginBottom: '5rem',
-            overflow: 'hidden',
-          }}
-          id="stats-banner"
-        >
-          <div className="stats-grid" id="stats-grid">
+    <section className="section" id="nosotros">
+      <div className="container">
+        {/* Stats Banner (Charred Core Stepping) */}
+        <div className="stats-banner" id="stats-banner">
+          <div className="stats-grid">
             {stats.map((stat, i) => (
               <div key={i} className="stat-item" id={`stat-${i}`}>
                 <span className="stat-number">
@@ -64,96 +46,149 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* Why choose us */}
-        <div className="section-header centered">
-          <div className="section-eyebrow centered">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-            Por qué elegirnos
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 60px' }}>
+          <div className="section-eyebrow" style={{ justifyContent: 'center' }}>
+            ✦ EL MANIFIESTO DE NEXUS AI
           </div>
           <h2 className="section-title">
-            Razones para{' '}
-            <span className="gradient-text">Elegirnos</span>
+            INGENIERÍA COGNITIVA
+            <br />
+            <span style={{ color: '#ffffff' }}>SIN CONCESIONES NI HUMO</span>
           </h2>
-          <p className="section-description">
-            No somos solo proveedores de tecnología. Somos tus socios estratégicos en la
-            transformación digital impulsada por inteligencia artificial.
+          <p className="section-description" style={{ margin: '16px auto 0' }}>
+            No somos consultores de diapositivas. Somos arquitectos de software e inteligencia artificial
+            que construyen ventajas competitivas imposibles de replicar.
           </p>
         </div>
 
-        {/* Feature cards */}
-        <div className="features-grid" id="features-grid">
-          {features.map((feature) => (
-            <div key={feature.id} className="feature-card" id={feature.id}>
-              <div className="feature-icon">{feature.icon}</div>
-              <h3 className="feature-title">{feature.title}</h3>
-              <p className="feature-description">{feature.description}</p>
+        {/* Pillars Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
+            marginBottom: '64px',
+          }}
+        >
+          {pillars.map((p, i) => (
+            <div
+              key={i}
+              style={{
+                background: 'var(--surface-spice-card)',
+                border: '1px solid var(--color-cardamom-brown)',
+                borderRadius: '8px',
+                padding: '32px 24px',
+              }}
+            >
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  background: 'var(--surface-charred-core)',
+                  border: '1px solid var(--color-tiger-gold)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--color-tiger-gold)',
+                  fontSize: '18px',
+                  fontWeight: 900,
+                  marginBottom: '20px',
+                }}
+              >
+                {p.icon}
+              </div>
+              <h3
+                style={{
+                  fontFamily: 'var(--font-salmond)',
+                  fontSize: '18px',
+                  fontWeight: 700,
+                  color: 'var(--color-tiger-gold)',
+                  marginBottom: '10px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {p.title}
+              </h3>
+              <p
+                style={{
+                  fontFamily: 'var(--font-graphikx)',
+                  fontSize: '13px',
+                  color: 'rgba(255,255,255,0.8)',
+                  lineHeight: 1.5,
+                }}
+              >
+                {p.description}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Highlight block */}
+        {/* Typographic Poster Statement Block */}
         <div
           style={{
-            marginTop: '4rem',
-            padding: '3rem',
-            background: 'linear-gradient(135deg, rgba(147,51,234,0.12) 0%, rgba(124,58,237,0.06) 100%)',
-            border: '1px solid rgba(147,51,234,0.25)',
-            borderRadius: '1.5rem',
+            background: 'var(--surface-charred-core)',
+            border: '1px solid var(--color-cardamom-brown)',
+            borderRadius: '12px',
+            padding: '48px 40px',
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '3rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '40px',
             alignItems: 'center',
           }}
-          id="about-highlight"
         >
           <div>
-            <div className="section-eyebrow">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="12" cy="12" r="10"/>
-              </svg>
-              Sobre NexusAI
-            </div>
-            <h2 className="section-title" style={{ fontSize: '2rem' }}>
-              Arte Moderno en Plataformas de{' '}
-              <span className="gradient-text">IA</span>
-            </h2>
-            <p className="section-description" style={{ marginTop: '1rem' }}>
-              Invertimos en creatividad que perdura en el tiempo. Nuestros proyectos de IA
-              son únicos en el espacio digital, construidos con tecnología de punta y
-              visión estratégica.
+            <div className="section-eyebrow">✦ EL FUTURO ES AUTÓNOMO</div>
+            <h3
+              style={{
+                fontFamily: 'var(--font-salmond)',
+                fontSize: 'clamp(2rem, 4.5vw, 42px)',
+                fontWeight: 800,
+                color: '#ffffff',
+                lineHeight: 0.95,
+                marginBottom: '16px',
+              }}
+            >
+              100% SOBERANÍA
+              <br />
+              <span style={{ color: 'var(--color-tiger-gold)' }}>Y MODELOS EXCLUSIVOS</span>
+            </h3>
+            <p style={{ fontFamily: 'var(--font-graphikx)', fontSize: '13px', color: 'rgba(255,255,255,0.8)', lineHeight: 1.5 }}>
+              Construimos activos digitales que incrementan la valuación patrimonial de tu compañía.
+              Toda la propiedad intelectual te pertenece desde el minuto uno.
             </p>
           </div>
+
           <div style={{ textAlign: 'center' }}>
             <div
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '5rem',
+                fontFamily: 'var(--font-salmond)',
+                fontSize: 'clamp(3.5rem, 8vw, 96px)',
                 fontWeight: 900,
-                background: 'linear-gradient(135deg, #c084fc, #a855f7, #7c3aed)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: 1,
-                marginBottom: '0.5rem',
+                color: 'var(--color-tiger-gold)',
+                lineHeight: 0.85,
               }}
             >
               100%
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Derechos asegurados
-            </div>
             <div
               style={{
-                marginTop: '1rem',
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.25rem',
+                fontFamily: 'var(--font-graphikx)',
+                fontSize: '11px',
                 fontWeight: 700,
-                color: 'white',
+                textTransform: 'uppercase',
+                letterSpacing: '0.12em',
+                color: 'rgba(255,255,255,0.6)',
+                marginTop: '8px',
               }}
             >
-              Arte en la Era de la IA
+              Propiedad Intelectual Asegurada
+            </div>
+            <div style={{ marginTop: '20px' }}>
+              <Link href="/register" className="btn btn-primary btn-sm">
+                Agendar Consulta Estratégica ➔
+              </Link>
             </div>
           </div>
         </div>

@@ -12,8 +12,8 @@ export default function HomePage() {
       <Navbar />
       <main>
         <HeroSection />
-        <ServicesSection />
         <WorksSection />
+        <ServicesSection />
         <AboutSection />
         <CtaSection />
       </main>

@@ -6,178 +6,177 @@ import Link from 'next/link'
 const services = [
   {
     id: 'ai-agents',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" fill="currentColor"/>
-      </svg>
-    ),
-    title: 'Agentes de IA',
-    description: 'Agentes autónomos que trabajan 24/7 gestionando tareas complejas, tomando decisiones y ejecutando flujos de trabajo completos.',
-    image: '/ai-card.jpg',
-    badge: 'Más popular',
-    badgeClass: 'badge-purple',
-    tags: ['GPT-4', 'Gemini', 'Autónomo'],
+    number: '01',
+    title: 'Agentes Autónomos 24/7',
+    description: 'Sistemas cognitivos independientes que gestionan flujos de venta, prospección multicanal y resolución compleja de tickets sin supervisión manual.',
+    badge: 'Popular',
+    badgeClass: 'badge-gold',
+    tags: ['GPT-4o', 'Claude 3.5', 'Autonomía Total'],
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80',
   },
   {
-    id: 'marketing',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      </svg>
-    ),
-    title: 'Marketing Digital IA',
-    description: 'Campañas automatizadas, contenido generado con IA, análisis predictivo y optimización en tiempo real de tus canales digitales.',
-    image: '/marketing-card.jpg',
+    id: 'marketing-ia',
+    number: '02',
+    title: 'Growth Marketing & Copy IA',
+    description: 'Generación hiperpersonalizada de campañas publicitarias, segmentación dinámica y optimización algorítmica de conversión en tiempo real.',
     badge: 'Trending',
-    badgeClass: 'badge-cyan',
-    tags: ['SEO', 'Ads', 'Contenido IA'],
+    badgeClass: 'badge-alert',
+    tags: ['E-Commerce', 'Performance', 'Paid Media'],
+    image: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=600&q=80',
   },
   {
-    id: 'chatbot',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    title: 'Chatbot Inteligente',
-    description: 'Chatbots entrenados con tu conocimiento empresarial, capaces de resolver consultas, calificar leads y automatizar soporte.',
-    image: '/chatbot-card.jpg',
-    badge: 'Nuevo',
-    badgeClass: 'badge-pink',
-    tags: ['Base conocimiento', 'Multicanal', '24/7'],
+    id: 'process-automation',
+    number: '03',
+    title: 'Automatización de Pipelines',
+    description: 'Conexión integral de ERPs, CRMs y bases de datos con flujos inteligentes que eliminan hasta el 85% de la carga operativa manual.',
+    badge: 'Alta Escala',
+    badgeClass: 'badge-secondary',
+    tags: ['n8n', 'Zapier Enterprise', 'Webhooks'],
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
   },
   {
-    id: 'automation',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    title: 'Automatización Avanzada',
-    description: 'Flujos de trabajo inteligentes que conectan tus herramientas, eliminan tareas repetitivas y escalan sin límites.',
-    image: '/automation-showcase.jpg',
-    badge: 'Escalable',
-    badgeClass: 'badge-purple',
-    tags: ['Zapier', 'n8n', 'API REST'],
+    id: 'rag-chatbots',
+    number: '04',
+    title: 'Asistentes RAG Empresariales',
+    description: 'Modelos entrenados exclusivamente con la base de conocimiento de tu compañía para brindar respuestas infalibles con cero alucinaciones.',
+    badge: 'Seguro',
+    badgeClass: 'badge-secondary',
+    tags: ['Embeddings', 'Vectores', 'Privacidad'],
+    image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80',
   },
   {
-    id: 'crm',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    title: 'CRM Inteligente',
-    description: 'Gestión de clientes potenciada con IA: predicción de churn, scoring de leads, personalización automática y seguimiento proactivo.',
-    image: '/hero-bg.jpg',
-    badge: 'Integrado',
-    badgeClass: 'badge-cyan',
-    tags: ['CRM', 'Pipeline', 'Scoring IA'],
+    id: 'predictive-crm',
+    number: '05',
+    title: 'CRM Inteligente & Lead Scoring',
+    description: 'Predicción probabilística de churn, calificación de leads por comportamiento y asignación automática al mejor representante comercial.',
+    badge: 'Predictivo',
+    badgeClass: 'badge-gold',
+    tags: ['Machine Learning', 'Pipelines', 'Analytics'],
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
   },
   {
-    id: 'analytics',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    title: 'Analytics & Reportes',
-    description: 'Dashboards en tiempo real, informes automáticos, alertas inteligentes y análisis predictivo de tus métricas clave.',
-    image: '/marketing-card.jpg',
-    badge: 'Tiempo real',
-    badgeClass: 'badge-purple',
-    tags: ['KPIs', 'Predicción', 'Alertas'],
+    id: 'audit-strategy',
+    number: '06',
+    title: 'Auditoría & Estrategia IA',
+    description: 'Diagnóstico exhaustivo de procesos de negocio, identificación de cuellos de botella y diseño del roadmap tecnológico de automatización a 12 meses.',
+    badge: 'Consultoría',
+    badgeClass: 'badge-secondary',
+    tags: ['Roadmap', 'ROI Medible', 'Arquitectura'],
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
   },
 ]
 
 export default function ServicesSection() {
   return (
-    <section className="section" id="servicios" style={{ position: 'relative' }}>
-      {/* Background glow */}
-      <div
-        className="glow-orb glow-orb-purple"
-        style={{ width: 600, height: 400, top: '20%', right: '-15%', opacity: 0.08 }}
-      />
-
+    <section className="section" id="servicios">
       <div className="container">
-        {/* Header */}
-        <div className="section-header centered">
-          <div className="section-eyebrow centered">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-            Nuestros servicios
+        {/* Section Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            borderBottom: '1px dotted var(--color-tiger-gold)',
+            paddingBottom: '24px',
+            marginBottom: '48px',
+            flexWrap: 'wrap',
+            gap: '24px',
+          }}
+        >
+          <div>
+            <div className="section-eyebrow">
+              ✦ SERVICIOS COGNITIVOS DE ALTA PRECISIÓN
+            </div>
+            <h2 className="section-title">
+              SUITE DE SOLUCIONES
+              <br />
+              <span style={{ color: '#ffffff' }}>PARA DOMINAR EL MERCADO</span>
+            </h2>
           </div>
-          <h2 className="section-title">
-            Explora nuestros{' '}
-            <span className="gradient-text">Servicios IA</span>
-          </h2>
-          <p className="section-description">
-            Una suite completa de servicios de inteligencia artificial diseñados para
-            transformar cada aspecto de tu negocio.
+
+          <p className="section-description" style={{ maxWidth: '420px', margin: 0 }}>
+            Infraestructura modular lista para desplegarse sobre tus operaciones actuales,
+            diseñada con el estándar más estricto de seguridad y soberanía de datos.
           </p>
         </div>
 
-        {/* Grid */}
+        {/* Services Grid */}
         <div className="services-grid" id="services-grid">
-          {services.map((service) => (
-            <div key={service.id} className="service-card" id={`service-card-${service.id}`}>
-              {/* Image */}
+          {services.map((s) => (
+            <div key={s.id} className="service-card" id={`service-${s.id}`}>
+              {/* Image with Tag */}
               <div className="service-card-image">
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  style={{ objectFit: 'cover' }}
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  loading="lazy"
                 />
                 <div className="service-card-image-overlay" />
-                {/* Badge */}
+                <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 1 }}>
+                  <span className={`badge ${s.badgeClass}`}>{s.badge}</span>
+                </div>
                 <div
-                  style={{ position: 'absolute', top: '0.75rem', left: '0.75rem', zIndex: 1 }}
+                  style={{
+                    position: 'absolute',
+                    top: 12,
+                    right: 12,
+                    zIndex: 1,
+                    fontFamily: 'var(--font-salmond)',
+                    fontSize: '14px',
+                    fontWeight: 800,
+                    color: 'var(--color-tiger-gold)',
+                  }}
                 >
-                  <span className={`badge ${service.badgeClass}`}>{service.badge}</span>
+                  {s.number}
                 </div>
               </div>
 
               {/* Body */}
               <div className="service-card-body">
-                <div className="service-card-icon">{service.icon}</div>
-                <h3 className="service-card-title">{service.title}</h3>
-                <p className="service-card-description">{service.description}</p>
+                <h3 className="service-card-title">{s.title}</h3>
+                <p className="service-card-description">{s.description}</p>
 
                 {/* Tags */}
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-                  {service.tags.map((tag) => (
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                  {s.tags.map((t) => (
                     <span
-                      key={tag}
+                      key={t}
                       style={{
-                        fontSize: '0.75rem',
-                        padding: '0.2rem 0.6rem',
-                        background: 'rgba(255,255,255,0.05)',
-                        border: '1px solid rgba(255,255,255,0.08)',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        padding: '3px 8px',
                         borderRadius: '9999px',
-                        color: 'rgba(255,255,255,0.5)',
+                        background: 'var(--surface-charred-core)',
+                        color: 'rgba(250, 174, 51, 0.85)',
+                        border: '1px solid var(--color-cardamom-brown)',
                       }}
                     >
-                      {tag}
+                      {t}
                     </span>
                   ))}
                 </div>
 
                 <div className="service-card-footer">
                   <Link
-                    href={`/#${service.id}`}
-                    className="service-card-link"
-                    id={`service-link-${service.id}`}
+                    href="/register"
+                    className="btn btn-outline btn-sm"
+                    style={{ fontSize: '11px', padding: '6px 14px' }}
                   >
-                    Ver más
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    Implementar
                   </Link>
-                  <Link href="/register" className="btn btn-primary btn-sm" id={`service-cta-${service.id}`}>
-                    Solicitar
+                  <Link
+                    href="/#contacto"
+                    style={{
+                      fontFamily: 'var(--font-graphikx)',
+                      fontSize: '12px',
+                      color: 'var(--color-tiger-gold)',
+                      fontWeight: 600,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    Detalles ➔
                   </Link>
                 </div>
               </div>

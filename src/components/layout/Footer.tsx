@@ -1,26 +1,26 @@
 import Link from 'next/link'
 
 const footerLinks = {
-  servicios: [
-    { label: 'Agentes IA', href: '/#servicios' },
-    { label: 'Automatización', href: '/#servicios' },
-    { label: 'Marketing Digital', href: '/#servicios' },
-    { label: 'Chatbot IA', href: '/#servicios' },
-    { label: 'CRM Inteligente', href: '/#servicios' },
+  soluciones: [
+    { label: 'Agentes Autónomos', href: '/#servicios' },
+    { label: 'Growth Marketing IA', href: '/#servicios' },
+    { label: 'Automatización de Pipelines', href: '/#servicios' },
+    { label: 'Chatbots RAG Seguros', href: '/#servicios' },
+    { label: 'Lead Scoring & CRM', href: '/#servicios' },
   ],
-  empresa: [
-    { label: 'Nosotros', href: '/#nosotros' },
-    { label: 'Trabajos', href: '/#trabajos' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Contacto', href: '/#contacto' },
-    { label: 'Privacidad', href: '/privacidad' },
+  agencia: [
+    { label: 'Casos de Éxito', href: '/#trabajos' },
+    { label: 'Manifiesto', href: '/#nosotros' },
+    { label: 'Laboratorio de IA', href: '/#inicio' },
+    { label: 'Contacto Directo', href: '/#contacto' },
+    { label: 'Seguridad & Privacidad', href: '/privacidad' },
   ],
   plataforma: [
-    { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Portal Cliente', href: '/portal' },
-    { label: 'Documentación', href: '/docs' },
-    { label: 'Estado del sistema', href: '/status' },
-    { label: 'API', href: '/api/v1' },
+    { label: 'Iniciar Sesión', href: '/login' },
+    { label: 'Crear Cuenta', href: '/register' },
+    { label: 'Portal de Clientes', href: '/portal' },
+    { label: 'Documentación API', href: '/docs' },
+    { label: 'Estado del Servicio', href: '/status' },
   ],
 }
 
@@ -31,30 +31,36 @@ export default function Footer() {
         <div className="footer-top">
           {/* Brand */}
           <div>
-            <Link href="/" className="nav-logo" id="footer-logo" style={{ display: 'inline-flex', marginBottom: '1rem' }}>
-              <div className="nav-logo-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              Nexus<span className="gradient-text-purple">AI</span>
+            <Link href="/" className="nav-logo" id="footer-logo" style={{ display: 'inline-flex', marginBottom: '16px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 32,
+                  height: 32,
+                  borderRadius: '50%',
+                  background: 'var(--color-tiger-gold)',
+                  color: 'var(--color-charred-clove)',
+                  fontSize: '15px',
+                  fontWeight: 900,
+                  marginRight: 6,
+                }}
+              >
+                ✦
+              </span>
+              NEXUS<span style={{ color: '#ffffff' }}>AI</span>
             </Link>
             <p className="footer-brand-description">
-              Transformamos negocios mediante inteligencia artificial, automatización avanzada
-              y estrategias de marketing digital de vanguardia.
+              Agencia boutique de inteligencia artificial aplicada, automatizaciones autónomas
+              y arquitectura cognitiva para empresas que buscan ventaja competitiva sostenible.
             </p>
             <div className="footer-social" id="footer-social">
               {[
-                { label: 'Twitter', icon: 'X' },
+                { label: 'X', icon: '𝕏' },
                 { label: 'LinkedIn', icon: 'in' },
                 { label: 'GitHub', icon: 'GH' },
-                { label: 'YouTube', icon: '▶' },
+                { label: 'Discord', icon: '✦' },
               ].map((s) => (
                 <a
                   key={s.label}
@@ -62,21 +68,40 @@ export default function Footer() {
                   className="footer-social-link"
                   id={`footer-social-${s.label.toLowerCase()}`}
                   aria-label={s.label}
-                  title={s.label}
                 >
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700 }}>{s.icon}</span>
+                  {s.icon}
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Services */}
+          {/* Soluciones */}
           <div>
-            <h4 className="footer-col-title">Servicios</h4>
-            <ul className="footer-links">
-              {footerLinks.servicios.map((l) => (
+            <h4
+              style={{
+                fontFamily: 'var(--font-salmond)',
+                fontSize: '13px',
+                fontWeight: 700,
+                color: 'var(--color-tiger-gold)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+              }}
+            >
+              Soluciones
+            </h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {footerLinks.soluciones.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="footer-link" id={`footer-link-${l.label.toLowerCase().replace(/\s/g, '-')}`}>
+                  <Link
+                    href={l.href}
+                    style={{
+                      fontFamily: 'var(--font-graphikx)',
+                      fontSize: '13px',
+                      color: 'rgba(255,255,255,0.7)',
+                      textDecoration: 'none',
+                    }}
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -84,13 +109,33 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Agencia */}
           <div>
-            <h4 className="footer-col-title">Empresa</h4>
-            <ul className="footer-links">
-              {footerLinks.empresa.map((l) => (
+            <h4
+              style={{
+                fontFamily: 'var(--font-salmond)',
+                fontSize: '13px',
+                fontWeight: 700,
+                color: 'var(--color-tiger-gold)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+              }}
+            >
+              Agencia
+            </h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {footerLinks.agencia.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="footer-link" id={`footer-link-empresa-${l.label.toLowerCase().replace(/\s/g, '-')}`}>
+                  <Link
+                    href={l.href}
+                    style={{
+                      fontFamily: 'var(--font-graphikx)',
+                      fontSize: '13px',
+                      color: 'rgba(255,255,255,0.7)',
+                      textDecoration: 'none',
+                    }}
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -98,13 +143,33 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Platform */}
+          {/* Plataforma */}
           <div>
-            <h4 className="footer-col-title">Plataforma</h4>
-            <ul className="footer-links">
+            <h4
+              style={{
+                fontFamily: 'var(--font-salmond)',
+                fontSize: '13px',
+                fontWeight: 700,
+                color: 'var(--color-tiger-gold)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginBottom: '16px',
+              }}
+            >
+              Acceso
+            </h4>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {footerLinks.plataforma.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="footer-link" id={`footer-link-platform-${l.label.toLowerCase().replace(/\s/g, '-')}`}>
+                  <Link
+                    href={l.href}
+                    style={{
+                      fontFamily: 'var(--font-graphikx)',
+                      fontSize: '13px',
+                      color: 'rgba(255,255,255,0.7)',
+                      textDecoration: 'none',
+                    }}
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -113,15 +178,27 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="footer-bottom">
-          <p className="footer-bottom-text">
-            © 2026 NexusAI. Todos los derechos reservados.
-          </p>
-          <p className="footer-bottom-text" style={{ display: 'flex', gap: '1.5rem' }}>
-            <Link href="/privacidad" className="footer-link" id="footer-privacy">Privacidad</Link>
-            <Link href="/terminos" className="footer-link" id="footer-terms">Términos</Link>
-            <Link href="/cookies" className="footer-link" id="footer-cookies">Cookies</Link>
-          </p>
+        {/* Footer Bottom with Dotted Rule */}
+        <div
+          style={{
+            borderTop: '1px dotted var(--color-tiger-gold)',
+            paddingTop: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px',
+            fontFamily: 'var(--font-graphikx)',
+            fontSize: '12px',
+            color: 'rgba(250, 174, 51, 0.7)',
+          }}
+        >
+          <p>© 2026 Nexus AI Agency. Estilo Hungry Tiger — Todos los derechos reservados.</p>
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <Link href="/privacidad" style={{ color: 'inherit' }}>Privacidad</Link>
+            <Link href="/terminos" style={{ color: 'inherit' }}>Términos de Servicio</Link>
+            <Link href="/seguridad" style={{ color: 'inherit' }}>Seguridad</Link>
+          </div>
         </div>
       </div>
     </footer>
