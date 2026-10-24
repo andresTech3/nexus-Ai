@@ -1,20 +1,34 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { checkBotAndMultiIpSecurity, createBlockedResponse } from '@/lib/security/bot-protection'
 
 /* ============================================================
-   MIDDLEWARE — Protección de rutas y refresh de sesión
-   ============================================================
-   Reglas:
-   - /dashboard/* → requiere sesión autenticada
-   - /login, /register → redirigir si ya hay sesión
-   - / → pública
-   - /api/v1/* → protegidas individualmente por handlers
+   MIDDLEWARE — Protección de rutas, control anti-bots y concurrencia
    ============================================================ */
 
 const PROTECTED_PREFIXES = ['/dashboard']
 const AUTH_ROUTES = ['/login', '/register']
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Extraer IP de origen y User-Agent
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    '127.0.0.1'
+  const userAgent = request.headers.get('user-agent') || ''
+  const sessionToken = request.cookies.get('nexus_session_token')?.value
+
+  // 1. FILTRO DE SEGURIDAD: Detección de bots y múltiples IPs simultáneas
+  const securityCheck = checkBotAndMultiIpSecurity(ip, userAgent, pathname, sessionToken)
+  if (securityCheck.blocked) {
+    return createBlockedResponse(
+      securityCheck.reason || 'Tráfico automatizado o múltiples IPs simultáneas detectadas',
+      pathname.startsWith('/api/')
+    )
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -43,8 +57,6 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
-  const { pathname } = request.nextUrl
 
   // Rutas protegidas → redirigir a /login si no hay sesión
   const isProtected = PROTECTED_PREFIXES.some((prefix) =>

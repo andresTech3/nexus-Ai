@@ -41,15 +41,11 @@ export default function ClientsPage() {
           const json = await res.json()
           setClients(json.data || [])
         } else {
-          // Mock inicial si aún no hay registros
-          setClients([
-            { id: '1', name: 'Carlos Mendoza', company_name: 'Mendoza Tech S.L.', email: 'carlos@mendoza.com', phone: '+34 612 345 678', status: 'active' },
-            { id: '2', name: 'Laura Gómez', company_name: 'RetailMax S.A.', email: 'laura@retailmax.com', phone: '+34 699 123 456', status: 'active' },
-            { id: '3', name: 'David Smith', company_name: 'TechCo Global', email: 'dsmith@techco.com', phone: '+1 555 0192', status: 'prospect' },
-          ])
+          setClients([])
         }
       } catch (err) {
         console.error('Error fetching clients:', err)
+        setClients([])
       } finally {
         setLoading(false)
       }
@@ -195,8 +191,25 @@ export default function ClientsPage() {
               </tr>
             ) : filteredClients.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
-                  No se encontraron clientes que coincidan con la búsqueda.
+                <td colSpan={5} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>👥</div>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
+                    {clients.length === 0 ? 'No tienes clientes registrados todavía' : 'No se encontraron clientes con esa búsqueda'}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '1.25rem' }}>
+                    {clients.length === 0
+                      ? 'Agrega tu primer cliente o prospecto para comenzar a gestionar proyectos y cotizaciones.'
+                      : 'Intenta con otro nombre, empresa o email.'}
+                  </div>
+                  {clients.length === 0 && (
+                    <button
+                      onClick={() => setShowModal(true)}
+                      className="btn btn-primary"
+                      style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}
+                    >
+                      + Nuevo Cliente
+                    </button>
+                  )}
                 </td>
               </tr>
             ) : (

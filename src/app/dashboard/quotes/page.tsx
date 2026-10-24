@@ -13,46 +13,7 @@ interface Quote {
   items: { name: string; amountCents: number }[]
 }
 
-const INITIAL_QUOTES: Quote[] = [
-  {
-    id: 'q-1',
-    quoteNumber: 'COT-2026-001',
-    clientName: 'RetailMax S.A.',
-    totalCents: 420000,
-    status: 'accepted',
-    createdAt: '15 Oct 2026',
-    validUntil: '30 Oct 2026',
-    items: [
-      { name: 'Despliegue de Chatbot RAG Multicanal', amountCents: 380000 },
-      { name: 'Integración Webhook Shopify', amountCents: 40000 },
-    ],
-  },
-  {
-    id: 'q-2',
-    quoteNumber: 'COT-2026-002',
-    clientName: 'TechCo Global',
-    totalCents: 530000,
-    status: 'sent',
-    createdAt: '20 Oct 2026',
-    validUntil: '05 Nov 2026',
-    items: [
-      { name: 'Auditoría & Plan de Automatización con IA', amountCents: 150000 },
-      { name: 'Despliegue de Chatbot RAG Multicanal', amountCents: 380000 },
-    ],
-  },
-  {
-    id: 'q-3',
-    quoteNumber: 'COT-2026-003',
-    clientName: 'Mendoza Tech S.L.',
-    totalCents: 290000,
-    status: 'draft',
-    createdAt: '23 Oct 2026',
-    validUntil: '10 Nov 2026',
-    items: [
-      { name: 'Sistema Automatizado de Captura y Calificación de Leads', amountCents: 290000 },
-    ],
-  },
-]
+const INITIAL_QUOTES: Quote[] = []
 
 const statusBadges = {
   accepted: { label: 'Aceptada', bg: 'rgba(74, 222, 128, 0.15)', text: '#4ade80', border: 'rgba(74, 222, 128, 0.3)' },
@@ -70,6 +31,12 @@ export default function QuotesPage() {
     price: 3800,
     validDays: 15,
   })
+
+  const totalCents = quotes.reduce((acc, q) => acc + q.totalCents, 0)
+  const acceptedQuotes = quotes.filter((q) => q.status === 'accepted')
+  const acceptanceRate = quotes.length > 0 ? `${((acceptedQuotes.length / quotes.length) * 100).toFixed(0)}%` : '0%'
+  const sentQuotes = quotes.filter((q) => q.status === 'sent')
+  const sentCents = sentQuotes.reduce((acc, q) => acc + q.totalCents, 0)
 
   const formatMoney = (cents: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -126,18 +93,18 @@ export default function QuotesPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <div className="metric-card">
           <div className="metric-label">Total Cotizado</div>
-          <div className="metric-value">$12,400</div>
-          <div className="metric-change">3 propuestas emitidas</div>
+          <div className="metric-value">{formatMoney(totalCents)}</div>
+          <div className="metric-change">{quotes.length} {quotes.length === 1 ? 'propuesta emitida' : 'propuestas emitidas'}</div>
         </div>
         <div className="metric-card">
           <div className="metric-label">Tasa de Aceptación</div>
-          <div className="metric-value" style={{ color: '#4ade80' }}>66.7%</div>
-          <div className="metric-change">+15% vs mes pasado</div>
+          <div className="metric-value" style={{ color: '#4ade80' }}>{acceptanceRate}</div>
+          <div className="metric-change">{acceptedQuotes.length} aceptadas</div>
         </div>
         <div className="metric-card">
           <div className="metric-label">En Negociación</div>
-          <div className="metric-value" style={{ color: '#38bdf8' }}>$5,300</div>
-          <div className="metric-change">1 cliente en revisión</div>
+          <div className="metric-value" style={{ color: '#38bdf8' }}>{formatMoney(sentCents)}</div>
+          <div className="metric-change">{sentQuotes.length} en revisión</div>
         </div>
       </div>
 
@@ -172,8 +139,28 @@ export default function QuotesPage() {
             </tr>
           </thead>
           <tbody>
-            {quotes.map((q) => {
-              const badge = statusBadges[q.status]
+            {quotes.length === 0 ? (
+              <tr>
+                <td colSpan={7} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>📄</div>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
+                    No tienes cotizaciones registradas todavía
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '1.25rem' }}>
+                    Emite propuestas comerciales formales con desglose de servicios y montos para tus clientes.
+                  </div>
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="btn btn-primary"
+                    style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}
+                  >
+                    + Nueva Cotización
+                  </button>
+                </td>
+              </tr>
+            ) : (
+              quotes.map((q) => {
+                const badge = statusBadges[q.status]
               return (
                 <tr
                   key={q.id}
@@ -230,7 +217,7 @@ export default function QuotesPage() {
                   </td>
                 </tr>
               )
-            })}
+            }))}
           </tbody>
         </table>
       </div>

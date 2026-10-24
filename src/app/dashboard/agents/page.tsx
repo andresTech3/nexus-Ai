@@ -14,57 +14,15 @@ interface Agent {
   tools: string[]
 }
 
-const INITIAL_AGENTS: Agent[] = [
-  {
-    id: 'agent-1',
-    name: 'Agente Calificador de Leads',
-    role: 'Ventas & CRM',
-    model: 'Gemini 2.0 Flash (Free)',
-    status: 'active',
-    callsToday: 342,
-    totalTokens: '48.2k',
-    systemPrompt: 'Evalúa la intención de compra del cliente, extrae presupuesto y necesidades clave, y califica el lead de 1 a 10.',
-    tools: ['crm_lookup', 'score_lead', 'send_slack_alert'],
-  },
-  {
-    id: 'agent-2',
-    name: 'Asistente de Soporte 24/7',
-    role: 'Atención al Cliente',
-    model: 'Gemini 2.0 Flash (Free)',
-    status: 'active',
-    callsToday: 820,
-    totalTokens: '112.5k',
-    systemPrompt: 'Responde dudas frecuentes consultando exclusivamente la base de conocimiento vectorial autorizada de la empresa.',
-    tools: ['knowledge_search', 'create_ticket'],
-  },
-  {
-    id: 'agent-3',
-    name: 'Generador de Copys & Campañas',
-    role: 'Marketing de Contenidos',
-    model: 'Gemini 2.0 Flash (Free)',
-    status: 'paused',
-    callsToday: 45,
-    totalTokens: '18.9k',
-    systemPrompt: 'Genera propuestas de anuncios en LinkedIn y Meta adaptadas al tono de marca del cliente con llamadas a la acción.',
-    tools: ['tone_analyzer', 'hashtag_generator'],
-  },
-  {
-    id: 'agent-4',
-    name: 'Auditor Financiero & Cotizaciones',
-    role: 'Operaciones',
-    model: 'Gemini 2.0 Flash (Free)',
-    status: 'active',
-    callsToday: 77,
-    totalTokens: '14.1k',
-    systemPrompt: 'Calcula presupuestos basados en horas hombre, margen de beneficio de la agencia y servicios contratados.',
-    tools: ['catalog_query', 'calculate_margin'],
-  },
-]
+const INITIAL_AGENTS: Agent[] = []
 
 export default function AgentsPage() {
   const [agents, setAgents] = useState<Agent[]>(INITIAL_AGENTS)
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [showConfigModal, setShowConfigModal] = useState<boolean>(false)
+
+  const totalCallsToday = agents.reduce((sum, a) => sum + (a.callsToday || 0), 0)
+  const remainingPercent = agents.length === 0 ? '100%' : `${Math.max(0, 100 - (totalCallsToday / 1500 * 100)).toFixed(1)}%`
 
   const toggleAgentStatus = (id: string) => {
     setAgents(
@@ -127,18 +85,52 @@ export default function AgentsPage() {
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <div>
             <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Consumo Hoy</div>
-            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#38bdf8' }}>1,284 reqs</div>
+            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#38bdf8' }}>{totalCallsToday} reqs</div>
           </div>
           <div>
             <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Cuota Restante</div>
-            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#4ade80' }}>85.6%</div>
+            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#4ade80' }}>{remainingPercent}</div>
           </div>
         </div>
       </div>
 
       {/* Agents Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '1.25rem' }}>
-        {agents.map((agent) => (
+        {agents.length === 0 ? (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              padding: '3.5rem 2rem',
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px dashed rgba(147, 51, 234, 0.25)',
+              borderRadius: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>🤖</div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
+              No tienes agentes de IA creados todavía
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              Despliega agentes autónomos con Gemini 2.0 Flash para calificar prospectos, atender clientes 24/7 o redactar contenidos sin costo.
+            </p>
+            <button
+              onClick={() => {
+                setSelectedAgent(null)
+                setShowConfigModal(true)
+              }}
+              className="btn btn-primary"
+              style={{ padding: '0.65rem 1.4rem', fontSize: '0.875rem' }}
+            >
+              + Crear Primer Agente
+            </button>
+          </div>
+        ) : (
+          agents.map((agent) => (
           <div
             key={agent.id}
             style={{
@@ -233,7 +225,7 @@ export default function AgentsPage() {
               </button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {/* Config Modal */}

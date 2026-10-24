@@ -12,35 +12,7 @@ interface Campaign {
   scheduledFor: string
 }
 
-const INITIAL_CAMPAIGNS: Campaign[] = [
-  {
-    id: 'camp-1',
-    title: 'Lanzamiento Agentes IA B2B Retail',
-    client: 'RetailMax S.A.',
-    channel: 'LinkedIn',
-    status: 'pending_approval',
-    contentSnippet: '¿Cómo automatizar el 80% de las consultas de catálogo sin perder el trato humano? Descubre la solución que implementamos con NexusAI...',
-    scheduledFor: '26 Oct 2026',
-  },
-  {
-    id: 'camp-2',
-    title: 'Campaña Retargeting Black Friday',
-    client: 'BrandGrow Marketing',
-    channel: 'Meta Ads',
-    status: 'approved',
-    contentSnippet: 'Aumenta tus conversiones este trimestre. Descarga el caso de éxito de optimización publicitaria con IA predictiva.',
-    scheduledFor: '28 Oct 2026',
-  },
-  {
-    id: 'camp-3',
-    title: 'Newsletter Mensual Tendencias Tech 2027',
-    client: 'TechCo Global',
-    channel: 'Email Marketing',
-    status: 'published',
-    contentSnippet: 'Edición #14: Los nuevos estándares en agentes autónomos, RAG seguro y monolitos modernos con Supabase.',
-    scheduledFor: '19 Oct 2026',
-  },
-]
+const INITIAL_CAMPAIGNS: Campaign[] = []
 
 const channelBadges = {
   LinkedIn: { bg: 'rgba(10, 102, 194, 0.2)', text: '#60a5fa', border: 'rgba(10, 102, 194, 0.4)' },
@@ -176,9 +148,33 @@ export default function CampaignsPage() {
         Campañas Programadas & Estados
       </h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.25rem' }}>
-        {campaigns.map((camp) => {
-          const chBadge = channelBadges[camp.channel]
-          const stBadge = statusMap[camp.status]
+        {campaigns.length === 0 ? (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              padding: '3.5rem 2rem',
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px dashed rgba(147, 51, 234, 0.25)',
+              borderRadius: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>📢</div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
+              No tienes campañas programadas todavía
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              Usa el generador con Gemini 2.0 arriba para redactar copies persuasivos y programar campañas en LinkedIn, Meta o Email.
+            </p>
+          </div>
+        ) : (
+          campaigns.map((camp) => {
+            const chBadge = channelBadges[camp.channel]
+            const stBadge = statusMap[camp.status]
           return (
             <div
               key={camp.id}
@@ -245,7 +241,7 @@ export default function CampaignsPage() {
               </div>
             </div>
           )
-        })}
+        }))}
       </div>
     </div>
   )

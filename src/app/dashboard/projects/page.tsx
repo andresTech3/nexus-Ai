@@ -15,52 +15,7 @@ interface Project {
   description: string
 }
 
-const INITIAL_PROJECTS: Project[] = [
-  {
-    id: 'proj-1',
-    name: 'Automatización E-commerce RetailMax',
-    client: 'RetailMax S.A.',
-    status: 'En curso',
-    progress: 75,
-    dueDate: '28 Oct 2026',
-    budget: '$4,200',
-    priority: 'Alta',
-    description: 'Integración de agentes para atención al cliente y gestión de inventario en tiempo real.',
-  },
-  {
-    id: 'proj-2',
-    name: 'Chatbot Multicanal Soporte TechCo',
-    client: 'TechCo Global',
-    status: 'Revisión',
-    progress: 90,
-    dueDate: '22 Oct 2026',
-    budget: '$3,800',
-    priority: 'Alta',
-    description: 'Bot de WhatsApp y Web con IA de Gemini conectado a base de conocimiento documental.',
-  },
-  {
-    id: 'proj-3',
-    name: 'Dashboard Analytics & IA BrandGrow',
-    client: 'BrandGrow Marketing',
-    status: 'En curso',
-    progress: 45,
-    dueDate: '15 Nov 2026',
-    budget: '$6,500',
-    priority: 'Media',
-    description: 'Panel de métricas con predicción de retención de clientes mediante IA generativa.',
-  },
-  {
-    id: 'proj-4',
-    name: 'Automatización de Facturas & CRM',
-    client: 'SaaS Solutions',
-    status: 'Pendiente',
-    progress: 10,
-    dueDate: '30 Nov 2026',
-    budget: '$2,900',
-    priority: 'Baja',
-    description: 'Flujo n8n auto-hospedado para procesar facturas PDF con OCR y alimentar el CRM.',
-  },
-]
+const INITIAL_PROJECTS: Project[] = []
 
 const statusStyles = {
   'En curso': { bg: 'rgba(168, 85, 247, 0.15)', text: '#c084fc', border: 'rgba(168, 85, 247, 0.3)' },
@@ -191,8 +146,43 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.25rem' }}>
-        {filteredProjects.map((p) => {
-          const st = statusStyles[p.status]
+        {filteredProjects.length === 0 ? (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              padding: '3.5rem 2rem',
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px dashed rgba(147, 51, 234, 0.25)',
+              borderRadius: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>📁</div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
+              {projects.length === 0 ? 'No tienes proyectos registrados todavía' : 'No se encontraron proyectos con ese filtro'}
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              {projects.length === 0
+                ? 'Empieza creando tu primer proyecto para gestionar entregables, plazos de entrega y presupuestos.'
+                : 'Prueba cambiando los términos de búsqueda o el filtro de estado.'}
+            </p>
+            {projects.length === 0 && (
+              <button
+                onClick={() => setShowModal(true)}
+                className="btn btn-primary"
+                style={{ padding: '0.65rem 1.4rem', fontSize: '0.875rem' }}
+              >
+                + Crear Primer Proyecto
+              </button>
+            )}
+          </div>
+        ) : (
+          filteredProjects.map((p) => {
+            const st = statusStyles[p.status]
           return (
             <div
               key={p.id}
@@ -283,7 +273,7 @@ export default function ProjectsPage() {
               </div>
             </div>
           )
-        })}
+        }))}
       </div>
 
       {/* Modal Crear Proyecto */}

@@ -14,41 +14,7 @@ interface Order {
   reference: string
 }
 
-const INITIAL_ORDERS: Order[] = [
-  {
-    id: 'ord-1',
-    orderNumber: 'ORD-2026-088',
-    clientName: 'RetailMax S.A.',
-    amountCents: 420000,
-    currency: 'USD',
-    status: 'paid',
-    paymentMethod: 'Transferencia Bancaria SEPA',
-    paidAt: '18 Oct 2026',
-    reference: 'TXN-984128471',
-  },
-  {
-    id: 'ord-2',
-    orderNumber: 'ORD-2026-089',
-    clientName: 'TechCo Global',
-    amountCents: 265000,
-    currency: 'USD',
-    status: 'paid',
-    paymentMethod: 'Stripe Sandbox Test',
-    paidAt: '21 Oct 2026',
-    reference: 'pi_test_3N8x749120',
-  },
-  {
-    id: 'ord-3',
-    orderNumber: 'ORD-2026-090',
-    clientName: 'Mendoza Tech S.L.',
-    amountCents: 150000,
-    currency: 'USD',
-    status: 'pending',
-    paymentMethod: 'Pendiente de Confirmación',
-    paidAt: null,
-    reference: 'REF-PENDING-003',
-  },
-]
+const INITIAL_ORDERS: Order[] = []
 
 const statusBadges = {
   paid: { label: 'Pagado', bg: 'rgba(74, 222, 128, 0.15)', text: '#4ade80', border: 'rgba(74, 222, 128, 0.3)' },
@@ -65,6 +31,10 @@ export default function OrdersPage() {
     paymentMethod: 'Transferencia Bancaria',
     reference: '',
   })
+
+  const confirmedCents = orders.filter((o) => o.status === 'paid').reduce((sum, o) => sum + o.amountCents, 0)
+  const pendingOrders = orders.filter((o) => o.status === 'pending')
+  const pendingCents = pendingOrders.reduce((sum, o) => sum + o.amountCents, 0)
 
   const formatMoney = (cents: number, cur: string) => {
     return new Intl.NumberFormat('en-US', {
@@ -121,17 +91,17 @@ export default function OrdersPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <div className="metric-card">
           <div className="metric-label">Ingresos Confirmados</div>
-          <div className="metric-value" style={{ color: '#4ade80' }}>$6,850</div>
+          <div className="metric-value" style={{ color: '#4ade80' }}>{formatMoney(confirmedCents, 'USD')}</div>
           <div className="metric-change">Fondos conciliados</div>
         </div>
         <div className="metric-card">
           <div className="metric-label">Facturación por Cobrar</div>
-          <div className="metric-value" style={{ color: '#facc15' }}>$1,500</div>
-          <div className="metric-change">1 orden pendiente</div>
+          <div className="metric-value" style={{ color: '#facc15' }}>{formatMoney(pendingCents, 'USD')}</div>
+          <div className="metric-change">{pendingOrders.length} {pendingOrders.length === 1 ? 'orden pendiente' : 'órdenes pendientes'}</div>
         </div>
         <div className="metric-card">
           <div className="metric-label">Margen Operativo Bruto</div>
-          <div className="metric-value" style={{ color: '#38bdf8' }}>92.4%</div>
+          <div className="metric-value" style={{ color: '#38bdf8' }}>{orders.length === 0 ? '100%' : '92.4%'}</div>
           <div className="metric-change">Infraestructura Free Tier</div>
         </div>
       </div>
@@ -167,8 +137,28 @@ export default function OrdersPage() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((ord) => {
-              const badge = statusBadges[ord.status]
+            {orders.length === 0 ? (
+              <tr>
+                <td colSpan={7} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>💳</div>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
+                    No hay órdenes ni cobros registrados todavía
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '1.25rem' }}>
+                    Registra cobros administrativos, facturas pagadas o transferencias de clientes.
+                  </div>
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="btn btn-primary"
+                    style={{ padding: '0.55rem 1.25rem', fontSize: '0.85rem' }}
+                  >
+                    + Registrar Pago
+                  </button>
+                </td>
+              </tr>
+            ) : (
+              orders.map((ord) => {
+                const badge = statusBadges[ord.status]
               return (
                 <tr
                   key={ord.id}
@@ -212,7 +202,7 @@ export default function OrdersPage() {
                   </td>
                 </tr>
               )
-            })}
+            }))}
           </tbody>
         </table>
       </div>

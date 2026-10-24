@@ -12,13 +12,7 @@ interface AuditLog {
   ipAddress: string
 }
 
-const INITIAL_LOGS: AuditLog[] = [
-  { id: 'log-1', timestamp: '24 Oct 2026 12:41', actor: 'andresnarvaez304@gmail.com', action: 'auth.login_success', resource: 'session:web', status: 'success', ipAddress: '127.0.0.1' },
-  { id: 'log-2', timestamp: '24 Oct 2026 12:40', actor: 'system.database_trigger', action: 'organization.membership_create', resource: 'org:andrestech', status: 'success', ipAddress: 'supabase-pooler' },
-  { id: 'log-3', timestamp: '24 Oct 2026 12:37', actor: 'tetramax10@gmail.com', action: 'auth.user_signup', resource: 'user:tetramax', status: 'success', ipAddress: '127.0.0.1' },
-  { id: 'log-4', timestamp: '24 Oct 2026 12:33', actor: 'andresnarvaez304@gmail.com', action: 'api.request_crm_clients', resource: 'GET /api/v1/crm/clients', status: 'success', ipAddress: '127.0.0.1' },
-  { id: 'log-5', timestamp: '24 Oct 2026 09:15', actor: 'worker.cron_service', action: 'automation.job_executed', resource: 'job:leads_qualification', status: 'success', ipAddress: 'internal-worker' },
-]
+const INITIAL_LOGS: AuditLog[] = []
 
 export default function ReportsPage() {
   const [logs] = useState<AuditLog[]>(INITIAL_LOGS)
@@ -48,17 +42,17 @@ export default function ReportsPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem', marginBottom: '2rem' }}>
         <div className="metric-card">
           <div className="metric-label">Eficiencia Operativa</div>
-          <div className="metric-value" style={{ color: '#4ade80' }}>99.8%</div>
+          <div className="metric-value" style={{ color: '#4ade80' }}>100%</div>
           <div className="metric-change">Sin tiempos de caída de base de datos</div>
         </div>
         <div className="metric-card">
           <div className="metric-label">Tiempo Medio de Respuesta IA</div>
-          <div className="metric-value" style={{ color: '#38bdf8' }}>640 ms</div>
+          <div className="metric-value" style={{ color: '#38bdf8' }}>{logs.length === 0 ? '—' : '640 ms'}</div>
           <div className="metric-change">Adaptador Gemini 2.0 Flash</div>
         </div>
         <div className="metric-card">
           <div className="metric-label">Volumen de Solicitudes API</div>
-          <div className="metric-value" style={{ color: '#c084fc' }}>3,410</div>
+          <div className="metric-value" style={{ color: '#c084fc' }}>{logs.length}</div>
           <div className="metric-change">Rutas /api/v1 aisladas por tenant</div>
         </div>
       </div>
@@ -103,46 +97,60 @@ export default function ReportsPage() {
             </tr>
           </thead>
           <tbody>
-            {logs.map((log) => (
-              <tr
-                key={log.id}
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.15s' }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
-              >
-                <td style={{ padding: '0.9rem 1.5rem', color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem', fontFamily: 'monospace' }}>
-                  {log.timestamp}
-                </td>
-                <td style={{ padding: '0.9rem 1.5rem', color: 'white', fontWeight: 600, fontSize: '0.85rem' }}>
-                  {log.actor}
-                </td>
-                <td style={{ padding: '0.9rem 1.5rem', color: 'var(--color-purple-400)', fontFamily: 'monospace', fontSize: '0.82rem' }}>
-                  {log.action}
-                </td>
-                <td style={{ padding: '0.9rem 1.5rem', color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem' }}>
-                  {log.resource}
-                </td>
-                <td style={{ padding: '0.9rem 1.5rem', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', fontFamily: 'monospace' }}>
-                  {log.ipAddress}
-                </td>
-                <td style={{ padding: '0.9rem 1.5rem' }}>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      padding: '0.15rem 0.5rem',
-                      borderRadius: '999px',
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
-                      background: 'rgba(74, 222, 128, 0.15)',
-                      color: '#4ade80',
-                      border: '1px solid rgba(74, 222, 128, 0.3)',
-                    }}
-                  >
-                    ✓ Correcto
-                  </span>
+            {logs.length === 0 ? (
+              <tr>
+                <td colSpan={6} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>📊</div>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
+                    No hay eventos de auditoría registrados todavía
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
+                    Las llamadas a la API, inicios de sesión y ejecuciones de agentes se auditarán aquí automáticamente en tiempo real.
+                  </div>
                 </td>
               </tr>
-            ))}
+            ) : (
+              logs.map((log) => (
+                <tr
+                  key={log.id}
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.15s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                >
+                  <td style={{ padding: '0.9rem 1.5rem', color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem', fontFamily: 'monospace' }}>
+                    {log.timestamp}
+                  </td>
+                  <td style={{ padding: '0.9rem 1.5rem', color: 'white', fontWeight: 600, fontSize: '0.85rem' }}>
+                    {log.actor}
+                  </td>
+                  <td style={{ padding: '0.9rem 1.5rem', color: 'var(--color-purple-400)', fontFamily: 'monospace', fontSize: '0.82rem' }}>
+                    {log.action}
+                  </td>
+                  <td style={{ padding: '0.9rem 1.5rem', color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem' }}>
+                    {log.resource}
+                  </td>
+                  <td style={{ padding: '0.9rem 1.5rem', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', fontFamily: 'monospace' }}>
+                    {log.ipAddress}
+                  </td>
+                  <td style={{ padding: '0.9rem 1.5rem' }}>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '999px',
+                        fontSize: '0.7rem',
+                        fontWeight: 700,
+                        background: 'rgba(74, 222, 128, 0.15)',
+                        color: '#4ade80',
+                        border: '1px solid rgba(74, 222, 128, 0.3)',
+                      }}
+                    >
+                      ✓ Correcto
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

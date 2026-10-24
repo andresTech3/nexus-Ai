@@ -13,48 +13,7 @@ interface Workflow {
   runsCount: number
 }
 
-const INITIAL_WORKFLOWS: Workflow[] = [
-  {
-    id: 'wf-1',
-    name: 'Captura y Calificación de Leads Web',
-    trigger: 'Webhook: Formulario de Contacto',
-    actions: ['Validar Payload Zod', 'Consultar Gemini 2.0 Lead Score', 'Guardar en CRM Supabase', 'Notificación Slack'],
-    status: 'active',
-    lastRun: 'Hace 12 mins',
-    successRate: '99.4%',
-    runsCount: 428,
-  },
-  {
-    id: 'wf-2',
-    name: 'Procesamiento de Facturas y Extracción OCR',
-    trigger: 'Email Inbound (PDF Adjunto)',
-    actions: ['Extraer Texto OCR', 'Clasificar con Gemini', 'Crear Registro en Finanzas', 'Emitir Comprobante'],
-    status: 'active',
-    lastRun: 'Hace 1 hora',
-    successRate: '98.1%',
-    runsCount: 164,
-  },
-  {
-    id: 'wf-3',
-    name: 'Envío Semanal de Informes a Clientes',
-    trigger: 'Cron: Cada Lunes 08:00 AM',
-    actions: ['Recopilar Métricas de Proyectos', 'Generar Resumen Ejecutivo con IA', 'Enviar Email Transaccional'],
-    status: 'active',
-    lastRun: 'Hace 5 días',
-    successRate: '100%',
-    runsCount: 52,
-  },
-  {
-    id: 'wf-4',
-    name: 'Sincronización de Catálogo con Shopify',
-    trigger: 'Webhook: Producto Actualizado',
-    actions: ['Transformar Esquema', 'Actualizar Cache Vectorial de Agente', 'Registrar Log de Auditoría'],
-    status: 'paused',
-    lastRun: 'Hace 2 días',
-    successRate: '95.8%',
-    runsCount: 89,
-  },
-]
+const INITIAL_WORKFLOWS: Workflow[] = []
 
 export default function AutomationsPage() {
   const [workflows, setWorkflows] = useState<Workflow[]>(INITIAL_WORKFLOWS)
@@ -121,7 +80,50 @@ export default function AutomationsPage() {
 
       {/* Grid of Workflows */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '1.25rem' }}>
-        {workflows.map((wf) => (
+        {workflows.length === 0 ? (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              padding: '3.5rem 2rem',
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px dashed rgba(147, 51, 234, 0.25)',
+              borderRadius: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>⚡</div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
+              No tienes flujos de automatización todavía
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              Diseña tuberías de eventos para conectar webhooks, procesar leads con IA y sincronizar datos con el CRM en tiempo real.
+            </p>
+            <button
+              onClick={() => {
+                const sample: Workflow = {
+                  id: `wf-${Date.now()}`,
+                  name: 'Captura y Calificación de Leads Web',
+                  trigger: 'Webhook: Formulario de Contacto',
+                  actions: ['Validar Payload Zod', 'Consultar Gemini 2.0 Lead Score', 'Guardar en CRM Supabase'],
+                  status: 'active',
+                  lastRun: 'Nunca',
+                  successRate: '100%',
+                  runsCount: 0,
+                }
+                setWorkflows([sample])
+              }}
+              className="btn btn-primary"
+              style={{ padding: '0.65rem 1.4rem', fontSize: '0.875rem' }}
+            >
+              + Crear Primer Flujo
+            </button>
+          </div>
+        ) : (
+          workflows.map((wf) => (
           <div
             key={wf.id}
             style={{
@@ -213,7 +215,7 @@ export default function AutomationsPage() {
               </div>
             </div>
           </div>
-        ))}
+        )))}
       </div>
     </div>
   )

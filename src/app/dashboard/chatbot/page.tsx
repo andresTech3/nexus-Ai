@@ -47,7 +47,7 @@ export default function ChatbotPage() {
       if (lower.includes('precio') || lower.includes('cotiza') || lower.includes('cuanto')) {
         reply = 'Según el catálogo de servicios de la agencia, el paquete de "Automatización con Agentes IA" tiene una tarifa base estimada de $3,500 USD, con un plazo promedio de entrega de 3 semanas.'
       } else if (lower.includes('cliente') || lower.includes('crm')) {
-        reply = 'He verificado la base de datos de CRM de tu organización: actualmente cuentas con 3 clientes activos y 1 prospecto en seguimiento. ¿Deseas redactar un email de seguimiento automático?'
+        reply = 'He verificado la base de datos de CRM de tu organización: puedes consultar y registrar contactos desde la sección Clientes CRM. ¿Deseas redactar una propuesta o registrar un nuevo cliente?'
       } else if (lower.includes('gemini') || lower.includes('modelo')) {
         reply = 'Estamos conectados al adaptador oficial de Google Gemini 2.0 Flash con límite gratuito garantizado. Todas las respuestas se sanitizan para evitar fugas de datos sensibles.'
       } else {

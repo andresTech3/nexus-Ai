@@ -1,8 +1,10 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOutAction } from '@/app/(auth)/actions'
+import { createClient } from '@/lib/supabase/client'
 
 interface NavLinkItem {
   id: string
@@ -55,6 +57,28 @@ const sidebarSections: NavSection[] = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  const [userName, setUserName] = useState<string>('Usuario')
+  const [userOrg, setUserOrg] = useState<string>('Mi Organización')
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const first = user.user_metadata?.first_name || ''
+          const last = user.user_metadata?.last_name || ''
+          const fullName = [first, last].filter(Boolean).join(' ')
+          const fallback = user.email?.split('@')[0] || 'Usuario'
+          setUserName(fullName || fallback)
+          setUserOrg(user.user_metadata?.company || 'Mi Organización')
+        }
+      } catch (err) {
+        console.error('Error loading user profile:', err)
+      }
+    }
+    loadUser()
+  }, [])
 
   const isLinkActive = (href: string) => {
     if (href === '/dashboard') {
@@ -156,7 +180,7 @@ export function Sidebar() {
             boxShadow: '0 0 12px rgba(147, 51, 234, 0.4)',
           }}
         >
-          A
+          {userName.charAt(0).toUpperCase() || 'U'}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
@@ -169,10 +193,10 @@ export function Sidebar() {
               whiteSpace: 'nowrap',
             }}
           >
-            Andrés (Admin)
+            {userName}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)' }}>
-            Empresa activa
+          <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {userOrg}
           </div>
         </div>
         <form action={signOutAction}>

@@ -13,48 +13,7 @@ interface ServiceItem {
   features: string[]
 }
 
-const INITIAL_SERVICES: ServiceItem[] = [
-  {
-    id: 'srv-1',
-    name: 'Auditoría & Plan de Automatización con IA',
-    category: 'Consultoría',
-    priceCents: 150000, // $1,500.00
-    currency: 'USD',
-    estimatedDays: 7,
-    description: 'Análisis completo de cuellos de botella operativos en la empresa del cliente con mapa de integración y cálculo de ROI.',
-    features: ['Entrevista diagnóstica', 'Diseño de arquitectura modular', 'Informe ejecutivo de 20 páginas'],
-  },
-  {
-    id: 'srv-2',
-    name: 'Despliegue de Chatbot RAG Multicanal',
-    category: 'Desarrollo IA',
-    priceCents: 380000, // $3,800.00
-    currency: 'USD',
-    estimatedDays: 14,
-    description: 'Implementación de asistente conversacional para WhatsApp, Web y Telegram integrado a base de conocimiento vectorial.',
-    features: ['Ingesta de documentos PDF/Web', 'Gemini 2.0 Flash configurado', 'Panel de moderación en tiempo real'],
-  },
-  {
-    id: 'srv-3',
-    name: 'Sistema Automatizado de Captura y Calificación de Leads',
-    category: 'Automatización',
-    priceCents: 290000, // $2,900.00
-    currency: 'USD',
-    estimatedDays: 10,
-    description: 'Flujo extremo a extremo desde el formulario web hasta el CRM de Supabase con puntuación predictiva por IA.',
-    features: ['Webhooks validados con Zod', 'Alertas instantáneas a Slack/Email', 'Filtro anti-spam con honeypot'],
-  },
-  {
-    id: 'srv-4',
-    name: 'Soporte, Mantenimiento y Cuota de Tokens Mensual',
-    category: 'Recurrente',
-    priceCents: 85000, // $850.00 / mes
-    currency: 'USD',
-    estimatedDays: 30,
-    description: 'Mantenimiento continuo de prompts, actualización de modelos, monitorización de errores y auditoría mensual.',
-    features: ['SLA de respuesta < 4 horas', 'Ajuste de fine-tuning continuo', 'Backups diarios automatizados'],
-  },
-]
+const INITIAL_SERVICES: ServiceItem[] = []
 
 export default function CatalogPage() {
   const [services, setServices] = useState<ServiceItem[]>(INITIAL_SERVICES)
@@ -117,7 +76,38 @@ export default function CatalogPage() {
 
       {/* Services Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '1.5rem' }}>
-        {services.map((srv) => (
+        {services.length === 0 ? (
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              padding: '3.5rem 2rem',
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px dashed rgba(147, 51, 234, 0.25)',
+              borderRadius: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>📦</div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
+              No tienes servicios registrados en el catálogo todavía
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              Crea tu oferta de paquetes, desarrollos de IA o consultorías para poder incluirlos de forma ágil en propuestas comerciales.
+            </p>
+            <button
+              onClick={() => setShowModal(true)}
+              className="btn btn-primary"
+              style={{ padding: '0.65rem 1.4rem', fontSize: '0.875rem' }}
+            >
+              + Agregar Primer Servicio
+            </button>
+          </div>
+        ) : (
+          services.map((srv) => (
           <div
             key={srv.id}
             style={{
@@ -202,7 +192,7 @@ export default function CatalogPage() {
               </button>
             </div>
           </div>
-        ))}
+        )))}
       </div>
 
       {/* Modal Añadir Servicio */}

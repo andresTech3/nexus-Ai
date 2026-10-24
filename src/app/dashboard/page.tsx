@@ -1,100 +1,120 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 
-const metrics = [
-  { id: 'metric-projects', label: 'Proyectos activos', value: '12', change: '+3 este mes', positive: true, icon: '◈' },
-  { id: 'metric-clients', label: 'Clientes totales', value: '47', change: '+8 este mes', positive: true, icon: '◎' },
-  { id: 'metric-ai-calls', label: 'Llamadas IA hoy', value: '1,284', change: '+12% vs ayer', positive: true, icon: '⚡' },
-  { id: 'metric-revenue', label: 'Ingresos del mes', value: '$24,560', change: '+18% vs anterior', positive: true, icon: '$' },
-]
+interface Project {
+  id: string
+  name: string
+  status: 'En curso' | 'Revisión' | 'Pendiente' | 'Completado'
+  progress: number
+  client: string
+  dueDate: string
+}
 
-const recentProjects = [
-  { id: 'proj-1', name: 'Automatización E-commerce RetailMax', status: 'En curso', progress: 75, client: 'RetailMax', dueDate: '28 Oct 2026' },
-  { id: 'proj-2', name: 'Chatbot de Soporte TechCo', status: 'Revisión', progress: 90, client: 'TechCo', dueDate: '22 Oct 2026' },
-  { id: 'proj-3', name: 'Dashboard Analytics BrandGrow', status: 'En curso', progress: 45, client: 'BrandGrow', dueDate: '15 Nov 2026' },
-  { id: 'proj-4', name: 'Agentes CRM SaaS Solutions', status: 'Pendiente', progress: 10, client: 'SaaS Solutions', dueDate: '30 Nov 2026' },
+const INITIAL_METRICS = [
+  { id: 'metric-projects', label: 'Proyectos activos', value: '0', change: 'Sin proyectos aún', positive: true, icon: '◈' },
+  { id: 'metric-clients', label: 'Clientes totales', value: '0', change: 'Sin clientes aún', positive: true, icon: '◎' },
+  { id: 'metric-ai-calls', label: 'Llamadas IA hoy', value: '0', change: '0 peticiones', positive: true, icon: '⚡' },
+  { id: 'metric-revenue', label: 'Ingresos del mes', value: '$0.00', change: 'Sin facturación aún', positive: true, icon: '$' },
 ]
 
 const statusColors: Record<string, string> = {
-  'En curso': '#a855f7',
+  'En curso': 'var(--color-tiger-gold)',
   'Revisión': '#22d3ee',
-  'Pendiente': 'rgba(255,255,255,0.3)',
+  'Pendiente': 'rgba(255,255,255,0.4)',
   'Completado': '#4ade80',
 }
 
 export default function DashboardPage() {
+  const [metrics] = useState(INITIAL_METRICS)
+  const [recentProjects] = useState<Project[]>([]) // Vacío por defecto para nuevos usuarios
+
   return (
     <div id="dashboard-overview">
       {/* Header */}
       <div className="dashboard-header" id="dashboard-header">
-          <div>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 800, color: 'white', marginBottom: '0.25rem' }}>
-              Panel de Control
-            </h1>
-            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
-              Bienvenido de vuelta. Aquí está el resumen de hoy.
+        <div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', fontWeight: 800, color: 'var(--color-tiger-gold)', marginBottom: '0.25rem', textTransform: 'uppercase' }}>
+            Panel de Control
+          </h1>
+          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)' }}>
+            Bienvenido a tu suite de Agencia IA. Todo tu entorno está listo y configurado.
+          </p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="badge badge-secondary" style={{ fontSize: '11px' }}>
+            {new Date().toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase()}
+          </div>
+          <Link href="/dashboard/projects" className="btn btn-primary btn-sm" id="new-project-btn">
+            + Nuevo proyecto
+          </Link>
+        </div>
+      </div>
+
+      {/* Metrics */}
+      <div className="dashboard-grid" id="metrics-grid">
+        {metrics.map((metric) => (
+          <div key={metric.id} className="metric-card" id={metric.id}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+              <div className="metric-label">{metric.label}</div>
+              <div style={{
+                width: 32,
+                height: 32,
+                background: 'var(--surface-charred-core)',
+                border: '1px solid var(--color-cardamom-brown)',
+                borderRadius: '9999px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.875rem',
+                color: 'var(--color-tiger-gold)',
+              }}>
+                {metric.icon}
+              </div>
+            </div>
+            <div className="metric-value">{metric.value}</div>
+            <div className={`metric-change ${!metric.positive ? 'negative' : ''}`} style={{ color: 'rgba(250, 174, 51, 0.7)' }}>
+              {metric.change}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Projects Container */}
+      <div
+        style={{
+          background: 'var(--surface-spice-card)',
+          border: '1px solid var(--color-cardamom-brown)',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          marginBottom: '2rem',
+        }}
+        id="projects-table-container"
+      >
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px dotted var(--color-cardamom-brown)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-tiger-gold)', textTransform: 'uppercase' }}>
+            Proyectos Recientes
+          </h2>
+          <Link href="/dashboard/projects" id="view-all-projects" style={{ fontSize: '0.8125rem', color: 'var(--color-tiger-gold)', fontWeight: 600 }}>
+            Ver todos →
+          </Link>
+        </div>
+
+        {recentProjects.length === 0 ? (
+          <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--color-tiger-gold)' }}>◈</div>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
+              No tienes proyectos activos todavía
+            </h3>
+            <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.65)', maxWidth: '420px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
+              Tu panel está completamente listo. Comienza agregando tu primer cliente o creando un proyecto con agentes de IA.
             </p>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
-              Sáb, 17 Oct 2026
-            </div>
-            <Link href="/dashboard/projects" className="btn btn-primary btn-sm" id="new-project-btn">
-              + Nuevo proyecto
+            <Link href="/dashboard/projects" className="btn btn-primary btn-sm">
+              + Crear Primer Proyecto
             </Link>
           </div>
-        </div>
-
-        {/* Metrics */}
-        <div className="dashboard-grid" id="metrics-grid">
-          {metrics.map((metric) => (
-            <div key={metric.id} className="metric-card" id={metric.id}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                <div className="metric-label">{metric.label}</div>
-                <div style={{
-                  width: 32,
-                  height: 32,
-                  background: 'rgba(147,51,234,0.15)',
-                  border: '1px solid rgba(147,51,234,0.25)',
-                  borderRadius: '0.5rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.875rem',
-                  color: 'var(--color-purple-400)',
-                }}>
-                  {metric.icon}
-                </div>
-              </div>
-              <div className="metric-value">{metric.value}</div>
-              <div className={`metric-change ${!metric.positive ? 'negative' : ''}`}>
-                <span>{metric.positive ? '↑' : '↓'}</span>
-                {metric.change}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Projects table */}
-        <div
-          style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(147,51,234,0.15)',
-            borderRadius: '1rem',
-            overflow: 'hidden',
-            marginBottom: '2rem',
-          }}
-          id="projects-table-container"
-        >
-          <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(147,51,234,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, color: 'white' }}>
-              Proyectos Recientes
-            </h2>
-            <Link href="/dashboard/projects" id="view-all-projects" style={{ fontSize: '0.8125rem', color: 'var(--color-purple-400)', fontWeight: 500 }}>
-              Ver todos →
-            </Link>
-          </div>
+        ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }} id="projects-table">
               <thead>
@@ -111,9 +131,7 @@ export default function DashboardPage() {
                   <tr
                     key={project.id}
                     id={`project-row-${project.id}`}
-                    style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 150ms' }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)' }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}
+                    style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}
                   >
                     <td style={{ padding: '1rem 1.5rem', fontSize: '0.9375rem', color: 'white', fontWeight: 500 }}>
                       {project.name}
@@ -134,24 +152,13 @@ export default function DashboardPage() {
                         color: statusColors[project.status],
                         border: `1px solid ${statusColors[project.status]}40`,
                       }}>
-                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: statusColors[project.status], display: 'inline-block' }} />
                         {project.status}
                       </span>
                     </td>
                     <td style={{ padding: '1rem 1.5rem', width: 160 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 9999, overflow: 'hidden' }}>
-                          <div style={{
-                            height: '100%',
-                            width: `${project.progress}%`,
-                            background: 'linear-gradient(90deg, #9333ea, #7c3aed)',
-                            borderRadius: 9999,
-                          }} />
-                        </div>
-                        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', minWidth: 32 }}>
-                          {project.progress}%
-                        </span>
-                      </div>
+                      <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>
+                        {project.progress}%
+                      </span>
                     </td>
                     <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
                       {project.dueDate}
@@ -161,49 +168,41 @@ export default function DashboardPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Quick actions row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }} id="quick-actions">
-          {[
-            { id: 'qa-new-client', label: 'Clientes CRM', icon: '◎', href: '/dashboard/clients' },
-            { id: 'qa-new-quote', label: 'Cotizaciones', icon: '$', href: '/dashboard/quotes' },
-            { id: 'qa-new-agent', label: 'Agentes IA', icon: '⚡', href: '/dashboard/agents' },
-            { id: 'qa-view-reports', label: 'Ver informes', icon: '▤', href: '/dashboard/reports' },
-          ].map((action) => (
-            <Link
-              key={action.id}
-              href={action.href}
-              id={action.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '1rem',
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(147,51,234,0.15)',
-                borderRadius: '0.75rem',
-                color: 'white',
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                transition: 'all 150ms',
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement
-                el.style.borderColor = 'rgba(147,51,234,0.4)'
-                el.style.background = 'rgba(147,51,234,0.08)'
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement
-                el.style.borderColor = 'rgba(147,51,234,0.15)'
-                el.style.background = 'rgba(255,255,255,0.02)'
-              }}
-            >
-              <span style={{ fontSize: '1.125rem', color: 'var(--color-purple-400)' }}>{action.icon}</span>
-              {action.label}
-            </Link>
-          ))}
-        </div>
+      {/* Quick actions row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }} id="quick-actions">
+        {[
+          { id: 'qa-new-client', label: 'Clientes CRM', icon: '◎', href: '/dashboard/clients' },
+          { id: 'qa-new-quote', label: 'Cotizaciones', icon: '$', href: '/dashboard/quotes' },
+          { id: 'qa-new-agent', label: 'Agentes IA', icon: '⚡', href: '/dashboard/agents' },
+          { id: 'qa-view-reports', label: 'Ver informes', icon: '▤', href: '/dashboard/reports' },
+        ].map((action) => (
+          <Link
+            key={action.id}
+            href={action.href}
+            id={action.id}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              padding: '1rem 1.25rem',
+              background: 'var(--surface-charred-core)',
+              border: '1px solid var(--color-cardamom-brown)',
+              borderRadius: '8px',
+              color: '#ffffff',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              textDecoration: 'none',
+              transition: 'border-color 150ms',
+            }}
+          >
+            <span style={{ fontSize: '1.125rem', color: 'var(--color-tiger-gold)' }}>{action.icon}</span>
+            {action.label}
+          </Link>
+        ))}
+      </div>
     </div>
   )
 }

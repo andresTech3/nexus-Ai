@@ -1,11 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function SettingsPage() {
-  const [orgName, setOrgName] = useState('Andrestech AI')
-  const [slug, setSlug] = useState('andrestech-ai')
+  const [orgName, setOrgName] = useState('')
+  const [slug, setSlug] = useState('')
   const [saveToast, setSaveToast] = useState(false)
+
+  useEffect(() => {
+    async function loadOrg() {
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const comp = user.user_metadata?.company || ''
+          setOrgName(comp)
+          setSlug(comp.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))
+        }
+      } catch (err) {
+        console.error('Error loading org settings:', err)
+      }
+    }
+    loadOrg()
+  }, [])
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,6 +87,7 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={orgName}
+                placeholder="Ej: Mi Agencia Digital"
                 onChange={(e) => setOrgName(e.target.value)}
                 style={{ width: '100%', padding: '0.65rem 0.85rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', outline: 'none' }}
               />
@@ -80,6 +99,7 @@ export default function SettingsPage() {
               <input
                 type="text"
                 value={slug}
+                placeholder="ej: mi-agencia-digital"
                 onChange={(e) => setSlug(e.target.value)}
                 style={{ width: '100%', padding: '0.65rem 0.85rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', outline: 'none' }}
               />

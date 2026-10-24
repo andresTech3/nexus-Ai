@@ -12,53 +12,7 @@ interface Task {
   dueDate: string
 }
 
-const INITIAL_TASKS: Task[] = [
-  {
-    id: 't-1',
-    title: 'Configurar Webhook de Shopify con Agente IA',
-    project: 'RetailMax E-commerce',
-    status: 'in_progress',
-    priority: 'Alta',
-    assignee: 'Andrés N.',
-    dueDate: '25 Oct',
-  },
-  {
-    id: 't-2',
-    title: 'Crear System Prompt con restricciones de catálogo',
-    project: 'TechCo Chatbot',
-    status: 'review',
-    priority: 'Alta',
-    assignee: 'Carlos M.',
-    dueDate: '22 Oct',
-  },
-  {
-    id: 't-3',
-    title: 'Subir documentos PDF a Base de Conocimiento RAG',
-    project: 'TechCo Chatbot',
-    status: 'done',
-    priority: 'Media',
-    assignee: 'Andrés N.',
-    dueDate: '20 Oct',
-  },
-  {
-    id: 't-4',
-    title: 'Diseñar Dashboard de KPIs en tiempo real',
-    project: 'BrandGrow Marketing',
-    status: 'in_progress',
-    priority: 'Media',
-    assignee: 'Laura P.',
-    dueDate: '29 Oct',
-  },
-  {
-    id: 't-5',
-    title: 'Instalar worker asíncrono para colas de tareas',
-    project: 'Core Platform',
-    status: 'todo',
-    priority: 'Urgente',
-    assignee: 'Dev Team',
-    dueDate: '26 Oct',
-  },
-]
+const INITIAL_TASKS: Task[] = []
 
 const COLUMNS = [
   { id: 'todo', label: 'Por Hacer', color: '#94a3b8' },
@@ -158,7 +112,25 @@ export default function TasksPage() {
 
               {/* Task Cards */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
-                {colTasks.map((task) => (
+                {colTasks.length === 0 ? (
+                  <div
+                    style={{
+                      padding: '2.5rem 1rem',
+                      textAlign: 'center',
+                      color: 'rgba(255,255,255,0.3)',
+                      fontSize: '0.8rem',
+                      border: '1px dashed rgba(255,255,255,0.06)',
+                      borderRadius: '0.625rem',
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span>Sin tareas</span>
+                  </div>
+                ) : (
+                  colTasks.map((task) => (
                   <div
                     key={task.id}
                     style={{
@@ -231,7 +203,7 @@ export default function TasksPage() {
                       </select>
                     </div>
                   </div>
-                ))}
+                )))}
               </div>
             </div>
           )
