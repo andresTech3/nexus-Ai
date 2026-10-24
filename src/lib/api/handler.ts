@@ -19,6 +19,13 @@ export interface ApiContext<TBody = any, TQuery = any> {
   params: Record<string, string>
 }
 
+function applySecurityHeaders(res: Response | NextResponse, requestId: string): Response | NextResponse {
+  res.headers.set('X-Request-ID', requestId)
+  res.headers.set('X-Content-Type-Options', 'nosniff')
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  return res
+}
+
 /**
  * Wrapper de seguridad para Route Handlers de Next.js (/api/v1/*).
  * Garantiza:
@@ -42,13 +49,19 @@ export function createApiHandler<TBody = any, TQuery = any>(
       if (options.requireAuth !== false) {
         authCtx = await getAuthContext()
         if (!authCtx) {
-          return errorResponse('Acceso no autorizado. Sesión requerida.', 401, requestId)
+          return applySecurityHeaders(
+            errorResponse('Acceso no autorizado. Sesión requerida.', 401, requestId),
+            requestId
+          )
         }
 
         if (options.minRole && !hasMinRole(authCtx, options.minRole)) {
-          return errorResponse(
-            `Acceso denegado. Se requiere rol de ${options.minRole} o superior.`,
-            403,
+          return applySecurityHeaders(
+            errorResponse(
+              `Acceso denegado. Se requiere rol de ${options.minRole} o superior.`,
+              403,
+              requestId
+            ),
             requestId
           )
         }
@@ -64,9 +77,12 @@ export function createApiHandler<TBody = any, TQuery = any>(
         const queryResult = options.querySchema.safeParse(rawQuery)
         if (!queryResult.success) {
           const firstIssue = (queryResult.error as ZodError).issues[0]
-          return errorResponse(
-            `Parámetro inválido '${firstIssue.path.join('.')}': ${firstIssue.message}`,
-            400,
+          return applySecurityHeaders(
+            errorResponse(
+              `Parámetro inválido '${firstIssue.path.join('.')}': ${firstIssue.message}`,
+              400,
+              requestId
+            ),
             requestId
           )
         }
@@ -80,15 +96,21 @@ export function createApiHandler<TBody = any, TQuery = any>(
         try {
           rawBody = await req.json()
         } catch {
-          return errorResponse('El cuerpo de la solicitud no es un JSON válido', 400, requestId)
+          return applySecurityHeaders(
+            errorResponse('El cuerpo de la solicitud no es un JSON válido', 400, requestId),
+            requestId
+          )
         }
 
         const bodyResult = options.bodySchema.safeParse(rawBody)
         if (!bodyResult.success) {
           const firstIssue = (bodyResult.error as ZodError).issues[0]
-          return errorResponse(
-            `Campo inválido '${firstIssue.path.join('.')}': ${firstIssue.message}`,
-            422,
+          return applySecurityHeaders(
+            errorResponse(
+              `Campo inválido '${firstIssue.path.join('.')}': ${firstIssue.message}`,
+              422,
+              requestId
+            ),
             requestId
           )
         }
@@ -105,14 +127,14 @@ export function createApiHandler<TBody = any, TQuery = any>(
         params: resolvedParams,
       })
 
-      // 5. Inyectar Headers de Seguridad y Trazabilidad
-      response.headers.set('X-Request-ID', requestId)
-      response.headers.set('X-Content-Type-Options', 'nosniff')
-      response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-      return response
+      // 5. Inyectar Headers de Seguridad y Trazabilidad en la respuesta exitosa
+      return applySecurityHeaders(response, requestId)
     } catch (err: any) {
       console.error(`[API Error][${requestId}]`, err?.message || err)
-      return errorResponse('Ha ocurrido un error interno en el servidor.', 500, requestId)
+      return applySecurityHeaders(
+        errorResponse('Ha ocurrido un error interno en el servidor.', 500, requestId),
+        requestId
+      )
     }
   }
 }
