@@ -1,70 +1,159 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+interface QuoteItem {
+  id: string
+  description: string
+  quantity: number
+  unit_price_cents: number
+  total_price_cents: number
+}
 
 interface Quote {
   id: string
-  quoteNumber: string
-  clientName: string
-  totalCents: number
-  status: 'draft' | 'sent' | 'accepted' | 'rejected'
-  createdAt: string
-  validUntil: string
-  items: { name: string; amountCents: number }[]
+  quote_number: string
+  client_id?: string | null
+  client?: { name: string; company_name: string; email: string } | null
+  total_cents: number
+  currency: string
+  status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'expired'
+  created_at: string
+  valid_until: string
+  notes?: string | null
+  items?: QuoteItem[]
 }
 
-const INITIAL_QUOTES: Quote[] = []
+interface ClientOption {
+  id: string
+  name: string
+  company_name: string
+}
 
-const statusBadges = {
+const statusBadges: Record<string, { label: string; bg: string; text: string; border: string }> = {
   accepted: { label: 'Aceptada', bg: 'rgba(74, 222, 128, 0.15)', text: '#4ade80', border: 'rgba(74, 222, 128, 0.3)' },
-  sent: { label: 'Enviada al Cliente', bg: 'rgba(56, 189, 248, 0.15)', text: '#38bdf8', border: 'rgba(56, 189, 248, 0.3)' },
+  sent: { label: 'Enviada', bg: 'rgba(56, 189, 248, 0.15)', text: '#38bdf8', border: 'rgba(56, 189, 248, 0.3)' },
   draft: { label: 'Borrador', bg: 'rgba(255, 255, 255, 0.08)', text: 'rgba(255,255,255,0.6)', border: 'rgba(255, 255, 255, 0.15)' },
   rejected: { label: 'Rechazada', bg: 'rgba(239, 68, 68, 0.15)', text: '#f87171', border: 'rgba(239, 68, 68, 0.3)' },
+  expired: { label: 'Vencida', bg: 'rgba(255, 255, 255, 0.05)', text: 'rgba(255,255,255,0.4)', border: 'rgba(255, 255, 255, 0.1)' },
 }
 
 export default function QuotesPage() {
-  const [quotes, setQuotes] = useState<Quote[]>(INITIAL_QUOTES)
+  const [quotes, setQuotes] = useState<Quote[]>([])
+  const [clients, setClients] = useState<ClientOption[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [submitting, setSubmitting] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [selectedClientId, setSelectedClientId] = useState<string>('')
   const [newQuote, setNewQuote] = useState({
     clientName: '',
     serviceName: 'Despliegue de Chatbot RAG Multicanal',
     price: 3800,
     validDays: 15,
+    notes: '',
   })
 
-  const totalCents = quotes.reduce((acc, q) => acc + q.totalCents, 0)
+  // Cargar cotizaciones y clientes desde la base de datos
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [qRes, cRes] = await Promise.all([
+          fetch('/api/v1/quotes?page=1&pageSize=50'),
+          fetch('/api/v1/crm/clients?page=1&pageSize=100'),
+        ])
+
+        if (qRes.ok) {
+          const qJson = await qRes.json()
+          setQuotes(qJson.data || [])
+        }
+        if (cRes.ok) {
+          const cJson = await cRes.json()
+          setClients(cJson.data || [])
+        }
+      } catch (err) {
+        console.error('Error cargando cotizaciones:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadData()
+  }, [])
+
+  const totalCents = quotes.reduce((acc, q) => acc + (q.total_cents || 0), 0)
   const acceptedQuotes = quotes.filter((q) => q.status === 'accepted')
   const acceptanceRate = quotes.length > 0 ? `${((acceptedQuotes.length / quotes.length) * 100).toFixed(0)}%` : '0%'
   const sentQuotes = quotes.filter((q) => q.status === 'sent')
-  const sentCents = sentQuotes.reduce((acc, q) => acc + q.totalCents, 0)
+  const sentCents = sentQuotes.reduce((acc, q) => acc + (q.total_cents || 0), 0)
 
-  const formatMoney = (cents: number) => {
+  const formatMoney = (cents: number, currency: string = 'USD') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currency || 'USD',
       maximumFractionDigits: 0,
-    }).format(cents / 100)
+    }).format((cents || 0) / 100)
   }
 
-  const handleCreateQuote = (e: React.FormEvent) => {
+  const handleCreateQuote = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newQuote.clientName) return
-
-    const num = `COT-2026-00${quotes.length + 1}`
-    const cents = Math.round(newQuote.price * 100)
-    const created: Quote = {
-      id: `q-${Date.now()}`,
-      quoteNumber: num,
-      clientName: newQuote.clientName,
-      totalCents: cents,
-      status: 'sent',
-      createdAt: 'Hoy',
-      validUntil: 'En 15 días',
-      items: [{ name: newQuote.serviceName, amountCents: cents }],
+    if (!selectedClientId && !newQuote.clientName.trim()) {
+      alert('Por favor selecciona o escribe el nombre del cliente.')
+      return
     }
-    setQuotes([created, ...quotes])
-    setShowModal(false)
-    setNewQuote({ clientName: '', serviceName: 'Despliegue de Chatbot RAG Multicanal', price: 3800, validDays: 15 })
+
+    setSubmitting(true)
+    try {
+      const payload = {
+        clientId: selectedClientId || undefined,
+        clientName: selectedClientId
+          ? clients.find((c) => c.id === selectedClientId)?.name || 'Cliente'
+          : newQuote.clientName,
+        serviceName: newQuote.serviceName,
+        price: Number(newQuote.price) || 0,
+        currency: 'USD',
+        validDays: Number(newQuote.validDays) || 15,
+        status: 'sent',
+        notes: newQuote.notes || undefined,
+      }
+
+      const res = await fetch('/api/v1/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (res.ok) {
+        const json = await res.json()
+        setQuotes([json.data, ...quotes])
+        setShowModal(false)
+        setNewQuote({ clientName: '', serviceName: 'Despliegue de Chatbot RAG Multicanal', price: 3800, validDays: 15, notes: '' })
+        setSelectedClientId('')
+      } else {
+        const errJson = await res.json()
+        alert(errJson.message || 'Error al emitir la cotización.')
+      }
+    } catch (err) {
+      console.error('Error creando cotización:', err)
+      alert('Error de conexión al emitir la cotización.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleStatusChange = async (quoteId: string, newStatus: string) => {
+    try {
+      const res = await fetch(`/api/v1/quotes/${quoteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+
+      if (res.ok) {
+        const json = await res.json()
+        setQuotes(quotes.map((q) => (q.id === quoteId ? json.data : q)))
+      }
+    } catch (err) {
+      console.error('Error al actualizar estado:', err)
+    }
   }
 
   return (
@@ -76,7 +165,7 @@ export default function QuotesPage() {
             Propuestas & Cotizaciones
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
-            Emisión de propuestas comerciales para clientes con desglose de servicios y montos exactos.
+            Emisión de propuestas comerciales para clientes con montos exactos y persistencia en Supabase.
           </p>
         </div>
         <button
@@ -104,7 +193,7 @@ export default function QuotesPage() {
         <div className="metric-card">
           <div className="metric-label">En Negociación</div>
           <div className="metric-value" style={{ color: '#38bdf8' }}>{formatMoney(sentCents)}</div>
-          <div className="metric-change">{sentQuotes.length} en revisión</div>
+          <div className="metric-change">{sentQuotes.length} enviadas / en revisión</div>
         </div>
       </div>
 
@@ -139,15 +228,21 @@ export default function QuotesPage() {
             </tr>
           </thead>
           <tbody>
-            {quotes.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan={7} style={{ padding: '2.5rem', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
+                  Cargando cotizaciones desde Supabase...
+                </td>
+              </tr>
+            ) : quotes.length === 0 ? (
               <tr>
                 <td colSpan={7} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
                   <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>📄</div>
                   <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
-                    No tienes cotizaciones registradas todavía
+                    No tienes cotizaciones emitidas todavía
                   </div>
                   <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', marginBottom: '1.25rem' }}>
-                    Emite propuestas comerciales formales con desglose de servicios y montos para tus clientes.
+                    Emite tu primera propuesta comercial con desglose de servicios de automatización e IA.
                   </div>
                   <button
                     onClick={() => setShowModal(true)}
@@ -160,69 +255,77 @@ export default function QuotesPage() {
               </tr>
             ) : (
               quotes.map((q) => {
-                const badge = statusBadges[q.status]
-              return (
-                <tr
-                  key={q.id}
-                  style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.15s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
-                >
-                  <td style={{ padding: '1rem 1.5rem', color: 'white', fontWeight: 700, fontFamily: 'monospace' }}>
-                    {q.quoteNumber}
-                  </td>
-                  <td style={{ padding: '1rem 1.5rem', color: 'white', fontWeight: 600 }}>
-                    {q.clientName}
-                  </td>
-                  <td style={{ padding: '1rem 1.5rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>
-                    {q.items.map((i) => i.name).join(', ')}
-                  </td>
-                  <td style={{ padding: '1rem 1.5rem', color: '#4ade80', fontWeight: 700, fontSize: '0.95rem' }}>
-                    {formatMoney(q.totalCents)}
-                  </td>
-                  <td style={{ padding: '1rem 1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-                    {q.validUntil}
-                  </td>
-                  <td style={{ padding: '1rem 1.5rem' }}>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        padding: '0.2rem 0.6rem',
-                        borderRadius: '999px',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        background: badge.bg,
-                        color: badge.text,
-                        border: `1px solid ${badge.border}`,
-                      }}
-                    >
-                      {badge.label}
-                    </span>
-                  </td>
-                  <td style={{ padding: '1rem 1.5rem' }}>
-                    <button
-                      onClick={() => alert(`Enviando cotización ${q.quoteNumber} a ${q.clientName}...`)}
-                      style={{
-                        background: 'none',
-                        border: '1px solid rgba(147, 51, 234, 0.3)',
-                        borderRadius: '0.35rem',
-                        color: 'var(--color-purple-400)',
-                        fontSize: '0.75rem',
-                        padding: '0.3rem 0.6rem',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      PDF / Enviar
-                    </button>
-                  </td>
-                </tr>
-              )
-            }))}
+                const badge = statusBadges[q.status] || statusBadges.sent
+                const clientName = q.client?.company_name || q.client?.name || 'Cliente sin asignar'
+                const serviceDescription = q.items?.[0]?.description || 'Servicios de Automatización'
+
+                return (
+                  <tr
+                    key={q.id}
+                    style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.15s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                  >
+                    <td style={{ padding: '1rem 1.5rem', color: '#faae33', fontWeight: 700, fontSize: '0.85rem' }}>
+                      {q.quote_number}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', color: 'white', fontWeight: 600, fontSize: '0.9rem' }}>
+                      {clientName}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>
+                      {serviceDescription}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', color: '#4ade80', fontWeight: 700, fontSize: '0.95rem' }}>
+                      {formatMoney(q.total_cents, q.currency)}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem' }}>
+                      {q.valid_until || '15 días'}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem' }}>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          padding: '0.2rem 0.6rem',
+                          borderRadius: '999px',
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          background: badge.bg,
+                          color: badge.text,
+                          border: `1px solid ${badge.border}`,
+                        }}
+                      >
+                        {badge.label}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem' }}>
+                      <select
+                        value={q.status}
+                        onChange={(e) => handleStatusChange(q.id, e.target.value)}
+                        style={{
+                          background: '#12121c',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          borderRadius: '0.375rem',
+                          color: 'rgba(255,255,255,0.8)',
+                          fontSize: '0.75rem',
+                          padding: '0.3rem 0.5rem',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <option value="draft">Borrador</option>
+                        <option value="sent">Enviada</option>
+                        <option value="accepted">✓ Aceptada</option>
+                        <option value="rejected">✕ Rechazada</option>
+                      </select>
+                    </td>
+                  </tr>
+                )
+              })
+            )}
           </tbody>
         </table>
       </div>
 
-      {/* Modal Nueva Cotización */}
+      {/* Modal Crear Cotización */}
       {showModal && (
         <div
           style={{
@@ -243,7 +346,7 @@ export default function QuotesPage() {
               border: '1px solid rgba(147, 51, 234, 0.3)',
               borderRadius: '1rem',
               width: '100%',
-              maxWidth: 500,
+              maxWidth: 520,
               padding: '2rem',
               boxShadow: '0 20px 40px rgba(0,0,0,0.8)',
             }}
@@ -260,39 +363,71 @@ export default function QuotesPage() {
 
             <form onSubmit={handleCreateQuote}>
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Nombre del Cliente / Empresa</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ej. Acme Corp o RetailMax"
-                  value={newQuote.clientName}
-                  onChange={(e) => setNewQuote({ ...newQuote, clientName: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
-                />
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>
+                  Cliente Destinatario *
+                </label>
+                {clients.length > 0 && (
+                  <select
+                    value={selectedClientId}
+                    onChange={(e) => {
+                      setSelectedClientId(e.target.value)
+                      if (e.target.value) setNewQuote({ ...newQuote, clientName: '' })
+                    }}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#12121c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', marginBottom: '0.5rem' }}
+                  >
+                    <option value="">-- Seleccionar de clientes CRM o escribir nuevo --</option>
+                    {clients.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} {c.company_name ? `(${c.company_name})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                {!selectedClientId && (
+                  <input
+                    type="text"
+                    required={!selectedClientId}
+                    placeholder="Ej. Inmobiliaria Costa Blanca S.L."
+                    value={newQuote.clientName}
+                    onChange={(e) => setNewQuote({ ...newQuote, clientName: e.target.value })}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
+                  />
+                )}
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Servicio Principal</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>
+                  Servicio Principal de IA
+                </label>
                 <select
                   value={newQuote.serviceName}
-                  onChange={(e) => setNewQuote({ ...newQuote, serviceName: e.target.value })}
+                  onChange={(e) => {
+                    const s = e.target.value
+                    let p = 3800
+                    if (s.includes('Workflows')) p = 4500
+                    if (s.includes('Autónomos')) p = 6200
+                    if (s.includes('Auditoría')) p = 1500
+                    setNewQuote({ ...newQuote, serviceName: s, price: p })
+                  }}
                   style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#12121c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
                 >
                   <option value="Despliegue de Chatbot RAG Multicanal">Despliegue de Chatbot RAG Multicanal ($3,800)</option>
-                  <option value="Auditoría & Plan de Automatización con IA">Auditoría & Plan de Automatización con IA ($1,500)</option>
-                  <option value="Sistema Automatizado de Captura y Calificación">Sistema Automatizado de Captura y Calificación ($2,900)</option>
-                  <option value="Mantenimiento Mensual y Cuota de Tokens">Mantenimiento Mensual ($850/mes)</option>
+                  <option value="Automatización de Workflows y CRM (n8n)">Automatización de Workflows y CRM ($4,500)</option>
+                  <option value="Desarrollo de Agentes Autónomos Personalizados">Desarrollo de Agentes Autónomos ($6,200)</option>
+                  <option value="Auditoría de Procesos y Consultoría de IA">Auditoría y Consultoría de IA ($1,500)</option>
                 </select>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Total Pactado ($ USD)</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Precio Total (USD)</label>
                   <input
                     type="number"
+                    step="100"
                     required
                     value={newQuote.price}
-                    onChange={(e) => setNewQuote({ ...newQuote, price: parseFloat(e.target.value) || 0 })}
+                    onChange={(e) => setNewQuote({ ...newQuote, price: Number(e.target.value) })}
                     style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
                   />
                 </div>
@@ -300,14 +435,25 @@ export default function QuotesPage() {
                   <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Validez de la Oferta</label>
                   <select
                     value={newQuote.validDays}
-                    onChange={(e) => setNewQuote({ ...newQuote, validDays: parseInt(e.target.value) || 15 })}
+                    onChange={(e) => setNewQuote({ ...newQuote, validDays: Number(e.target.value) })}
                     style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#12121c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
                   >
-                    <option value={7}>7 Días</option>
-                    <option value={15}>15 Días</option>
-                    <option value={30}>30 Días</option>
+                    <option value={7}>7 días</option>
+                    <option value={15}>15 días</option>
+                    <option value={30}>30 días</option>
                   </select>
                 </div>
+              </div>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Notas y Condiciones</label>
+                <textarea
+                  rows={2}
+                  placeholder="Ej. Pago del 50% al inicio y 50% tras entrega y puesta en producción..."
+                  value={newQuote.notes}
+                  onChange={(e) => setNewQuote({ ...newQuote, notes: e.target.value })}
+                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', resize: 'vertical' }}
+                />
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
@@ -320,10 +466,11 @@ export default function QuotesPage() {
                 </button>
                 <button
                   type="submit"
+                  disabled={submitting}
                   className="btn btn-primary"
                   style={{ padding: '0.6rem 1.2rem' }}
                 >
-                  Generar Cotización
+                  {submitting ? 'Emitiendo...' : 'Emitir Cotización'}
                 </button>
               </div>
             </form>

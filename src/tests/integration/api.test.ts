@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server'
 import { createApiHandler } from '@/lib/api/handler'
 import { createClientSchema, clientQuerySchema } from '@/lib/validation/crm.schemas'
 import { createProjectSchema, projectQuerySchema } from '@/lib/validation/projects.schemas'
+import { createQuoteSchema, quoteQuerySchema } from '@/lib/validation/quotes.schemas'
 import * as authServer from '@/lib/auth/server'
 
 describe('REST API Security & Middleware Engine (createApiHandler)', () => {
@@ -136,6 +137,41 @@ describe('REST API Security & Middleware Engine (createApiHandler)', () => {
       expect(parsed.data.page).toBe(2)
       expect(parsed.data.pageSize).toBe(100) // Max clamp
       expect(parsed.data.status).toBe('planning')
+    }
+  })
+
+  it('validates quote creation schema requiring client and valid price', () => {
+    const valid = createQuoteSchema.safeParse({
+      clientName: 'Distribuidora del Norte S.A.',
+      serviceName: 'Automatización de Facturación con IA',
+      price: 3200,
+      validDays: 15,
+      status: 'sent',
+    })
+    expect(valid.success).toBe(true)
+    if (valid.success) {
+      expect(valid.data.price).toBe(3200)
+      expect(valid.data.status).toBe('sent')
+    }
+
+    const invalid = createQuoteSchema.safeParse({
+      clientName: '',
+      serviceName: 'Chatbot',
+      price: 1000,
+    })
+    expect(invalid.success).toBe(false)
+  })
+
+  it('validates quote query schema and clamps max page size', () => {
+    const parsed = quoteQuerySchema.safeParse({
+      page: '1',
+      pageSize: '250',
+      status: 'accepted',
+    })
+    expect(parsed.success).toBe(true)
+    if (parsed.success) {
+      expect(parsed.data.pageSize).toBe(100) // Clamped
+      expect(parsed.data.status).toBe('accepted')
     }
   })
 })
