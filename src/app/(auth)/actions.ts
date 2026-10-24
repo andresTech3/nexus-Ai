@@ -42,11 +42,11 @@ export async function loginAction(
   })
 
   if (error) {
-    // No filtrar mensajes internos de Supabase
+    console.error('[loginAction Supabase Error]:', error.message, 'Status:', error.status)
     const message =
       error.status === 400
         ? 'Correo o contraseña incorrectos'
-        : 'Error al iniciar sesión. Intenta de nuevo.'
+        : (error.message || 'Error al iniciar sesión. Intenta de nuevo.')
     return { success: false, error: message }
   }
 
@@ -77,7 +77,7 @@ export async function registerAction(
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -92,13 +92,18 @@ export async function registerAction(
   })
 
   if (error) {
+    console.error('[registerAction Supabase Error]:', error.message, 'Status:', error.status)
     if (error.status === 422) {
       return { success: false, error: 'Este correo ya está registrado', field: 'email' }
     }
-    return { success: false, error: 'Error al crear la cuenta. Intenta de nuevo.' }
+    return { success: false, error: error.message || 'Error al crear la cuenta. Intenta de nuevo.' }
   }
 
-  // Redirigir a confirmación de email
+  if (data?.session) {
+    redirect('/dashboard')
+  }
+
+  // Redirigir a confirmación de email si el proyecto requiere verificación
   redirect('/register/verify-email')
 }
 
