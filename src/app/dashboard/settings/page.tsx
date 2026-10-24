@@ -94,7 +94,7 @@ export default function SettingsPage() {
         </form>
       </div>
 
-      {/* Security and Connected Services Status */}
+      {/* Preferencias de Negocio y Operaciones */}
       <div
         style={{
           background: 'rgba(255, 255, 255, 0.02)',
@@ -105,57 +105,51 @@ export default function SettingsPage() {
         }}
       >
         <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'white', marginBottom: '1.25rem' }}>
-          Estado de Integraciones & Seguridad
+          Preferencias Operativas
         </h2>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Supabase */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'rgba(0,0,0,0.3)', borderRadius: '0.625rem', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: '#4ade80' }}>●</span>
-                <span style={{ fontWeight: 600, color: 'white', fontSize: '0.95rem' }}>Base de Datos Supabase (PostgreSQL)</span>
-              </div>
-              <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.2rem' }}>
-                Proyecto: sleisgocuwawjguoxkxy (aws-0-us-east-1) · 19 Tablas RLS Activas
-              </div>
-            </div>
-            <span style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 700, background: 'rgba(74, 222, 128, 0.15)', padding: '0.25rem 0.6rem', borderRadius: '999px' }}>
-              Conectado
-            </span>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.4rem' }}>
+              Moneda Predeterminada de Cotización
+            </label>
+            <select
+              defaultValue="USD"
+              style={{ width: '100%', padding: '0.65rem 0.85rem', background: '#12121c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', outline: 'none' }}
+            >
+              <option value="USD">USD ($) — Dólar Estadounidense</option>
+              <option value="EUR">EUR (€) — Euro</option>
+              <option value="COP">COP ($) — Peso Colombiano</option>
+              <option value="MXN">MXN ($) — Peso Mexicano</option>
+            </select>
           </div>
 
-          {/* Gemini */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'rgba(0,0,0,0.3)', borderRadius: '0.625rem', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: '#4ade80' }}>●</span>
-                <span style={{ fontWeight: 600, color: 'white', fontSize: '0.95rem' }}>Google Gemini 2.0 Flash (Adaptador IA)</span>
-              </div>
-              <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.2rem' }}>
-                Plan Gratuito Activo · Rate limiting con Token Bucket
-              </div>
-            </div>
-            <span style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 700, background: 'rgba(74, 222, 128, 0.15)', padding: '0.25rem 0.6rem', borderRadius: '999px' }}>
-              Operativo
-            </span>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.4rem' }}>
+              Zona Horaria
+            </label>
+            <select
+              defaultValue="America/Bogota"
+              style={{ width: '100%', padding: '0.65rem 0.85rem', background: '#12121c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', outline: 'none' }}
+            >
+              <option value="America/Bogota">GMT-5 (Bogotá, Lima, Quito)</option>
+              <option value="America/Mexico_City">GMT-6 (Ciudad de México)</option>
+              <option value="America/Argentina/Buenos_Aires">GMT-3 (Buenos Aires, Santiago)</option>
+              <option value="Europe/Madrid">GMT+1 (Madrid, Barcelona)</option>
+            </select>
           </div>
+        </div>
 
-          {/* API Security */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'rgba(0,0,0,0.3)', borderRadius: '0.625rem', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: '#c084fc' }}>🔒</span>
-                <span style={{ fontWeight: 600, color: 'white', fontSize: '0.95rem' }}>Cabeceras de Seguridad & CORS</span>
-              </div>
-              <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.2rem' }}>
-                X-Content-Type-Options: nosniff · X-Request-ID · Zod Validation
-              </div>
-            </div>
-            <span style={{ fontSize: '0.75rem', color: '#c084fc', fontWeight: 700, background: 'rgba(147, 51, 234, 0.15)', padding: '0.25rem 0.6rem', borderRadius: '999px' }}>
-              Protegido
-            </span>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <input
+            type="checkbox"
+            id="notify-leads"
+            defaultChecked
+            style={{ width: 16, height: 16, accentColor: 'var(--color-purple-500)', cursor: 'pointer' }}
+          />
+          <label htmlFor="notify-leads" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', cursor: 'pointer' }}>
+            Recibir notificaciones por correo electrónico al recibir un nuevo cliente o lead calificado
+          </label>
         </div>
       </div>
     </div>
