@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { NextRequest } from 'next/server'
 import { createApiHandler } from '@/lib/api/handler'
 import { createClientSchema, clientQuerySchema } from '@/lib/validation/crm.schemas'
+import { createProjectSchema, projectQuerySchema } from '@/lib/validation/projects.schemas'
 import * as authServer from '@/lib/auth/server'
 
 describe('REST API Security & Middleware Engine (createApiHandler)', () => {
@@ -99,7 +100,6 @@ describe('REST API Security & Middleware Engine (createApiHandler)', () => {
   })
 
   it('clamps pagination limits to prevent memory exhaustion DoS', () => {
-    // Si envían pageSize exagerado (ej. 9999), se limita al máximo seguro (100)
     const clamped = clientQuerySchema.safeParse({
       pageSize: '999999',
     })
@@ -107,6 +107,35 @@ describe('REST API Security & Middleware Engine (createApiHandler)', () => {
     expect(clamped.success).toBe(true)
     if (clamped.success) {
       expect(clamped.data.pageSize).toBe(100)
+    }
+  })
+
+  it('validates project creation schema requiring a non-empty title', () => {
+    const valid = createProjectSchema.safeParse({
+      title: 'Sistema de IA para Atención al Cliente',
+      clientName: 'Hospital Universitario',
+      budget: 4500,
+      status: 'in_progress',
+    })
+    expect(valid.success).toBe(true)
+
+    const invalid = createProjectSchema.safeParse({
+      title: '',
+    })
+    expect(invalid.success).toBe(false)
+  })
+
+  it('validates project query params and clamps max page size', () => {
+    const parsed = projectQuerySchema.safeParse({
+      page: '2',
+      pageSize: '500',
+      status: 'planning',
+    })
+    expect(parsed.success).toBe(true)
+    if (parsed.success) {
+      expect(parsed.data.page).toBe(2)
+      expect(parsed.data.pageSize).toBe(100) // Max clamp
+      expect(parsed.data.status).toBe('planning')
     }
   })
 })

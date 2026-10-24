@@ -1,34 +1,99 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface Project {
   id: string
-  name: string
-  status: 'En curso' | 'Revisión' | 'Pendiente' | 'Completado'
-  progress: number
-  client: string
-  dueDate: string
+  title: string
+  status: 'planning' | 'in_progress' | 'review' | 'completed' | 'cancelled'
+  client?: { name?: string; company_name?: string } | null
+  budget_cents?: number
+  currency?: string
+  due_date?: string | null
 }
 
-const INITIAL_METRICS = [
-  { id: 'metric-projects', label: 'Proyectos activos', value: '0', change: 'Sin proyectos aún', positive: true, icon: '◈' },
-  { id: 'metric-clients', label: 'Clientes totales', value: '0', change: 'Sin clientes aún', positive: true, icon: '◎' },
-  { id: 'metric-ai-calls', label: 'Llamadas IA hoy', value: '0', change: '0 peticiones', positive: true, icon: '⚡' },
-  { id: 'metric-revenue', label: 'Ingresos del mes', value: '$0.00', change: 'Sin facturación aún', positive: true, icon: '$' },
-]
-
-const statusColors: Record<string, string> = {
-  'En curso': 'var(--color-tiger-gold)',
-  'Revisión': '#22d3ee',
-  'Pendiente': 'rgba(255,255,255,0.4)',
-  'Completado': '#4ade80',
+const statusMap: Record<string, { label: string; color: string }> = {
+  in_progress: { label: 'En curso', color: 'var(--color-tiger-gold)' },
+  review: { label: 'Revisión', color: '#22d3ee' },
+  planning: { label: 'Planificación', color: 'rgba(250, 174, 51, 0.9)' },
+  completed: { label: 'Completado', color: '#4ade80' },
+  cancelled: { label: 'Cancelado', color: 'rgba(255,255,255,0.4)' },
 }
 
 export default function DashboardPage() {
-  const [metrics] = useState(INITIAL_METRICS)
-  const [recentProjects] = useState<Project[]>([]) // Vacío por defecto para nuevos usuarios
+  const [projectsCount, setProjectsCount] = useState<number>(0)
+  const [clientsCount, setClientsCount] = useState<number>(0)
+  const [revenueTotal, setRevenueTotal] = useState<number>(0)
+  const [recentProjects, setRecentProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    async function loadOverview() {
+      try {
+        const [projRes, cliRes] = await Promise.all([
+          fetch('/api/v1/projects?page=1&pageSize=5'),
+          fetch('/api/v1/crm/clients?page=1&pageSize=1'),
+        ])
+
+        if (projRes.ok) {
+          const pJson = await projRes.json()
+          setProjectsCount(pJson.pagination?.total || 0)
+          setRecentProjects(pJson.data || [])
+
+          // Calcular presupuesto acumulado
+          const totalCents = (pJson.data || []).reduce((acc: number, p: any) => acc + (p.budget_cents || 0), 0)
+          setRevenueTotal(totalCents / 100)
+        }
+
+        if (cliRes.ok) {
+          const cJson = await cliRes.json()
+          setClientsCount(cJson.pagination?.total || 0)
+        }
+      } catch (err) {
+        console.error('Error cargando métricas:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadOverview()
+  }, [])
+
+  const metrics = [
+    {
+      id: 'metric-projects',
+      label: 'Proyectos activos',
+      value: loading ? '...' : String(projectsCount),
+      change: projectsCount > 0 ? `${projectsCount} registrados` : 'Sin proyectos aún',
+      positive: projectsCount > 0,
+      icon: '◈',
+    },
+    {
+      id: 'metric-clients',
+      label: 'Clientes totales',
+      value: loading ? '...' : String(clientsCount),
+      change: clientsCount > 0 ? `${clientsCount} en directorio` : 'Sin clientes aún',
+      positive: clientsCount > 0,
+      icon: '◎',
+    },
+    {
+      id: 'metric-ai-calls',
+      label: 'Llamadas IA hoy',
+      value: '0',
+      change: '0 peticiones',
+      positive: true,
+      icon: '⚡',
+    },
+    {
+      id: 'metric-revenue',
+      label: 'Presupuesto Proyectos',
+      value: loading ? '...' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(revenueTotal),
+      change: revenueTotal > 0 ? 'En proyectos activos' : 'Sin facturación aún',
+      positive: revenueTotal > 0,
+      icon: '$',
+    },
+  ]
 
   return (
     <div id="dashboard-overview">
@@ -39,7 +104,7 @@ export default function DashboardPage() {
             Panel de Control
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)' }}>
-            Bienvenido a tu suite de Agencia IA. Todo tu entorno está listo y configurado.
+            Bienvenido a tu suite de Agencia IA. Todo tu entorno está listo y sincronizado en tiempo real.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -97,7 +162,7 @@ export default function DashboardPage() {
             Proyectos Recientes
           </h2>
           <Link href="/dashboard/projects" id="view-all-projects" style={{ fontSize: '0.8125rem', color: 'var(--color-tiger-gold)', fontWeight: 600 }}>
-            Ver todos →
+            Ver todos ({projectsCount}) →
           </Link>
         </div>
 
@@ -119,7 +184,7 @@ export default function DashboardPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }} id="projects-table">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  {['Proyecto', 'Cliente', 'Estado', 'Progreso', 'Entrega'].map((h) => (
+                  {['Proyecto', 'Cliente', 'Estado', 'Presupuesto', 'Plazo'].map((h) => (
                     <th key={h} style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                       {h}
                     </th>
@@ -127,44 +192,48 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {recentProjects.map((project) => (
-                  <tr
-                    key={project.id}
-                    id={`project-row-${project.id}`}
-                    style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}
-                  >
-                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.9375rem', color: 'white', fontWeight: 500 }}>
-                      {project.name}
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
-                      {project.client}
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      <span style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.375rem',
-                        padding: '0.25rem 0.625rem',
-                        borderRadius: '9999px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        background: `${statusColors[project.status]}20`,
-                        color: statusColors[project.status],
-                        border: `1px solid ${statusColors[project.status]}40`,
-                      }}>
-                        {project.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', width: 160 }}>
-                      <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>
-                        {project.progress}%
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
-                      {project.dueDate}
-                    </td>
-                  </tr>
-                ))}
+                {recentProjects.map((project) => {
+                  const st = statusMap[project.status] || statusMap.planning
+                  const clientDisplay = project.client?.company_name || project.client?.name || 'Cliente sin asignar'
+                  const budgetFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: project.currency || 'USD', maximumFractionDigits: 0 }).format((project.budget_cents || 0) / 100)
+
+                  return (
+                    <tr
+                      key={project.id}
+                      id={`project-row-${project.id}`}
+                      style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}
+                    >
+                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.9375rem', color: 'white', fontWeight: 500 }}>
+                        {project.title}
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
+                        {clientDisplay}
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.375rem',
+                          padding: '0.25rem 0.625rem',
+                          borderRadius: '9999px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          background: `${st.color}20`,
+                          color: st.color,
+                          border: `1px solid ${st.color}40`,
+                        }}>
+                          {st.label}
+                        </span>
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: '#4ade80', fontWeight: 600 }}>
+                        {budgetFormatted}
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.4)' }}>
+                        {project.due_date || 'Sin fecha'}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

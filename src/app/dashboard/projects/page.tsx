@@ -1,70 +1,135 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+
+interface ClientOption {
+  id: string
+  name: string
+  company_name: string
+}
 
 interface Project {
   id: string
-  name: string
-  client: string
-  status: 'En curso' | 'Revisión' | 'Completado' | 'Pendiente'
-  progress: number
-  dueDate: string
-  budget: string
-  priority: 'Alta' | 'Media' | 'Baja'
-  description: string
+  title: string
+  client_id?: string | null
+  client?: { id: string; name: string; company_name: string; email: string } | null
+  status: 'planning' | 'in_progress' | 'review' | 'completed' | 'cancelled'
+  budget_cents: number
+  currency: string
+  start_date?: string | null
+  due_date?: string | null
+  description?: string | null
+  created_at?: string
 }
 
-const INITIAL_PROJECTS: Project[] = []
-
-const statusStyles = {
-  'En curso': { bg: 'rgba(168, 85, 247, 0.15)', text: '#c084fc', border: 'rgba(168, 85, 247, 0.3)' },
-  'Revisión': { bg: 'rgba(34, 211, 238, 0.15)', text: '#38bdf8', border: 'rgba(34, 211, 238, 0.3)' },
-  'Completado': { bg: 'rgba(74, 222, 128, 0.15)', text: '#4ade80', border: 'rgba(74, 222, 128, 0.3)' },
-  'Pendiente': { bg: 'rgba(255, 255, 255, 0.08)', text: 'rgba(255,255,255,0.6)', border: 'rgba(255, 255, 255, 0.15)' },
+const statusConfig: Record<string, { label: string; bg: string; text: string; border: string }> = {
+  in_progress: { label: 'En curso', bg: 'rgba(168, 85, 247, 0.15)', text: '#c084fc', border: 'rgba(168, 85, 247, 0.3)' },
+  review: { label: 'Revisión', bg: 'rgba(34, 211, 238, 0.15)', text: '#38bdf8', border: 'rgba(34, 211, 238, 0.3)' },
+  completed: { label: 'Completado', bg: 'rgba(74, 222, 128, 0.15)', text: '#4ade80', border: 'rgba(74, 222, 128, 0.3)' },
+  planning: { label: 'Planificación', bg: 'rgba(250, 174, 51, 0.15)', text: '#faae33', border: 'rgba(250, 174, 51, 0.3)' },
+  cancelled: { label: 'Cancelado', bg: 'rgba(255, 255, 255, 0.08)', text: 'rgba(255,255,255,0.5)', border: 'rgba(255, 255, 255, 0.15)' },
 }
 
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS)
-  const [filter, setFilter] = useState<string>('Todos')
+  const [projects, setProjects] = useState<Project[]>([])
+  const [clients, setClients] = useState<ClientOption[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [submitting, setSubmitting] = useState<boolean>(false)
+  const [filter, setFilter] = useState<string>('all')
   const [search, setSearch] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [selectedClientId, setSelectedClientId] = useState<string>('')
   const [newProject, setNewProject] = useState({
-    name: '',
-    client: '',
+    title: '',
+    clientName: '',
     budget: '',
     dueDate: '',
     description: '',
-    priority: 'Media' as const,
+    status: 'in_progress' as const,
   })
 
+  // Cargar proyectos y clientes desde la base de datos
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [projRes, cliRes] = await Promise.all([
+          fetch('/api/v1/projects?page=1&pageSize=50'),
+          fetch('/api/v1/crm/clients?page=1&pageSize=100'),
+        ])
+
+        if (projRes.ok) {
+          const pJson = await projRes.json()
+          setProjects(pJson.data || [])
+        }
+
+        if (cliRes.ok) {
+          const cJson = await cliRes.json()
+          setClients(cJson.data || [])
+        }
+      } catch (err) {
+        console.error('Error cargando proyectos o clientes:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
+
   const filteredProjects = projects.filter((p) => {
-    const matchesFilter = filter === 'Todos' || p.status === filter
+    const matchesFilter = filter === 'all' || p.status === filter
+    const clientName = p.client?.name || p.client?.company_name || ''
     const matchesSearch =
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.client.toLowerCase().includes(search.toLowerCase())
+      p.title.toLowerCase().includes(search.toLowerCase()) ||
+      clientName.toLowerCase().includes(search.toLowerCase())
     return matchesFilter && matchesSearch
   })
 
-  const handleCreateProject = (e: React.FormEvent) => {
+  const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newProject.name || !newProject.client) return
+    if (!newProject.title) return
 
-    const created: Project = {
-      id: `proj-${Date.now()}`,
-      name: newProject.name,
-      client: newProject.client,
-      budget: newProject.budget || '$3,000',
-      dueDate: newProject.dueDate || '30 Nov 2026',
-      priority: newProject.priority,
-      status: 'En curso',
-      progress: 0,
-      description: newProject.description || 'Proyecto creado desde el panel.',
+    setSubmitting(true)
+    try {
+      const payload = {
+        title: newProject.title,
+        clientId: selectedClientId || undefined,
+        clientName: !selectedClientId ? newProject.clientName : undefined,
+        budget: newProject.budget ? parseFloat(newProject.budget.replace(/[^0-9.]/g, '')) || 0 : 0,
+        currency: 'USD',
+        dueDate: newProject.dueDate || undefined,
+        description: newProject.description || undefined,
+        status: newProject.status,
+      }
+
+      const res = await fetch('/api/v1/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (res.ok) {
+        const json = await res.json()
+        setProjects([json.data, ...projects])
+        setShowModal(false)
+        setNewProject({ title: '', clientName: '', budget: '', dueDate: '', description: '', status: 'in_progress' })
+        setSelectedClientId('')
+      } else {
+        const errJson = await res.json()
+        alert(errJson.message || 'Error al guardar el proyecto en Supabase.')
+      }
+    } catch (err) {
+      console.error('Error al crear proyecto:', err)
+      alert('Error de conexión al guardar el proyecto.')
+    } finally {
+      setSubmitting(false)
     }
+  }
 
-    setProjects([created, ...projects])
-    setShowModal(false)
-    setNewProject({ name: '', client: '', budget: '', dueDate: '', description: '', priority: 'Media' })
+  const formatBudget = (cents: number, currency: string) => {
+    const amount = (cents || 0) / 100
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD', maximumFractionDigits: 0 }).format(amount)
   }
 
   return (
@@ -76,7 +141,7 @@ export default function ProjectsPage() {
             Proyectos & Entregables
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)' }}>
-            Supervisa avances, plazos y entregables de automatización para cada cliente.
+            Supervisa avances, clientes asociados y entregables de IA persistidos en la base de datos.
           </p>
         </div>
         <button
@@ -104,24 +169,30 @@ export default function ProjectsPage() {
           borderRadius: '0.75rem',
         }}
       >
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {['Todos', 'En curso', 'Revisión', 'Completado', 'Pendiente'].map((st) => (
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {[
+            { id: 'all', label: 'Todos' },
+            { id: 'in_progress', label: 'En curso' },
+            { id: 'review', label: 'Revisión' },
+            { id: 'planning', label: 'Planificación' },
+            { id: 'completed', label: 'Completado' },
+          ].map((st) => (
             <button
-              key={st}
-              onClick={() => setFilter(st)}
+              key={st.id}
+              onClick={() => setFilter(st.id)}
               style={{
                 padding: '0.4rem 0.85rem',
                 borderRadius: '0.5rem',
                 fontSize: '0.8125rem',
                 fontWeight: 600,
-                border: filter === st ? '1px solid var(--color-purple-500)' : '1px solid transparent',
-                background: filter === st ? 'rgba(147,51,234,0.2)' : 'transparent',
-                color: filter === st ? '#e9d5ff' : 'rgba(255,255,255,0.6)',
+                border: filter === st.id ? '1px solid var(--color-purple-500)' : '1px solid transparent',
+                background: filter === st.id ? 'rgba(147,51,234,0.2)' : 'transparent',
+                color: filter === st.id ? '#e9d5ff' : 'rgba(255,255,255,0.6)',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
               }}
             >
-              {st}
+              {st.label}
             </button>
           ))}
         </div>
@@ -146,7 +217,11 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.25rem' }}>
-        {filteredProjects.length === 0 ? (
+        {loading ? (
+          <div style={{ gridColumn: '1 / -1', padding: '3rem', textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
+            Cargando proyectos desde Supabase...
+          </div>
+        ) : filteredProjects.length === 0 ? (
           <div
             style={{
               gridColumn: '1 / -1',
@@ -167,7 +242,7 @@ export default function ProjectsPage() {
             </h3>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.5)', maxWidth: '420px', marginBottom: '1.5rem', lineHeight: 1.5 }}>
               {projects.length === 0
-                ? 'Empieza creando tu primer proyecto para gestionar entregables, plazos de entrega y presupuestos.'
+                ? 'Empieza creando tu primer proyecto para gestionar entregables, plazos de entrega y presupuestos reales.'
                 : 'Prueba cambiando los términos de búsqueda o el filtro de estado.'}
             </p>
             {projects.length === 0 && (
@@ -182,98 +257,83 @@ export default function ProjectsPage() {
           </div>
         ) : (
           filteredProjects.map((p) => {
-            const st = statusStyles[p.status]
-          return (
-            <div
-              key={p.id}
-              style={{
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(147, 51, 234, 0.15)',
-                borderRadius: '1rem',
-                padding: '1.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.2s, border-color 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.4)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.15)'
-                e.currentTarget.style.transform = 'none'
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                <span
-                  style={{
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.72rem',
-                    fontWeight: 700,
-                    background: st.bg,
-                    color: st.text,
-                    border: `1px solid ${st.border}`,
-                  }}
-                >
-                  {p.status}
-                </span>
-                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
-                  Entrega: {p.dueDate}
-                </span>
-              </div>
-
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '0.25rem' }}>
-                {p.name}
-              </h3>
-              <div style={{ fontSize: '0.8125rem', color: 'var(--color-purple-400)', marginBottom: '0.75rem', fontWeight: 500 }}>
-                {p.client}
-              </div>
-
-              <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, marginBottom: '1.25rem', flex: 1 }}>
-                {p.description}
-              </p>
-
-              {/* Progress bar */}
-              <div style={{ marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginBottom: '0.35rem' }}>
-                  <span>Progreso de entregables</span>
-                  <span style={{ color: 'white', fontWeight: 600 }}>{p.progress}%</span>
-                </div>
-                <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 3, overflow: 'hidden' }}>
-                  <div
+            const st = statusConfig[p.status] || statusConfig.planning
+            const clientDisplay = p.client?.company_name || p.client?.name || 'Cliente sin asignar'
+            return (
+              <div
+                key={p.id}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid rgba(147, 51, 234, 0.15)',
+                  borderRadius: '1rem',
+                  padding: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s, border-color 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.4)'
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(147, 51, 234, 0.15)'
+                  e.currentTarget.style.transform = 'none'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                  <span
                     style={{
-                      height: '100%',
-                      width: `${p.progress}%`,
-                      background: 'linear-gradient(90deg, #9333ea, #c084fc)',
-                      borderRadius: 3,
-                      transition: 'width 0.4s ease',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '9999px',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      background: st.bg,
+                      color: st.text,
+                      border: `1px solid ${st.border}`,
                     }}
-                  />
+                  >
+                    {st.label}
+                  </span>
+                  <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
+                    {p.due_date ? `Entrega: ${p.due_date}` : 'Sin plazo fijado'}
+                  </span>
                 </div>
-              </div>
 
-              {/* Footer info */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                <div>
-                  <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Presupuesto: </span>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#4ade80' }}>{p.budget}</span>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'white', marginBottom: '0.25rem' }}>
+                  {p.title}
+                </h3>
+                <div style={{ fontSize: '0.8125rem', color: 'var(--color-purple-400)', marginBottom: '0.75rem', fontWeight: 500 }}>
+                  🏢 {clientDisplay}
                 </div>
-                <Link
-                  href="/dashboard/tasks"
-                  style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--color-purple-400)',
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                  }}
-                >
-                  Ver Tareas →
-                </Link>
+
+                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, marginBottom: '1.25rem', flex: 1 }}>
+                  {p.description || 'Sin descripción detallada.'}
+                </p>
+
+                {/* Footer info */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div>
+                    <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Presupuesto: </span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#4ade80' }}>
+                      {formatBudget(p.budget_cents, p.currency)}
+                    </span>
+                  </div>
+                  <Link
+                    href="/dashboard/tasks"
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--color-purple-400)',
+                      textDecoration: 'none',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Ver Tareas →
+                  </Link>
+                </div>
               </div>
-            </div>
-          )
-        }))}
+            )
+          })
+        )}
       </div>
 
       {/* Modal Crear Proyecto */}
@@ -314,35 +374,59 @@ export default function ProjectsPage() {
 
             <form onSubmit={handleCreateProject}>
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Nombre del Proyecto</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>
+                  Nombre del Proyecto *
+                </label>
                 <input
                   type="text"
                   required
                   placeholder="Ej. Agente de Soporte WhatsApp para Clínica"
-                  value={newProject.name}
-                  onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+                  value={newProject.title}
+                  onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                   style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
                 />
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Cliente</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ej. Clínica Dental Sonrisas S.L."
-                  value={newProject.client}
-                  onChange={(e) => setNewProject({ ...newProject, client: e.target.value })}
-                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
-                />
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>
+                  Cliente Asociado
+                </label>
+                {clients.length > 0 ? (
+                  <select
+                    value={selectedClientId}
+                    onChange={(e) => {
+                      setSelectedClientId(e.target.value)
+                      if (e.target.value) setNewProject({ ...newProject, clientName: '' })
+                    }}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#12121c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white', marginBottom: '0.5rem' }}
+                  >
+                    <option value="">-- Seleccionar cliente existente o escribir nuevo --</option>
+                    {clients.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} {c.company_name ? `(${c.company_name})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                ) : null}
+
+                {!selectedClientId && (
+                  <input
+                    type="text"
+                    placeholder="O escribe el nombre de un nuevo cliente/empresa..."
+                    value={newProject.clientName}
+                    onChange={(e) => setNewProject({ ...newProject, clientName: e.target.value })}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
+                  />
+                )}
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Presupuesto Estimado</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Presupuesto (USD)</label>
                   <input
-                    type="text"
-                    placeholder="Ej. $3,500"
+                    type="number"
+                    step="50"
+                    placeholder="Ej. 3500"
                     value={newProject.budget}
                     onChange={(e) => setNewProject({ ...newProject, budget: e.target.value })}
                     style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
@@ -351,8 +435,7 @@ export default function ProjectsPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.35rem' }}>Fecha de Entrega</label>
                   <input
-                    type="text"
-                    placeholder="Ej. 15 Dic 2026"
+                    type="date"
                     value={newProject.dueDate}
                     onChange={(e) => setNewProject({ ...newProject, dueDate: e.target.value })}
                     style={{ width: '100%', padding: '0.6rem 0.8rem', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', color: 'white' }}
@@ -381,10 +464,11 @@ export default function ProjectsPage() {
                 </button>
                 <button
                   type="submit"
+                  disabled={submitting}
                   className="btn btn-primary"
                   style={{ padding: '0.6rem 1.2rem' }}
                 >
-                  Guardar Proyecto
+                  {submitting ? 'Guardando...' : 'Guardar Proyecto'}
                 </button>
               </div>
             </form>
