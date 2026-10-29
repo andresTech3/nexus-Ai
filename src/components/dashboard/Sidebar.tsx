@@ -88,7 +88,23 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="sidebar" id="dashboard-sidebar">
+    <aside
+      className="sidebar"
+      id="dashboard-sidebar"
+      style={{
+        width: '260px',
+        minWidth: '260px',
+        maxWidth: '260px',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: '#181818',
+        borderRight: '1px solid #2e2e2e',
+        zIndex: 100,
+        overflowY: 'auto',
+      }}
+    >
       {/* Logo */}
       <div className="sidebar-logo">
         <Link

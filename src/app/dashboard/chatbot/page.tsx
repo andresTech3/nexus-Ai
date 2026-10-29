@@ -27,7 +27,7 @@ const INITIAL_MESSAGES: Message[] = [
   {
     id: 'm-1',
     role: 'assistant',
-    content: '¡Hola! Soy tu asistente de IA de NexusAI. Puedes pedirme consultas sobre servicios y cotizaciones, o pedirme que ejecute acciones reales como:\n\n• *"Crea un lead llamado Carlos Gómez de la empresa DentalPro con correo carlos@dentalpro.com"*\n• *"¿Qué clientes tengo en el CRM?"*\n• *"¿Cuáles son los paquetes y tarifas de automatización?"*',
+    content: '¡Hola! Soy tu asistente de IA de NexusAI. Puedes pedirme consultas sobre servicios y cotizaciones, o pedirme que ejecute acciones reales en tu base de datos como:\n\n• "Crea un lead llamado Carlos Gómez de DentalPro con correo carlos@dentalpro.com"\n• "¿Qué clientes tengo en el CRM?"\n• "¿Cuáles son los paquetes y tarifas de automatización?"',
     time: 'Ahora',
     model: 'NexusAI Core',
   },
@@ -172,9 +172,12 @@ export default function ChatbotPage() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: 'calc(100vh - 4.5rem)',
-        maxHeight: 'calc(100vh - 4.5rem)',
+        height: 'calc(100vh - 3.25rem)',
+        maxHeight: 'calc(100vh - 3.25rem)',
+        width: '100%',
+        boxSizing: 'border-box',
         overflow: 'hidden',
+        color: '#f3f4f6',
       }}
     >
       {/* Header & Controls */}
@@ -183,7 +186,7 @@ export default function ChatbotPage() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '1rem',
+          marginBottom: '0.75rem',
           flexWrap: 'wrap',
           gap: '0.75rem',
           flexShrink: 0,
@@ -193,30 +196,31 @@ export default function ChatbotPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <h1
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '1.6rem',
-                fontWeight: 800,
-                color: 'white',
-                lineHeight: 1.2,
+                fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+                fontSize: '1.35rem',
+                fontWeight: 700,
+                color: '#ffffff',
+                letterSpacing: '-0.01em',
+                margin: 0,
               }}
             >
               Consola de Chatbot & IA
             </h1>
             <span
               style={{
-                fontSize: '0.72rem',
-                padding: '0.2rem 0.5rem',
+                fontSize: '0.7rem',
+                padding: '0.15rem 0.5rem',
                 borderRadius: '999px',
                 background: 'rgba(74, 222, 128, 0.15)',
                 color: '#4ade80',
                 border: '1px solid rgba(74, 222, 128, 0.3)',
-                fontWeight: 700,
+                fontWeight: 600,
               }}
             >
               ● Conectado
             </span>
           </div>
-          <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', marginTop: '0.2rem' }}>
+          <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.15rem', margin: 0 }}>
             Interactúa con Gemini 2.0 Flash o ejecuta acciones reales en CRM y Proyectos.
           </p>
         </div>
@@ -228,12 +232,12 @@ export default function ChatbotPage() {
             value={selectedAgentId}
             onChange={(e) => setSelectedAgentId(e.target.value)}
             style={{
-              background: '#191919',
-              border: '1px solid #333',
-              borderRadius: '0.5rem',
+              background: '#181818',
+              border: '1px solid #333333',
+              borderRadius: '0.45rem',
               color: 'white',
               fontSize: '0.8rem',
-              padding: '0.5rem 0.75rem',
+              padding: '0.45rem 0.65rem',
               outline: 'none',
               cursor: 'pointer',
             }}
@@ -251,12 +255,12 @@ export default function ChatbotPage() {
             value={selectedDoc}
             onChange={(e) => setSelectedDoc(e.target.value)}
             style={{
-              background: '#191919',
-              border: '1px solid #333',
-              borderRadius: '0.5rem',
+              background: '#181818',
+              border: '1px solid #333333',
+              borderRadius: '0.45rem',
               color: 'white',
               fontSize: '0.8rem',
-              padding: '0.5rem 0.75rem',
+              padding: '0.45rem 0.65rem',
               outline: 'none',
               cursor: 'pointer',
             }}
@@ -269,14 +273,14 @@ export default function ChatbotPage() {
           <button
             onClick={handleClearChat}
             style={{
-              padding: '0.5rem 0.85rem',
-              borderRadius: '0.5rem',
-              background: '#1e1e1e',
-              border: '1px solid #333',
-              color: 'rgba(255,255,255,0.7)',
-              fontSize: '0.8rem',
+              padding: '0.45rem 0.75rem',
+              borderRadius: '0.45rem',
+              background: '#242424',
+              border: '1px solid #383838',
+              color: 'rgba(255,255,255,0.8)',
+              fontSize: '0.78rem',
               cursor: 'pointer',
-              fontWeight: 600,
+              fontWeight: 500,
               transition: 'background 0.15s',
             }}
           >
@@ -289,32 +293,33 @@ export default function ChatbotPage() {
       <div
         style={{
           flex: 1,
-          background: '#1c1c1c',
+          background: '#181818',
           border: '1px solid #2e2e2e',
-          borderRadius: '0.875rem',
+          borderRadius: '0.75rem',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
           minHeight: 0,
-          boxShadow: '0 8px 30px rgba(0,0,0,0.4)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
         }}
       >
         {/* Active Agent Banner (if selected) */}
         {currentAgent && (
           <div
             style={{
-              padding: '0.6rem 1rem',
-              background: 'rgba(147, 51, 234, 0.12)',
-              borderBottom: '1px solid rgba(147, 51, 234, 0.25)',
+              padding: '0.5rem 1rem',
+              background: 'rgba(147, 51, 234, 0.15)',
+              borderBottom: '1px solid rgba(147, 51, 234, 0.3)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               fontSize: '0.78rem',
-              color: 'rgba(255,255,255,0.8)',
+              color: 'rgba(255,255,255,0.85)',
+              flexShrink: 0,
             }}
           >
             <div>
-              Hablando con: <strong style={{ color: 'var(--color-purple-300)' }}>{currentAgent.name}</strong> ({currentAgent.role})
+              Hablando con: <strong style={{ color: '#d8b4fe' }}>{currentAgent.name}</strong> ({currentAgent.role})
             </div>
             <div style={{ display: 'flex', gap: '0.35rem' }}>
               {currentAgent.tools.map((t) => (
@@ -325,8 +330,8 @@ export default function ChatbotPage() {
                     fontFamily: 'monospace',
                     padding: '0.15rem 0.4rem',
                     borderRadius: '0.25rem',
-                    background: 'rgba(147, 51, 234, 0.2)',
-                    color: '#d8b4fe',
+                    background: 'rgba(147, 51, 234, 0.25)',
+                    color: '#e9d5ff',
                   }}
                 >
                   {t}()
@@ -340,11 +345,12 @@ export default function ChatbotPage() {
         <div
           style={{
             flex: 1,
-            padding: '1.25rem',
+            padding: '1rem',
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem',
+            gap: '0.85rem',
+            minHeight: 0,
           }}
         >
           {messages.map((m) => {
@@ -356,24 +362,24 @@ export default function ChatbotPage() {
                   display: 'flex',
                   justifyContent: isBot ? 'flex-start' : 'flex-end',
                   alignItems: 'flex-start',
-                  gap: '0.75rem',
+                  gap: '0.65rem',
                 }}
               >
                 {isBot && (
                   <div
                     style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: '0.5rem',
+                      width: 30,
+                      height: 30,
+                      borderRadius: '0.45rem',
                       background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '0.85rem',
+                      fontSize: '0.8rem',
                       color: 'white',
-                      fontWeight: 800,
+                      fontWeight: 700,
                       flexShrink: 0,
-                      boxShadow: '0 4px 10px rgba(124, 58, 237, 0.3)',
+                      boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
                     }}
                   >
                     🤖
@@ -382,30 +388,30 @@ export default function ChatbotPage() {
 
                 <div
                   style={{
-                    maxWidth: '82%',
-                    background: isBot ? '#262626' : 'linear-gradient(135deg, #6d28d9, #7c3aed)',
-                    border: isBot ? '1px solid #383838' : '1px solid rgba(147, 51, 234, 0.4)',
-                    borderRadius: '0.75rem',
-                    padding: '0.85rem 1.1rem',
-                    color: 'white',
-                    fontSize: '0.88rem',
-                    lineHeight: 1.55,
+                    maxWidth: '85%',
+                    background: isBot ? '#242424' : 'linear-gradient(135deg, #6d28d9, #7c3aed)',
+                    border: isBot ? '1px solid #333333' : '1px solid rgba(147, 51, 234, 0.4)',
+                    borderRadius: '0.65rem',
+                    padding: '0.75rem 1rem',
+                    color: '#ffffff',
+                    fontSize: '0.85rem',
+                    lineHeight: 1.5,
                     whiteSpace: 'pre-wrap',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
                   }}
                 >
                   {/* Tool execution badge if an action was executed */}
                   {m.toolExecuted && (
                     <div
                       style={{
-                        padding: '0.45rem 0.75rem',
+                        padding: '0.4rem 0.65rem',
                         background: 'rgba(74, 222, 128, 0.12)',
                         border: '1px solid rgba(74, 222, 128, 0.3)',
-                        borderRadius: '0.5rem',
-                        fontSize: '0.78rem',
+                        borderRadius: '0.45rem',
+                        fontSize: '0.75rem',
                         color: '#4ade80',
                         fontWeight: 600,
-                        marginBottom: '0.65rem',
+                        marginBottom: '0.5rem',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
@@ -415,7 +421,7 @@ export default function ChatbotPage() {
                       {m.toolExecuted.name === 'crm_create_lead' && (
                         <Link
                           href="/dashboard/clients"
-                          style={{ color: '#86efac', textDecoration: 'underline', fontSize: '0.75rem' }}
+                          style={{ color: '#86efac', textDecoration: 'underline', fontSize: '0.72rem', marginLeft: '0.5rem' }}
                         >
                           Ver en CRM ➔
                         </Link>
@@ -430,10 +436,10 @@ export default function ChatbotPage() {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      fontSize: '0.7rem',
-                      color: isBot ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.7)',
-                      marginTop: '0.5rem',
-                      gap: '1rem',
+                      fontSize: '0.68rem',
+                      color: isBot ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.7)',
+                      marginTop: '0.45rem',
+                      gap: '0.75rem',
                     }}
                   >
                     <span>
@@ -447,19 +453,19 @@ export default function ChatbotPage() {
           })}
 
           {loading && (
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
               <div
                 style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '0.5rem',
+                  width: 30,
+                  height: 30,
+                  borderRadius: '0.45rem',
                   background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '0.85rem',
+                  fontSize: '0.8rem',
                   color: 'white',
-                  fontWeight: 800,
+                  fontWeight: 700,
                   flexShrink: 0,
                 }}
               >
@@ -467,18 +473,18 @@ export default function ChatbotPage() {
               </div>
               <div
                 style={{
-                  background: '#262626',
-                  padding: '0.6rem 1rem',
-                  borderRadius: '0.75rem',
-                  color: '#c084fc',
-                  fontSize: '0.82rem',
-                  border: '1px solid #383838',
+                  background: '#242424',
+                  padding: '0.55rem 0.9rem',
+                  borderRadius: '0.65rem',
+                  color: '#d8b4fe',
+                  fontSize: '0.8rem',
+                  border: '1px solid #333333',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                 }}
               >
-                <span className="spinner" style={{ width: 14, height: 14 }} />
+                <span className="spinner" style={{ width: 13, height: 13 }} />
                 <span>Ejecutando razonamiento y acciones con Gemini 2.0 Flash...</span>
               </div>
             </div>
@@ -490,11 +496,11 @@ export default function ChatbotPage() {
         {/* Quick prompt suggestions */}
         <div
           style={{
-            padding: '0.5rem 1rem',
+            padding: '0.45rem 0.85rem',
             borderTop: '1px solid #282828',
-            background: '#181818',
+            background: '#141414',
             display: 'flex',
-            gap: '0.5rem',
+            gap: '0.4rem',
             overflowX: 'auto',
             flexShrink: 0,
           }}
@@ -506,24 +512,24 @@ export default function ChatbotPage() {
               disabled={loading}
               style={{
                 whiteSpace: 'nowrap',
-                padding: '0.35rem 0.75rem',
+                padding: '0.3rem 0.65rem',
                 borderRadius: '9999px',
-                background: '#242424',
-                border: '1px solid #383838',
+                background: '#222222',
+                border: '1px solid #333333',
                 color: 'rgba(255,255,255,0.75)',
-                fontSize: '0.75rem',
+                fontSize: '0.72rem',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--color-purple-400)'
+                e.currentTarget.style.borderColor = 'var(--color-purple-500)'
                 e.currentTarget.style.color = '#ffffff'
-                e.currentTarget.style.background = '#2c2c2c'
+                e.currentTarget.style.background = '#2a2a2a'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#383838'
+                e.currentTarget.style.borderColor = '#333333'
                 e.currentTarget.style.color = 'rgba(255,255,255,0.75)'
-                e.currentTarget.style.background = '#242424'
+                e.currentTarget.style.background = '#222222'
               }}
             >
               {prompt}
@@ -535,11 +541,11 @@ export default function ChatbotPage() {
         <form
           onSubmit={handleSendMessage}
           style={{
-            padding: '0.85rem 1rem',
-            borderTop: '1px solid #2e2e2e',
-            background: '#151515',
+            padding: '0.65rem 0.85rem',
+            borderTop: '1px solid #282828',
+            background: '#121212',
             display: 'flex',
-            gap: '0.75rem',
+            gap: '0.65rem',
             alignItems: 'center',
             flexShrink: 0,
           }}
@@ -556,31 +562,39 @@ export default function ChatbotPage() {
             disabled={loading}
             style={{
               flex: 1,
-              background: '#242424',
-              border: '1px solid #383838',
-              borderRadius: '0.5rem',
-              padding: '0.7rem 1rem',
+              background: '#222222',
+              border: '1px solid #333333',
+              borderRadius: '0.45rem',
+              padding: '0.65rem 0.85rem',
               color: 'white',
-              fontSize: '0.88rem',
+              fontSize: '0.85rem',
               outline: 'none',
               transition: 'border-color 0.2s',
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-purple-500)')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = '#383838')}
+            onFocus={(e) => (e.currentTarget.style.borderColor = '#9333ea')}
+            onBlur={(e) => (e.currentTarget.style.borderColor = '#333333')}
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="btn btn-primary"
             style={{
-              padding: '0.7rem 1.4rem',
-              fontSize: '0.88rem',
+              padding: '0.65rem 1.25rem',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.45rem',
+              cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
+              opacity: loading || !input.trim() ? 0.6 : 1,
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
+              gap: '0.4rem',
+              boxShadow: '0 2px 8px rgba(124, 58, 237, 0.4)',
+              flexShrink: 0,
             }}
           >
-            {loading ? <span className="spinner" /> : 'Enviar ↵'}
+            {loading ? <span className="spinner" style={{ width: 14, height: 14 }} /> : 'Enviar ↵'}
           </button>
         </form>
       </div>
