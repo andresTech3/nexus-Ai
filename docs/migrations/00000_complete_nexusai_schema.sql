@@ -171,12 +171,18 @@ create table if not exists public.ai_agents (
     id uuid primary key default gen_random_uuid(),
     organization_id uuid not null references public.organizations(id) on delete cascade,
     name text not null,
+    role text not null default 'Asistente Virtual',
     model text not null default 'gemini-2.0-flash',
     system_prompt text not null,
+    tools jsonb not null default '[]'::jsonb,
+    temperature numeric not null default 0.7,
+    max_tokens integer not null default 1000,
     is_active boolean not null default true,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
+
+create index if not exists idx_ai_agents_org on public.ai_agents(organization_id);
 
 create table if not exists public.ai_usage_logs (
     id uuid primary key default gen_random_uuid(),
@@ -395,3 +401,36 @@ create policy "Admins can view audit_logs" on public.audit_logs
               and organization_memberships.status = 'active'
         )
     );
+
+-- AI Agents: Lectura para miembros, gestión para administradores y empleados
+create policy "Members can view ai_agents" on public.ai_agents
+    for select using (
+        exists (
+            select 1 from public.organization_memberships
+            where organization_memberships.organization_id = ai_agents.organization_id
+              and organization_memberships.user_id = auth.uid()
+              and organization_memberships.status = 'active'
+        )
+    );
+
+create policy "Admins and employees can manage ai_agents" on public.ai_agents
+    for all
+    using (
+        exists (
+            select 1 from public.organization_memberships
+            where organization_memberships.organization_id = ai_agents.organization_id
+              and organization_memberships.user_id = auth.uid()
+              and organization_memberships.role in ('admin', 'employee')
+              and organization_memberships.status = 'active'
+        )
+    )
+    with check (
+        exists (
+            select 1 from public.organization_memberships
+            where organization_memberships.organization_id = ai_agents.organization_id
+              and organization_memberships.user_id = auth.uid()
+              and organization_memberships.role in ('admin', 'employee')
+              and organization_memberships.status = 'active'
+        )
+    );
+

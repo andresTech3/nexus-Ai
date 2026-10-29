@@ -63,3 +63,20 @@ export interface PaginatedResponse<T> {
     totalPages: number
   }
 }
+
+/** Agente IA Autónomo */
+export interface AiAgent {
+  id: string
+  organizationId: string
+  name: string
+  role: string
+  model: string
+  systemPrompt: string
+  tools: string[]
+  temperature: number
+  maxTokens: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+

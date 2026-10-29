@@ -15,7 +15,7 @@
 | MVP-03 | Proyectos, tareas y panel | **verificado** (API /projects, presupuestos, clientes asociados y panel reactivo) |
 | MVP-04 | Catálogo y cotizaciones | **verificado** (API /quotes, quote_items, cambio de estados y cálculos) |
 | MVP-05 | Colaboración y portal | `pendiente` |
-| MVP-06 | Gemini y agentes | **verificado** (Adaptador Gemini 2.0 Flash REST, cuotas y métricas) |
+| MVP-06 | Gemini y agentes | **verificado** (CRUD /ai/agents, persistencia en Supabase, cuotas, plantillas y tests) |
 | MVP-07 | Chatbot | **verificado** (Consola /chatbot interactiva conectada a RAG y API de IA) |
 | MVP-08 | Automatizaciones | `pendiente` |
 | MVP-09 | Marketing | `pendiente` |

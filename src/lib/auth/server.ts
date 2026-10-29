@@ -43,9 +43,42 @@ export async function getAuthContext(
     query.eq('organization_id', organizationId)
   }
 
-  const { data: membership, error } = await query.single()
+  const { data: memberships, error } = await query.limit(1)
+  let membership = memberships?.[0]
 
-  if (error || !membership) return null
+  // Auto-recuperación si no existe membresía aún para un usuario autenticado
+  if (!membership) {
+    try {
+      const userEmail = user.email || 'usuario'
+      const orgName = (user.user_metadata?.company as string) || `Agencia de ${userEmail.split('@')[0]}`
+      const slug = `${orgName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${user.id.substring(0, 6)}`
+
+      const { data: newOrg } = await supabase
+        .from('organizations')
+        .insert({ name: orgName, slug })
+        .select('id')
+        .single()
+
+      if (newOrg) {
+        await supabase.from('organization_memberships').insert({
+          user_id: user.id,
+          organization_id: newOrg.id,
+          role: 'admin',
+          status: 'active',
+        })
+
+        membership = {
+          organization_id: newOrg.id,
+          role: 'admin',
+          status: 'active',
+        }
+      }
+    } catch (e) {
+      console.warn('[Auto-provisioning org error]:', e)
+    }
+  }
+
+  if (!membership) return null
 
   return {
     userId: user.id,
