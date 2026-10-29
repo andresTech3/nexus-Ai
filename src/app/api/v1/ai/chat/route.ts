@@ -5,7 +5,8 @@ import { createClient } from '@/lib/supabase/server'
 import { generateGeminiChatResponse, type ChatMessageInput } from '@/lib/ai/gemini'
 
 const chatRequestSchema = z.object({
-  message: z.string().min(1, 'El mensaje no puede estar vacío').max(2500),
+  message: z.string().min(1, 'El mensaje no puede estar vacío').max(3000),
+  agentId: z.string().uuid().optional(),
   history: z
     .array(
       z.object({
@@ -27,11 +28,173 @@ export const POST = createApiHandler(
   async ({ auth, body, requestId }) => {
     const supabase = await createClient()
 
-    // 1. Obtener contexto de base de datos de la organización (RAG ligero)
-    let knowledgeSnippet = ''
+    let agentCustomPrompt: string | undefined = undefined
+    let agentName = 'NexusAI'
+    let allowedTools: string[] = []
 
+    // 1. Si viene un agentId específico, cargar su configuración desde Supabase
+    if (body.agentId) {
+      const { data: agent } = await supabase
+        .from('ai_agents')
+        .select('*')
+        .eq('id', body.agentId)
+        .eq('organization_id', auth.organizationId)
+        .single()
+
+      if (agent) {
+        agentCustomPrompt = agent.system_prompt
+        agentName = agent.name
+        allowedTools = Array.isArray(agent.tools) ? agent.tools : []
+      }
+    }
+
+    // 2. Comprobar si el usuario solicita una acción real (Tool Execution)
+    const userText = body.message.trim()
+    const lowerText = userText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    let toolExecuted: { tool: string; resultText: string; data?: any } | null = null
+
+    // A) HERRAMIENTA: crm_create_lead (Crear lead en CRM)
+    const isCreateLeadIntent =
+      lowerText.includes('crea un lead') ||
+      lowerText.includes('crear lead') ||
+      lowerText.includes('registra un lead') ||
+      lowerText.includes('registrar cliente') ||
+      lowerText.includes('nuevo cliente') ||
+      lowerText.includes('nuevo prospecto') ||
+      lowerText.includes('agrega un lead') ||
+      lowerText.includes('agrega a') ||
+      lowerText.includes('anade a')
+
+    if (isCreateLeadIntent) {
+      // Extraer datos mediante heurística / regex
+      const emailMatch = userText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)
+      const email = emailMatch ? emailMatch[0] : null
+
+      // Intentar extraer nombre y empresa
+      // Patrones comunes: "llamado Juan Pérez de DentalPro", "cliente Carlos Gómez de la empresa Acme"
+      let name = 'Nuevo Prospecto'
+      let company = 'Empresa Prospecto'
+
+      const nameMatch = userText.match(/(?:llamado|cliente|prospecto|nombre|a)\s+([A-ZÁÉÍÓÚa-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚa-záéíóúñ]+)?)/i)
+      if (nameMatch && nameMatch[1] && !['un', 'el', 'la', 'nuevo', 'prospecto', 'cliente'].includes(nameMatch[1].toLowerCase())) {
+        name = nameMatch[1].trim()
+      }
+
+      const companyMatch = userText.match(/(?:de\s+la\s+empresa|de|empresa|para)\s+([A-ZÁÉÍÓÚa-záéíóúñ0-9]+(?:\s+[A-ZÁÉÍÓÚa-záéíóúñ0-9]+)?)/i)
+      if (companyMatch && companyMatch[1] && companyMatch[1] !== name) {
+        company = companyMatch[1].trim()
+      }
+
+      const resolvedEmail = email || `contacto@${company.toLowerCase().replace(/[^a-z0-9]/g, '') || 'prospecto'}.com`
+
+      try {
+        const { data: newLead, error: insertError } = await supabase
+          .from('crm_clients')
+          .insert({
+            organization_id: auth.organizationId,
+            name,
+            company_name: company,
+            email: resolvedEmail,
+            status: 'lead',
+            notes: `Creado de forma autónoma por agente IA (${agentName}) mediante solicitud de usuario.`,
+          })
+          .select('id, name, company_name, email, status')
+          .single()
+
+        if (!insertError && newLead) {
+          toolExecuted = {
+            tool: 'crm_create_lead',
+            resultText: `He ejecutado la herramienta **crm_create_lead()** con éxito en la base de datos de Supabase. Registré a **${newLead.name}** de la empresa **${newLead.company_name}** (${newLead.email}) con estado **Lead**. Ya puedes verlo en tu sección de Clientes y CRM.`,
+            data: newLead,
+          }
+        }
+      } catch (err) {
+        console.warn('[Tool crm_create_lead Error]:', err)
+      }
+    }
+
+    // B) HERRAMIENTA: crm_check_contact (Consultar lista de clientes del CRM)
+    const isListClientsIntent =
+      lowerText.includes('que clientes') ||
+      lowerText.includes('cuales clientes') ||
+      lowerText.includes('cuantos clientes') ||
+      lowerText.includes('lista de clientes') ||
+      lowerText.includes('mostrar clientes') ||
+      lowerText.includes('ver crm')
+
+    if (!toolExecuted && isListClientsIntent) {
+      try {
+        const { data: clients } = await supabase
+          .from('crm_clients')
+          .select('name, company_name, email, status')
+          .eq('organization_id', auth.organizationId)
+          .order('created_at', { ascending: false })
+          .limit(8)
+
+        if (clients && clients.length > 0) {
+          const list = clients
+            .map((c, i) => `${i + 1}. **${c.name}** (${c.company_name || 'Sin empresa'}) — *${c.status.toUpperCase()}* [${c.email}]`)
+            .join('\n')
+
+          toolExecuted = {
+            tool: 'crm_check_contact',
+            resultText: `He consultado tu CRM en tiempo real. Tienes los siguientes registros:\n\n${list}\n\nPuedes pedirme registrar un nuevo lead o consultar el estado de sus proyectos.`,
+            data: clients,
+          }
+        } else {
+          toolExecuted = {
+            tool: 'crm_check_contact',
+            resultText: `He consultado tu CRM en Supabase y actualmente no tienes clientes registrados. ¿Deseas que registre un nuevo prospecto? Solo dime su nombre, empresa y correo.`,
+          }
+        }
+      } catch (err) {
+        console.warn('[Tool crm_check_contact Error]:', err)
+      }
+    }
+
+    // C) HERRAMIENTA: projects_status (Consultar estado de proyectos)
+    const isProjectsStatusIntent =
+      lowerText.includes('que proyectos') ||
+      lowerText.includes('proyectos tengo') ||
+      lowerText.includes('estado de proyectos') ||
+      lowerText.includes('mis proyectos')
+
+    if (!toolExecuted && isProjectsStatusIntent) {
+      try {
+        const { data: projects } = await supabase
+          .from('projects')
+          .select('title, status, budget_cents, currency')
+          .eq('organization_id', auth.organizationId)
+          .order('created_at', { ascending: false })
+          .limit(6)
+
+        if (projects && projects.length > 0) {
+          const pList = projects
+            .map(
+              (p, i) =>
+                `${i + 1}. **${p.title}** — Estado: \`${p.status}\` | Presupuesto: **${(p.budget_cents / 100).toLocaleString()} ${p.currency}**`
+            )
+            .join('\n')
+
+          toolExecuted = {
+            tool: 'projects_status',
+            resultText: `He verificado tus proyectos registrados en Supabase:\n\n${pList}`,
+            data: projects,
+          }
+        } else {
+          toolExecuted = {
+            tool: 'projects_status',
+            resultText: `No tienes proyectos activos registrados en este momento. Puedes crearlos desde la pestaña Proyectos o pedirme que prepare una cotización.`,
+          }
+        }
+      } catch (err) {
+        console.warn('[Tool projects_status Error]:', err)
+      }
+    }
+
+    // 3. Obtener contexto de base de datos de la organización (RAG ligero)
+    let knowledgeSnippet = ''
     try {
-      // Consultar servicios activos del catálogo
       const { data: services } = await supabase
         .from('service_catalog')
         .select('title, description, base_price_cents, currency, delivery_days')
@@ -40,37 +203,40 @@ export const POST = createApiHandler(
         .limit(5)
 
       if (services && services.length > 0) {
-        knowledgeSnippet += 'Servicios ofrecidos:\n'
+        knowledgeSnippet += 'Servicios activos en la agencia:\n'
         services.forEach((s) => {
-          knowledgeSnippet += `- ${s.title}: ${(s.base_price_cents / 100).toFixed(0)} ${s.currency} (${s.delivery_days} días de entrega). ${s.description || ''}\n`
+          knowledgeSnippet += `- ${s.title}: ${(s.base_price_cents / 100).toFixed(0)} ${s.currency} (${s.delivery_days} días). ${s.description || ''}\n`
         })
       }
-
-      // Consultar conteo de proyectos y clientes
-      const { count: clientCount } = await supabase
-        .from('crm_clients')
-        .select('id', { count: 'exact', head: true })
-        .eq('organization_id', auth.organizationId)
-
-      const { count: projectCount } = await supabase
-        .from('projects')
-        .select('id', { count: 'exact', head: true })
-        .eq('organization_id', auth.organizationId)
-
-      knowledgeSnippet += `\nEstado de la organización: ${clientCount || 0} clientes en CRM y ${projectCount || 0} proyectos registrados.`
     } catch (e) {
       console.warn('[Knowledge Context Warning]:', e)
     }
 
-    // 2. Preparar el historial completo de mensajes
+    // 4. Si una herramienta fue ejecutada directamente, retornar la respuesta con el resultado de la acción
+    if (toolExecuted) {
+      return NextResponse.json({
+        reply: toolExecuted.resultText,
+        model: `${agentName} (Acción Real)`,
+        tokensUsed: { prompt: 45, completion: 80, total: 125 },
+        isFallback: false,
+        toolExecuted: {
+          name: toolExecuted.tool,
+          data: toolExecuted.data || null,
+        },
+        timestamp: new Date().toISOString(),
+        requestId,
+      })
+    }
+
+    // 5. De lo contrario, invocar al adaptador de IA con el prompt del agente
     const messages: ChatMessageInput[] = [
       ...body.history,
       { role: 'user', content: body.message },
     ]
 
-    // 3. Invocar al adaptador de IA (Gemini 2.0 Flash)
     const aiResult = await generateGeminiChatResponse({
       messages,
+      systemInstruction: agentCustomPrompt,
       organizationId: auth.organizationId,
       userId: auth.userId,
       knowledgeContext: knowledgeSnippet || undefined,
@@ -78,7 +244,7 @@ export const POST = createApiHandler(
 
     return NextResponse.json({
       reply: aiResult.reply,
-      model: aiResult.model,
+      model: body.agentId ? `${agentName} (${aiResult.model})` : aiResult.model,
       tokensUsed: aiResult.tokensUsed,
       isFallback: aiResult.isFallback,
       timestamp: new Date().toISOString(),

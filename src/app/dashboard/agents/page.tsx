@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import Link from 'next/link'
 
 interface Agent {
   id: string
@@ -28,9 +29,20 @@ interface AgentStats {
   quotaRemaining: number
 }
 
+interface TestMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  time: string
+  toolExecuted?: {
+    name: string
+    data?: any
+  }
+}
+
 const AVAILABLE_TOOLS = [
-  { id: 'crm_create_lead', name: 'crm_create_lead', desc: 'Crear leads en CRM' },
-  { id: 'crm_check_contact', name: 'crm_check_contact', desc: 'Consultar contactos' },
+  { id: 'crm_create_lead', name: 'crm_create_lead', desc: 'Crear leads reales en CRM' },
+  { id: 'crm_check_contact', name: 'crm_check_contact', desc: 'Consultar clientes del CRM' },
   { id: 'catalog_query', name: 'catalog_query', desc: 'Consultar catálogo y tarifas' },
   { id: 'quote_calculate', name: 'quote_calculate', desc: 'Calcular cotizaciones' },
   { id: 'projects_status', name: 'projects_status', desc: 'Consultar estado de proyectos' },
@@ -93,6 +105,13 @@ export default function AgentsPage() {
   const [formMaxTokens, setFormMaxTokens] = useState<number>(1000)
   const [formIsActive, setFormIsActive] = useState<boolean>(true)
 
+  // Live Agent Playground State
+  const [testingAgent, setTestingAgent] = useState<Agent | null>(null)
+  const [testMessages, setTestMessages] = useState<TestMessage[]>([])
+  const [testInput, setTestInput] = useState('')
+  const [testLoading, setTestLoading] = useState(false)
+  const testEndRef = useRef<HTMLDivElement>(null)
+
   const showToast = (text: string, type: 'success' | 'error' = 'success') => {
     setToastMessage({ text, type })
     setTimeout(() => setToastMessage(null), 4000)
@@ -124,6 +143,13 @@ export default function AgentsPage() {
     fetchAgents()
   }, [fetchAgents])
 
+  // Scroll to bottom on test messages
+  useEffect(() => {
+    if (testingAgent) {
+      testEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [testMessages, testLoading, testingAgent])
+
   const openModal = (agent?: Agent) => {
     if (agent) {
       setSelectedAgent(agent)
@@ -147,6 +173,79 @@ export default function AgentsPage() {
       setFormIsActive(true)
     }
     setShowConfigModal(true)
+  }
+
+  const openPlayground = (agent: Agent) => {
+    setTestingAgent(agent)
+    setTestMessages([
+      {
+        id: 'msg-init',
+        role: 'assistant',
+        content: `¡Hola! Soy ${agent.name} (${agent.role}). Estoy listo para ejecutar mis instrucciones y herramientas permitidas (${agent.tools.join(', ') || 'sin herramientas'}). ¿Qué deseas que haga?`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      },
+    ])
+    setTestInput('')
+  }
+
+  const sendTestMessage = async (text: string) => {
+    if (!text.trim() || testLoading || !testingAgent) return
+
+    const userMsg: TestMessage = {
+      id: `usr-${Date.now()}`,
+      role: 'user',
+      content: text.trim(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    }
+
+    setTestMessages((prev) => [...prev, userMsg])
+    setTestInput('')
+    setTestLoading(true)
+
+    try {
+      const history = testMessages.map((m) => ({ role: m.role, content: m.content }))
+
+      const res = await fetch('/api/v1/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text.trim(),
+          agentId: testingAgent.id,
+          history,
+        }),
+      })
+
+      if (res.ok) {
+        const json = await res.json()
+        const botMsg: TestMessage = {
+          id: `bot-${Date.now()}`,
+          role: 'assistant',
+          content: json.reply,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          toolExecuted: json.toolExecuted,
+        }
+        setTestMessages((prev) => [...prev, botMsg])
+      } else {
+        const err = await res.json().catch(() => ({}))
+        const errorMsg: TestMessage = {
+          id: `bot-err-${Date.now()}`,
+          role: 'assistant',
+          content: `⚠️ ${err.message || 'Error al comunicarse con el agente'}`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }
+        setTestMessages((prev) => [...prev, errorMsg])
+      }
+    } catch {
+      const errorMsg: TestMessage = {
+        id: `bot-err-${Date.now()}`,
+        role: 'assistant',
+        content: '⚠️ Error de conexión con el agente',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }
+      setTestMessages((prev) => [...prev, errorMsg])
+    } finally {
+      setTestLoading(false)
+    }
   }
 
   const applyTemplate = (template: typeof AGENT_TEMPLATES[0]) => {
@@ -241,7 +340,6 @@ export default function AgentsPage() {
       })
 
       if (!res.ok) {
-        // Revertir
         setAgents((prev) =>
           prev.map((a) => (a.id === agent.id ? { ...a, isActive: agent.isActive } : a))
         )
@@ -284,7 +382,7 @@ export default function AgentsPage() {
   const remainingPercent = `${((remainingQuota / 1500) * 100).toFixed(1)}%`
 
   return (
-    <div id="agents-page">
+    <div id="agents-page" style={{ color: '#f3f4f6' }}>
       {/* Toast Alert */}
       {toastMessage && (
         <div
@@ -296,7 +394,7 @@ export default function AgentsPage() {
             color: 'white',
             padding: '0.875rem 1.5rem',
             borderRadius: '0.75rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
             zIndex: 9999,
             fontSize: '0.9rem',
             fontWeight: 600,
@@ -315,7 +413,7 @@ export default function AgentsPage() {
             Agentes Autónomos de IA
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)' }}>
-            Configuración y monitorización de agentes inteligentes conectados a Supabase y potenciados por Google Gemini.
+            Configuración, ejecución y monitorización de agentes inteligentes conectados a Supabase y Google Gemini.
           </p>
         </div>
         <button
@@ -331,8 +429,8 @@ export default function AgentsPage() {
       {/* Quota & Status Banner */}
       <div
         style={{
-          background: 'linear-gradient(135deg, rgba(147, 51, 234, 0.12), rgba(34, 211, 238, 0.06))',
-          border: '1px solid rgba(147, 51, 234, 0.28)',
+          background: '#1c1c1c',
+          border: '1px solid #2e2e2e',
           borderRadius: '0.875rem',
           padding: '1.25rem 1.5rem',
           marginBottom: '2rem',
@@ -347,7 +445,7 @@ export default function AgentsPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
             <span style={{ color: '#4ade80', fontSize: '0.9rem' }}>●</span>
             <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'white' }}>Proveedor Activo: Google Gemini 2.0 Flash</span>
-            <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>Nivel Gratuito Activo</span>
+            <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>Free Tier Activo</span>
             <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 600 }}>• Persistencia Supabase</span>
           </div>
           <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.65)' }}>
@@ -374,7 +472,7 @@ export default function AgentsPage() {
 
       {/* Filter and Search Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', background: 'rgba(255,255,255,0.03)', padding: '0.25rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', background: '#1c1c1c', padding: '0.25rem', borderRadius: '0.5rem', border: '1px solid #2e2e2e' }}>
           <button
             onClick={() => setStatusFilter('all')}
             style={{
@@ -431,8 +529,8 @@ export default function AgentsPage() {
             style={{
               width: '100%',
               padding: '0.55rem 0.85rem',
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.1)',
+              background: '#1c1c1c',
+              border: '1px solid #2e2e2e',
               borderRadius: '0.5rem',
               color: 'white',
               fontSize: '0.85rem',
@@ -452,8 +550,8 @@ export default function AgentsPage() {
           style={{
             padding: '3.5rem 2rem',
             textAlign: 'center',
-            background: 'rgba(255, 255, 255, 0.02)',
-            border: '1px dashed rgba(147, 51, 234, 0.25)',
+            background: '#1c1c1c',
+            border: '1px dashed #333',
             borderRadius: '1rem',
             display: 'flex',
             flexDirection: 'column',
@@ -482,14 +580,15 @@ export default function AgentsPage() {
             <div
               key={agent.id}
               style={{
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: agent.isActive ? '1px solid rgba(147, 51, 234, 0.25)' : '1px solid rgba(255, 255, 255, 0.08)',
+                background: '#1c1c1c',
+                border: agent.isActive ? '1px solid #333333' : '1px solid #282828',
                 borderRadius: '1rem',
                 padding: '1.5rem',
                 display: 'flex',
                 flexDirection: 'column',
-                transition: 'border-color 0.2s, transform 0.2s',
-                opacity: agent.isActive ? 1 : 0.7,
+                transition: 'all 0.2s',
+                opacity: agent.isActive ? 1 : 0.75,
+                boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
               }}
             >
               {/* Card Header */}
@@ -560,12 +659,37 @@ export default function AgentsPage() {
               </div>
 
               {/* Metrics and actions */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.875rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ display: 'flex', gap: '1rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)' }}>
-                  <span>Llamadas: <strong style={{ color: 'white' }}>{agent.callsToday}</strong></span>
-                  <span>Tokens: <strong style={{ color: '#38bdf8' }}>{agent.totalTokens}</strong></span>
-                </div>
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #282828' }}>
+                {/* PROBAR AGENTE BUTTON */}
+                <button
+                  onClick={() => openPlayground(agent)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.4rem 0.8rem',
+                    borderRadius: '0.5rem',
+                    background: 'rgba(147, 51, 234, 0.25)',
+                    border: '1px solid rgba(147, 51, 234, 0.5)',
+                    color: '#e9d5ff',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--color-purple-600)'
+                    e.currentTarget.style.color = 'white'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(147, 51, 234, 0.25)'
+                    e.currentTarget.style.color = '#e9d5ff'
+                  }}
+                >
+                  💬 Probar Agente
+                </button>
+
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                   <button
                     onClick={() => openModal(agent)}
                     style={{
@@ -600,13 +724,288 @@ export default function AgentsPage() {
         </div>
       )}
 
+      {/* LIVE AGENT PLAYGROUND MODAL */}
+      {testingAgent && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '1rem',
+          }}
+        >
+          <div
+            style={{
+              background: '#181818',
+              border: '1px solid #333',
+              borderRadius: '1rem',
+              width: '100%',
+              maxWidth: 680,
+              height: '85vh',
+              maxHeight: 700,
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.9)',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                padding: '1rem 1.25rem',
+                borderBottom: '1px solid #282828',
+                background: '#141414',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '1.1rem' }}>🤖</span>
+                  <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'white' }}>
+                    Probando Agente: {testingAgent.name}
+                  </h2>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      padding: '0.15rem 0.5rem',
+                      borderRadius: '999px',
+                      background: 'rgba(147, 51, 234, 0.2)',
+                      color: '#d8b4fe',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {testingAgent.role}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.2rem' }}>
+                  Herramientas activas: {testingAgent.tools.map((t) => `${t}()`).join(', ') || 'Ninguna'}
+                </div>
+              </div>
+              <button
+                onClick={() => setTestingAgent(null)}
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: '1.25rem', cursor: 'pointer' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Test Messages Stream */}
+            <div
+              style={{
+                flex: 1,
+                padding: '1.25rem',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.85rem',
+                background: '#191919',
+              }}
+            >
+              {testMessages.map((m) => {
+                const isBot = m.role === 'assistant'
+                return (
+                  <div
+                    key={m.id}
+                    style={{
+                      display: 'flex',
+                      justifyContent: isBot ? 'flex-start' : 'flex-end',
+                      alignItems: 'flex-start',
+                      gap: '0.6rem',
+                    }}
+                  >
+                    {isBot && (
+                      <div
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: '0.35rem',
+                          background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.75rem',
+                          color: 'white',
+                          flexShrink: 0,
+                        }}
+                      >
+                        🤖
+                      </div>
+                    )}
+                    <div
+                      style={{
+                        maxWidth: '85%',
+                        background: isBot ? '#262626' : 'linear-gradient(135deg, #6d28d9, #7c3aed)',
+                        border: isBot ? '1px solid #333' : '1px solid rgba(147, 51, 234, 0.4)',
+                        borderRadius: '0.75rem',
+                        padding: '0.75rem 1rem',
+                        color: 'white',
+                        fontSize: '0.85rem',
+                        lineHeight: 1.5,
+                        whiteSpace: 'pre-wrap',
+                      }}
+                    >
+                      {/* Tool Execution Notification */}
+                      {m.toolExecuted && (
+                        <div
+                          style={{
+                            padding: '0.4rem 0.65rem',
+                            background: 'rgba(74, 222, 128, 0.12)',
+                            border: '1px solid rgba(74, 222, 128, 0.3)',
+                            borderRadius: '0.4rem',
+                            fontSize: '0.75rem',
+                            color: '#4ade80',
+                            fontWeight: 600,
+                            marginBottom: '0.5rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <span>✓ Acción Real: <code>{m.toolExecuted.name}()</code></span>
+                          {m.toolExecuted.name === 'crm_create_lead' && (
+                            <Link href="/dashboard/clients" style={{ color: '#86efac', textDecoration: 'underline' }}>
+                              Ver en CRM ➔
+                            </Link>
+                          )}
+                        </div>
+                      )}
+                      <div>{m.content}</div>
+                      <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.4)', textAlign: 'right', marginTop: '0.35rem' }}>
+                        {m.time}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+
+              {testLoading && (
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', color: '#c084fc', fontSize: '0.8rem' }}>
+                  <span className="spinner" style={{ width: 14, height: 14 }} />
+                  <span>{testingAgent.name} está procesando y ejecutando acciones...</span>
+                </div>
+              )}
+              <div ref={testEndRef} />
+            </div>
+
+            {/* Quick Test Prompt Shortcuts */}
+            <div
+              style={{
+                padding: '0.5rem 1rem',
+                borderTop: '1px solid #282828',
+                background: '#141414',
+                display: 'flex',
+                gap: '0.4rem',
+                overflowX: 'auto',
+              }}
+            >
+              <button
+                onClick={() => sendTestMessage('Crea un lead llamado Carlos Gómez de DentalPro con correo carlos@dentalpro.com')}
+                disabled={testLoading}
+                style={{
+                  whiteSpace: 'nowrap',
+                  padding: '0.3rem 0.65rem',
+                  borderRadius: '999px',
+                  background: '#222',
+                  border: '1px solid #333',
+                  color: '#4ade80',
+                  fontSize: '0.72rem',
+                  cursor: 'pointer',
+                }}
+              >
+                ⚡ Probar: Crear Lead en CRM
+              </button>
+              <button
+                onClick={() => sendTestMessage('¿Qué clientes tengo en el CRM?')}
+                disabled={testLoading}
+                style={{
+                  whiteSpace: 'nowrap',
+                  padding: '0.3rem 0.65rem',
+                  borderRadius: '999px',
+                  background: '#222',
+                  border: '1px solid #333',
+                  color: '#38bdf8',
+                  fontSize: '0.72rem',
+                  cursor: 'pointer',
+                }}
+              >
+                🔍 Probar: Consultar CRM
+              </button>
+              <button
+                onClick={() => sendTestMessage('¿Cuáles son las tarifas y paquetes de automatización?')}
+                disabled={testLoading}
+                style={{
+                  whiteSpace: 'nowrap',
+                  padding: '0.3rem 0.65rem',
+                  borderRadius: '999px',
+                  background: '#222',
+                  border: '1px solid #333',
+                  color: '#e9d5ff',
+                  fontSize: '0.72rem',
+                  cursor: 'pointer',
+                }}
+              >
+                💰 Probar: Tarifas
+              </button>
+            </div>
+
+            {/* Test Input Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                sendTestMessage(testInput)
+              }}
+              style={{
+                padding: '0.75rem 1rem',
+                borderTop: '1px solid #282828',
+                background: '#141414',
+                display: 'flex',
+                gap: '0.6rem',
+              }}
+            >
+              <input
+                type="text"
+                placeholder={`Instrucción para ${testingAgent.name}...`}
+                value={testInput}
+                onChange={(e) => setTestInput(e.target.value)}
+                disabled={testLoading}
+                style={{
+                  flex: 1,
+                  background: '#222',
+                  border: '1px solid #333',
+                  borderRadius: '0.5rem',
+                  padding: '0.6rem 0.85rem',
+                  color: 'white',
+                  fontSize: '0.85rem',
+                  outline: 'none',
+                }}
+              />
+              <button
+                type="submit"
+                disabled={testLoading || !testInput.trim()}
+                className="btn btn-primary"
+                style={{ padding: '0.6rem 1.1rem', fontSize: '0.85rem' }}
+              >
+                {testLoading ? '...' : 'Enviar'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Config / Create Modal */}
       {showConfigModal && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0,0,0,0.8)',
+            background: 'rgba(0,0,0,0.85)',
             backdropFilter: 'blur(6px)',
             display: 'flex',
             alignItems: 'center',
@@ -617,8 +1016,8 @@ export default function AgentsPage() {
         >
           <div
             style={{
-              background: '#0d0d16',
-              border: '1px solid rgba(147, 51, 234, 0.35)',
+              background: '#181818',
+              border: '1px solid #333',
               borderRadius: '1rem',
               width: '100%',
               maxWidth: 600,
@@ -660,8 +1059,8 @@ export default function AgentsPage() {
                       style={{
                         padding: '0.35rem 0.65rem',
                         borderRadius: '0.35rem',
-                        border: '1px solid rgba(255,255,255,0.15)',
-                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid #333',
+                        background: '#222',
                         color: 'white',
                         fontSize: '0.75rem',
                         cursor: 'pointer',
@@ -686,7 +1085,7 @@ export default function AgentsPage() {
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="Ej. LeadBot Pro"
-                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#13131f', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#222', border: '1px solid #333', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
                   />
                 </div>
                 <div>
@@ -699,7 +1098,7 @@ export default function AgentsPage() {
                     value={formRole}
                     onChange={(e) => setFormRole(e.target.value)}
                     placeholder="Ej. Calificador de Leads CRM"
-                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#13131f', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#222', border: '1px solid #333', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
                   />
                 </div>
               </div>
@@ -709,7 +1108,7 @@ export default function AgentsPage() {
                 <select
                   value={formModel}
                   onChange={(e) => setFormModel(e.target.value)}
-                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#13131f', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
+                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#222', border: '1px solid #333', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
                 >
                   <option value="gemini-2.0-flash">Google Gemini 2.0 Flash (Recomendado — 0€ / Free Tier)</option>
                   <option value="gemini-1.5-flash">Google Gemini 1.5 Flash (Free Tier)</option>
@@ -727,7 +1126,7 @@ export default function AgentsPage() {
                   value={formSystemPrompt}
                   onChange={(e) => setFormSystemPrompt(e.target.value)}
                   placeholder="Define el rol estricto, tono de voz y restricciones de seguridad del agente..."
-                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#13131f', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.5rem', color: 'white', resize: 'vertical', fontSize: '0.85rem' }}
+                  style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#222', border: '1px solid #333', borderRadius: '0.5rem', color: 'white', resize: 'vertical', fontSize: '0.85rem' }}
                 />
               </div>
 
@@ -746,8 +1145,8 @@ export default function AgentsPage() {
                         style={{
                           padding: '0.5rem 0.75rem',
                           borderRadius: '0.5rem',
-                          background: isChecked ? 'rgba(147, 51, 234, 0.2)' : 'rgba(255,255,255,0.03)',
-                          border: isChecked ? '1px solid rgba(147, 51, 234, 0.5)' : '1px solid rgba(255,255,255,0.08)',
+                          background: isChecked ? 'rgba(147, 51, 234, 0.2)' : '#222',
+                          border: isChecked ? '1px solid rgba(147, 51, 234, 0.5)' : '1px solid #333',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
@@ -807,7 +1206,7 @@ export default function AgentsPage() {
                     step="50"
                     value={formMaxTokens}
                     onChange={(e) => setFormMaxTokens(parseInt(e.target.value) || 1000)}
-                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#13131f', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
+                    style={{ width: '100%', padding: '0.6rem 0.8rem', background: '#222', border: '1px solid #333', borderRadius: '0.5rem', color: 'white', fontSize: '0.85rem' }}
                   />
                 </div>
               </div>
