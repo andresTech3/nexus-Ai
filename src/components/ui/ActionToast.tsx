@@ -6,7 +6,7 @@ export interface ActionToastData {
   title: string
   problem: string
   actionRequired: string
-  type: 'error' | 'warning' | 'info' | 'success'
+  type?: 'error' | 'warning' | 'success'
 }
 
 interface ActionToastProps {
@@ -23,7 +23,6 @@ export function ActionToast({ toast, onClose }: ActionToastProps) {
   const borderColor = isError ? '#ef4444' : isSuccess ? '#22c55e' : '#f59e0b'
   const bgColor = isError ? '#1c1212' : isSuccess ? '#101c13' : '#1c1810'
   const titleColor = isError ? '#fca5a5' : isSuccess ? '#86efac' : '#fde68a'
-  const icon = isError ? '⚠️' : isSuccess ? '✓' : 'ℹ️'
 
   return (
     <div
@@ -51,7 +50,23 @@ export function ActionToast({ toast, onClose }: ActionToastProps) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '1.1rem' }}>{icon}</span>
+          {isError ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          ) : isSuccess ? (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          )}
           <span style={{ fontWeight: 700, fontSize: '0.9rem', color: titleColor, letterSpacing: '-0.01em' }}>
             {toast.title}
           </span>
@@ -63,13 +78,20 @@ export function ActionToast({ toast, onClose }: ActionToastProps) {
             background: 'none',
             border: 'none',
             color: 'rgba(255,255,255,0.5)',
-            fontSize: '1.1rem',
+            width: '24px',
+            height: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             cursor: 'pointer',
-            padding: '0.2rem',
-            lineHeight: 1,
+            padding: 0,
+            borderRadius: '4px',
           }}
         >
-          ✕
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="2" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
 
@@ -91,7 +113,7 @@ export function ActionToast({ toast, onClose }: ActionToastProps) {
           lineHeight: 1.45,
         }}
       >
-        <span style={{ color: '#38bdf8', fontWeight: 700 }}>👉 Lo que debes hacer: </span>
+        <span style={{ color: '#38bdf8', fontWeight: 700 }}>Acción requerida: </span>
         {toast.actionRequired}
       </div>
     </div>

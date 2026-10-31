@@ -100,7 +100,13 @@ export default function ReportsPage() {
             {logs.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>📊</div>
+                  <div style={{ width: 44, height: 44, margin: '0 auto 0.75rem auto', borderRadius: '8px', backgroundColor: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#faae33' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="20" x2="18" y2="10"></line>
+                      <line x1="12" y1="20" x2="12" y2="4"></line>
+                      <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                  </div>
                   <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
                     No hay eventos de auditoría registrados todavía
                   </div>
@@ -145,7 +151,7 @@ export default function ReportsPage() {
                         border: '1px solid rgba(74, 222, 128, 0.3)',
                       }}
                     >
-                      ✓ Correcto
+                      Correcto
                     </span>
                   </td>
                 </tr>

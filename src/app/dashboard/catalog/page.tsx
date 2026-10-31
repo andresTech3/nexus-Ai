@@ -91,7 +91,13 @@ export default function CatalogPage() {
               justifyContent: 'center',
             }}
           >
-            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>📦</div>
+            <div style={{ width: 44, height: 44, margin: '0 auto 1rem auto', borderRadius: '8px', backgroundColor: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#faae33' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
               No tienes servicios registrados en el catálogo todavía
             </h3>
@@ -143,7 +149,7 @@ export default function CatalogPage() {
                 {srv.category}
               </span>
               <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)' }}>
-                ⏱ Plazo: {srv.estimatedDays} días
+                Plazo: {srv.estimatedDays} días
               </span>
             </div>
 
@@ -166,7 +172,10 @@ export default function CatalogPage() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                 {srv.features.map((f, i) => (
                   <li key={i} style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ color: '#4ade80' }}>✓</span> {f}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -225,9 +234,13 @@ export default function CatalogPage() {
               <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>Nuevo Servicio del Catálogo</h2>
               <button
                 onClick={() => setShowModal(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: '1.25rem', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRadius: '4px' }}
+                aria-label="Cerrar modal"
               >
-                ✕
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
 

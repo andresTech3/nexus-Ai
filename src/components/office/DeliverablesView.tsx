@@ -136,8 +136,12 @@ export function DeliverablesView() {
             gap: '0.45rem',
           }}
         >
-          <span>📦</span>
-          <span>{isZipping ? 'Generando ZIP...' : 'Descargar Todo en ZIP (JSZip)'}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>{isZipping ? 'Generando ZIP...' : 'Descargar Todo en ZIP'}</span>
         </button>
       </div>
 
@@ -159,12 +163,12 @@ export function DeliverablesView() {
             borderBottom: activeSubTab === 'gallery' ? '2px solid #faae33' : '2px solid transparent',
             color: activeSubTab === 'gallery' ? '#faae33' : '#9ca3af',
             fontSize: '0.78rem',
-            fontWeight: 800,
+            fontWeight: 700,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
           }}
         >
-          🎨 Creativos &amp; Anuncios IA (Leo)
+          Creativos y Anuncios (Leo)
         </button>
         <button
           onClick={() => setActiveSubTab('market_research')}
@@ -175,12 +179,12 @@ export function DeliverablesView() {
             borderBottom: activeSubTab === 'market_research' ? '2px solid #34d399' : '2px solid transparent',
             color: activeSubTab === 'market_research' ? '#34d399' : '#9ca3af',
             fontSize: '0.78rem',
-            fontWeight: 800,
+            fontWeight: 700,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
           }}
         >
-          🔍 Averiguación Real de Mercado (Iván)
+          Investigación de Mercado (Iván)
         </button>
         <button
           onClick={() => setActiveSubTab('calculator')}
@@ -196,7 +200,7 @@ export function DeliverablesView() {
             whiteSpace: 'nowrap',
           }}
         >
-          📊 Calculadora Determinista (Eva)
+          Calculadora Determinista (Eva)
         </button>
         <button
           onClick={() => setActiveSubTab('mobile_store')}
@@ -212,7 +216,7 @@ export function DeliverablesView() {
             whiteSpace: 'nowrap',
           }}
         >
-          📱 Mockup Móvil Shopify (Diego)
+          Mockup Móvil Shopify (Diego)
         </button>
 
         <button
@@ -229,7 +233,7 @@ export function DeliverablesView() {
             whiteSpace: 'nowrap',
           }}
         >
-          🎬 Guion Vídeo 9:16 (Marco)
+          Guion Vídeo 9:16 (Marco)
         </button>
         <button
           onClick={() => setActiveSubTab('meta_ads')}
@@ -245,7 +249,7 @@ export function DeliverablesView() {
             whiteSpace: 'nowrap',
           }}
         >
-          🎯 Blueprint Meta Ads (Tomás)
+          Blueprint Meta Ads (Tomás)
         </button>
         <button
           onClick={() => setActiveSubTab('all_files')}
@@ -261,7 +265,7 @@ export function DeliverablesView() {
             whiteSpace: 'nowrap',
           }}
         >
-          📁 Todos los Archivos ({Object.keys(deliverables).length})
+          Todos los Archivos ({Object.keys(deliverables).length})
         </button>
       </div>
 
@@ -743,7 +747,7 @@ export function DeliverablesView() {
                 {/* Ingredients Accordion Mandatory */}
                 <div style={{ marginTop: '1rem', borderTop: '1px solid #3d2a1d', paddingTop: '0.6rem' }}>
                   <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#faae33', marginBottom: '0.2rem' }}>
-                    🌿 Ficha de Ingredientes (INCI):
+                    Ficha de Ingredientes (INCI):
                   </div>
                   <div style={{ fontSize: '0.64rem', color: '#9ca3af', lineHeight: 1.4 }}>
                     Ácido hialurónico puro microcristalizado, Niacinamida, Centella Asiática, Madecassoside. Sin alcohol ni fragancias sintéticas.
@@ -888,8 +892,8 @@ export function DeliverablesView() {
             </div>
 
             <div style={{ background: '#201712', border: '1px solid #ef4444', borderRadius: '8px', padding: '1rem' }}>
-              <div style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 800, marginBottom: '0.4rem' }}>
-                🛡️ REGLAS DETERMINISTAS DE STOP-LOSS (VINCULADAS A EVA):
+              <div style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 800, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Reglas Deterministas de Stop-Loss (Eva):
               </div>
               <div style={{ fontSize: '0.76rem', color: '#d1d5db', lineHeight: 1.6 }}>
                 <div>1. <strong>Parada Inmediata:</strong> Si un conjunto gasta más de <strong>{(liveEcon.cpa_maximo_rentable * 1.5).toFixed(2)} €</strong> sin registrar compras, pausar de inmediato.</div>
@@ -1013,9 +1017,13 @@ export function DeliverablesView() {
               </h3>
               <button
                 onClick={() => setPreviewFile(null)}
-                style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '1.2rem', cursor: 'pointer' }}
+                style={{ background: 'transparent', border: 'none', color: '#9ca3af', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRadius: '4px' }}
+                aria-label="Cerrar vista previa"
               >
-                ✕
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
             <div style={{ padding: '1rem', overflowY: 'auto', flex: 1 }}>

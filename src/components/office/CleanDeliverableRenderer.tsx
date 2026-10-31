@@ -162,7 +162,7 @@ export function CleanDeliverableRenderer({
 
         <div style={{ backgroundColor: '#201712', border: '1px solid #3d2a1d', borderRadius: '6px', padding: '0.75rem', marginBottom: '0.75rem' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#faae33', marginBottom: '0.35rem' }}>
-            ✦ Mecanismo Único y Factor "Wow":
+            Mecanismo Único y Factor Diferenciador:
           </div>
           <p style={{ fontSize: '0.78rem', color: '#d1d5db', lineHeight: 1.45, margin: 0 }}>
             {data.mecanismo_diferenciador ||
@@ -172,7 +172,7 @@ export function CleanDeliverableRenderer({
 
         <div style={{ backgroundColor: '#201712', border: '1px solid #3d2a1d', borderRadius: '6px', padding: '0.75rem' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#faae33', marginBottom: '0.35rem' }}>
-            ✦ Recomendación de Abastecimiento:
+            Recomendación de Abastecimiento:
           </div>
           <div style={{ fontSize: '0.75rem', color: '#9ca3af', lineHeight: 1.4 }}>
             <div>• Proveedor recomendado: <strong>CJ Dropshipping Verified Supplier</strong></div>
@@ -194,7 +194,7 @@ export function CleanDeliverableRenderer({
           <div style={{ backgroundColor: '#201712', border: '1px solid #059669', borderRadius: '6px', padding: '0.6rem' }}>
             <div style={{ fontSize: '0.68rem', color: '#9ca3af' }}>Multiplicador Markup</div>
             <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#34d399' }}>4.2x</div>
-            <div style={{ fontSize: '0.62rem', color: '#34d399' }}>✓ Excede mínimo 3.5x</div>
+            <div style={{ fontSize: '0.62rem', color: '#34d399' }}>Excede mínimo 3.5x</div>
           </div>
           <div style={{ backgroundColor: '#201712', border: '1px solid #3d2a1d', borderRadius: '6px', padding: '0.6rem' }}>
             <div style={{ fontSize: '0.68rem', color: '#9ca3af' }}>PVP Recomendado</div>
@@ -256,8 +256,11 @@ export function CleanDeliverableRenderer({
 
         <div style={{ backgroundColor: '#201712', border: '1px solid #3d2a1d', borderRadius: '6px', padding: '0.85rem', marginBottom: '0.85rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ width: 38, height: 38, borderRadius: '50%', backgroundColor: '#ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
-              👩
+            <div style={{ width: 38, height: 38, borderRadius: '50%', backgroundColor: 'rgba(236, 72, 153, 0.2)', border: '1px solid #ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ec4899' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
             </div>
             <div>
               <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#fff' }}>Laura Méndez, 34 años</div>

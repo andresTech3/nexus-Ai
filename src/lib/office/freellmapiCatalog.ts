@@ -148,16 +148,16 @@ export const FREELLMAPI_CATALOG: FreeLLMAPIModelInfo[] = [
 
 export const FREELLMAPI_CATEGORIES = [
   { id: 'all', name: 'Todos los Modelos' },
-  { id: 'auto', name: '🌟 Smart Failover' },
-  { id: 'cerebras', name: '⚡ Cerebras' },
-  { id: 'google', name: '🧠 Google Gemini' },
-  { id: 'groq', name: '🚀 Groq' },
-  { id: 'mistral', name: '🇫🇷 Mistral' },
-  { id: 'openrouter', name: '🌐 OpenRouter' },
-  { id: 'nvidia', name: '🟢 NVIDIA NIM' },
-  { id: 'cohere', name: '📚 Cohere' },
-  { id: 'cloudflare', name: '☁️ Cloudflare' },
-  { id: 'search', name: '🔎 Búsqueda Web' },
+  { id: 'auto', name: 'Smart Failover' },
+  { id: 'cerebras', name: 'Cerebras' },
+  { id: 'google', name: 'Google Gemini' },
+  { id: 'groq', name: 'Groq' },
+  { id: 'mistral', name: 'Mistral' },
+  { id: 'openrouter', name: 'OpenRouter' },
+  { id: 'nvidia', name: 'NVIDIA NIM' },
+  { id: 'cohere', name: 'Cohere' },
+  { id: 'cloudflare', name: 'Cloudflare' },
+  { id: 'search', name: 'Búsqueda Web' },
 ]
 
 export function getRecommendedModelForAgent(agentId: string): string {

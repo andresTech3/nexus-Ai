@@ -254,7 +254,7 @@ export function createBlockedResponse(reason: string, isApi: boolean): Response 
     return new Response(
       JSON.stringify({
         error: 'ACCESO_BLOQUEADO_INSTANTANEAMENTE',
-        mensaje: '⚠️ ADVERTENCIA DE SEGURIDAD: Tu acceso ha sido bloqueado instantáneamente debido a actividad automatizada de bot o solicitudes concurrentes desde múltiples direcciones IP.',
+        mensaje: 'ADVERTENCIA DE SEGURIDAD: Tu acceso ha sido bloqueado instantáneamente debido a actividad automatizada de bot o solicitudes concurrentes desde múltiples direcciones IP.',
         motivo: reason,
         accion: 'Sesión invalidada y dirección IP restringida.',
         soporte: 'contacto@nexusai.com',
@@ -365,7 +365,7 @@ export function createBlockedResponse(reason: string, isApi: boolean): Response 
 <body>
   <div class="card">
     <span class="badge">Bloqueo de Seguridad Activo</span>
-    <h1>⚠️ Acceso Bloqueado Instantáneamente</h1>
+    <h1>Acceso Restringido</h1>
     <p>
       El sistema de monitoreo en tiempo real ha detectado un comportamiento anómalo que coincide con
       <strong>tráfico automatizado de bots</strong> o <strong>múltiples direcciones IP interactuando de forma simultánea</strong>.

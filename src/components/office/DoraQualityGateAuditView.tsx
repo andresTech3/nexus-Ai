@@ -4,6 +4,93 @@ import React, { useState } from 'react'
 import { useOfficeStore } from '@/lib/office/store'
 import { calculateUnitEconomics } from '@/lib/office/finance/calculator'
 
+function CheckStatusIcon() {
+  return (
+    <div style={{
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      backgroundColor: 'rgba(52, 211, 153, 0.1)',
+      border: '1px solid rgba(52, 211, 153, 0.3)',
+      color: '#34d399',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0
+    }}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+  )
+}
+
+function AlertStatusIcon() {
+  return (
+    <div style={{
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      backgroundColor: 'rgba(250, 174, 51, 0.1)',
+      border: '1px solid rgba(250, 174, 51, 0.3)',
+      color: '#faae33',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0
+    }}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
+  )
+}
+
+function PendingStatusIcon() {
+  return (
+    <div style={{
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      backgroundColor: 'rgba(161, 161, 170, 0.1)',
+      border: '1px solid rgba(161, 161, 170, 0.25)',
+      color: '#a1a1aa',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0
+    }}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    </div>
+  )
+}
+
+function FailStatusIcon() {
+  return (
+    <div style={{
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      backgroundColor: 'rgba(248, 113, 113, 0.1)',
+      border: '1px solid rgba(248, 113, 113, 0.3)',
+      color: '#f87171',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0
+    }}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </div>
+  )
+}
+
 export function DoraQualityGateAuditView() {
   const store = useOfficeStore()
   const activeOffice = store.offices[store.activeOfficeId]
@@ -32,7 +119,6 @@ export function DoraQualityGateAuditView() {
 
   // 2. Audit Pillar 1: Multiplier
   const markupPass = eco.multiplicador_markup >= 3.5
-  const markupStatus = markupPass ? 'PASSED' : 'FAILED'
 
   // 3. Audit Pillar 2: Legal Claims Scan
   const copyContent = typeof deliverables['05_copy_landing_page_carlos.md'] === 'string'
@@ -103,18 +189,18 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
       } else {
         setLiveDoraVerdict(
           `Evaluación Heurística de Dora:\n\n` +
-          `1. Rentabilidad: El multiplicador de ${eco.multiplicador_markup}x cumple con creces el estándar de la industria (>=3.5x), garantizando un colchón publicitario de ${eco.cpa_maximo_rentable}€ por adquisición.\n` +
-          `2. Cumplimiento: Estructura limpia sin reclamos médicos directos ni promesas desmesuradas.\n` +
-          `3. Creativos: Se recomienda probar 3 ángulos de gancho en TikTok (problema visual, sorpresa y comparativa de precio).\n` +
-          `4. Publicidad: Activar Stop-Loss a 1.5x CPA máximo (${(eco.cpa_maximo_rentable * 1.5).toFixed(2)}€) para proteger el capital ante cualquier variación del algoritmo.`
+          `• Rentabilidad: El multiplicador de ${eco.multiplicador_markup}x cumple con creces el estándar de la industria (>=3.5x), garantizando un colchón publicitario de ${eco.cpa_maximo_rentable}€ por adquisición.\n` +
+          `• Cumplimiento: Estructura limpia sin reclamos médicos directos ni promesas desmesuradas.\n` +
+          `• Creativos: Se recomienda probar 3 ángulos de gancho en TikTok (problema visual, sorpresa y comparativa de precio).\n` +
+          `• Publicidad: Activar Stop-Loss a 1.5x CPA máximo (${(eco.cpa_maximo_rentable * 1.5).toFixed(2)}€) para proteger el capital ante cualquier variación del algoritmo.`
         )
       }
     } catch {
       setLiveDoraVerdict(
         `Evaluación Heurística de Dora:\n\n` +
-        `✓ Rentabilidad Validada: Multiplicador ${eco.multiplicador_markup}x (Mínimo exigido: 3.5x).\n` +
-        `✓ CPA Techo: ${eco.cpa_maximo_rentable}€ para mantener margen neto positivo.\n` +
-        `✓ Recomendación para tu tienda: Mantén el bundle de 2da unidad con 30% de descuento para elevar el AOV a >65€ y maximizar el beneficio neto de cada compra.`
+        `• Rentabilidad Validada: Multiplicador ${eco.multiplicador_markup}x (Mínimo exigido: 3.5x).\n` +
+        `• CPA Techo: ${eco.cpa_maximo_rentable}€ para mantener margen neto positivo.\n` +
+        `• Recomendación: Mantener el bundle de 2da unidad con 30% de descuento para elevar el AOV a >65€ y maximizar el beneficio neto de cada compra.`
       )
     } finally {
       setIsRunningLiveAudit(false)
@@ -126,10 +212,10 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
       {/* Header Banner */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #1f140e, #140d09)',
-          border: '1px solid #3d2a1d',
-          borderRadius: '12px',
-          padding: '1.25rem 1.5rem',
+          background: '#111113',
+          border: '1px solid #1f1f23',
+          borderRadius: '8px',
+          padding: '1.25rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -140,41 +226,45 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div
             style={{
-              width: 50,
-              height: 50,
-              borderRadius: '12px',
-              backgroundColor: '#2a1a12',
-              border: '2px solid #faae33',
+              width: 44,
+              height: 44,
+              borderRadius: '8px',
+              backgroundColor: '#18181c',
+              border: '1px solid #27272a',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.6rem',
-              boxShadow: '0 0 20px rgba(250, 174, 51, 0.25)',
+              color: '#faae33',
             }}
           >
-            ⚖️
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#fff', margin: 0 }}>
-                Auditoría de Calidad &amp; Quality Gate (Dora CEO)
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff', margin: 0 }}>
+                Auditoría de Calidad y Control de Riesgo (Dora CEO)
               </h2>
               <span
                 style={{
-                  fontSize: '0.7rem',
-                  fontWeight: 800,
-                  backgroundColor: overallScore >= 75 ? '#064e3b' : '#332418',
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  backgroundColor: overallScore >= 75 ? 'rgba(52, 211, 153, 0.1)' : 'rgba(250, 174, 51, 0.1)',
                   color: overallScore >= 75 ? '#34d399' : '#faae33',
                   padding: '2px 8px',
                   borderRadius: '4px',
-                  border: `1px solid ${overallScore >= 75 ? '#059669' : '#faae33'}`,
+                  border: `1px solid ${overallScore >= 75 ? 'rgba(52, 211, 153, 0.3)' : 'rgba(250, 174, 51, 0.3)'}`,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
                 }}
               >
-                {hasDeliverables ? (overallScore >= 75 ? 'APROBADO PARA DROPSHIPPING' : 'REQUIERE AJUSTES') : 'LISTO PARA EJECUTAR'}
+                {hasDeliverables ? (overallScore >= 75 ? 'Aprobado para Operación' : 'Ajustes Requeridos') : 'Listo para Ejecutar'}
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0' }}>
-              Evaluación automatizada y transparente de los 5 pilares críticos para que tu negocio de dropshipping funcione de forma rentable y segura.
+              Evaluación automatizada de los 5 pilares críticos para que el catálogo opere de forma rentable y segura.
             </p>
           </div>
         </div>
@@ -184,23 +274,37 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
           onClick={handleRunLiveDoraEvaluation}
           disabled={isRunningLiveAudit}
           style={{
-            background: 'linear-gradient(135deg, #faae33, #823513)',
-            color: '#181008',
+            background: '#faae33',
+            color: '#120d09',
             border: 'none',
-            padding: '0.65rem 1.25rem',
+            padding: '0.55rem 1.15rem',
             borderRadius: '6px',
-            fontSize: '0.82rem',
-            fontWeight: 800,
+            fontSize: '0.8rem',
+            fontWeight: 700,
             cursor: isRunningLiveAudit ? 'not-allowed' : 'pointer',
             opacity: isRunningLiveAudit ? 0.7 : 1,
-            boxShadow: '0 4px 15px rgba(250, 174, 51, 0.3)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
           }}
         >
-          <span>{isRunningLiveAudit ? '⏳' : '✨'}</span>
-          <span>{isRunningLiveAudit ? 'Dora Evaluando...' : 'Pedir Veredicto Personalizado a Dora'}</span>
+          {isRunningLiveAudit ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
+              <line x1="12" y1="2" x2="12" y2="6"></line>
+              <line x1="12" y1="18" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="6" y2="12"></line>
+              <line x1="18" y1="12" x2="22" y2="12"></line>
+              <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+              <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          )}
+          <span>{isRunningLiveAudit ? 'Evaluando...' : 'Pedir Veredicto a Dora'}</span>
         </button>
       </div>
 
@@ -208,9 +312,9 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
       {liveDoraVerdict && (
         <div
           style={{
-            backgroundColor: '#1b1410',
-            border: '1px solid #faae33',
-            borderRadius: '10px',
+            backgroundColor: '#111113',
+            border: '1px solid #1f1f23',
+            borderRadius: '8px',
             padding: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
@@ -218,21 +322,24 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '1.1rem' }}>👩‍💼</span>
-            <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#faae33' }}>
-              Veredicto Ejecutivo de Dora sobre tu Producto:
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#faae33" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#faae33' }}>
+              Veredicto Ejecutivo de Dora:
             </span>
           </div>
           <div
             style={{
-              fontSize: '0.85rem',
-              color: '#e5e7eb',
+              fontSize: '0.82rem',
+              color: '#d4d4d8',
               lineHeight: 1.6,
               whiteSpace: 'pre-line',
-              backgroundColor: '#140d09',
+              backgroundColor: '#18181b',
               padding: '1rem',
-              borderRadius: '8px',
-              border: '1px solid #332418',
+              borderRadius: '6px',
+              border: '1px solid #27272a',
             }}
           >
             {liveDoraVerdict}
@@ -251,80 +358,80 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
         {/* Metric 1 */}
         <div
           style={{
-            backgroundColor: '#19120e',
-            border: '1px solid #332418',
+            backgroundColor: '#111113',
+            border: '1px solid #1f1f23',
             borderRadius: '8px',
             padding: '1rem',
           }}
         >
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 700 }}>
-            MULTIPLICADOR DE PRECIO
+          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Multiplicador de Precio
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: markupPass ? '#34d399' : '#f87171', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: markupPass ? '#34d399' : '#f87171', marginTop: '4px' }}>
             {eco.multiplicador_markup}x
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', marginTop: '4px' }}>
-            Exigido: &ge; 3.5x {markupPass ? '✓ Cumplido' : '✕ Insuficiente'}
+          <div style={{ fontSize: '0.72rem', color: '#a1a1aa', marginTop: '4px' }}>
+            Exigido: &ge; 3.5x ({markupPass ? 'Cumplido' : 'Insuficiente'})
           </div>
         </div>
 
         {/* Metric 2 */}
         <div
           style={{
-            backgroundColor: '#19120e',
-            border: '1px solid #332418',
+            backgroundColor: '#111113',
+            border: '1px solid #1f1f23',
             borderRadius: '8px',
             padding: '1rem',
           }}
         >
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 700 }}>
-            CPA MÁXIMO (STOP-LOSS)
+          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            CPA Máximo (Stop-Loss)
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#38bdf8', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#38bdf8', marginTop: '4px' }}>
             {eco.cpa_maximo_rentable}€
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', marginTop: '4px' }}>
-            Corte automático en Meta a {(eco.cpa_maximo_rentable * 1.5).toFixed(2)}€
+          <div style={{ fontSize: '0.72rem', color: '#a1a1aa', marginTop: '4px' }}>
+            Corte en Meta a {(eco.cpa_maximo_rentable * 1.5).toFixed(2)}€
           </div>
         </div>
 
         {/* Metric 3 */}
         <div
           style={{
-            backgroundColor: '#19120e',
-            border: '1px solid #332418',
+            backgroundColor: '#111113',
+            border: '1px solid #1f1f23',
             borderRadius: '8px',
             padding: '1rem',
           }}
         >
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 700 }}>
-            FILTRO LEGAL PUBLICITARIO
+          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Filtro Legal Publicitario
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: legalPass ? '#34d399' : '#f87171', marginTop: '4px' }}>
-            {legalPass ? '100% Limpio' : 'Claims Detectados'}
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: legalPass ? '#34d399' : '#f87171', marginTop: '4px' }}>
+            {legalPass ? 'Validado' : 'Observaciones'}
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', marginTop: '4px' }}>
-            {detectedForbidden.length === 0 ? 'Sin reclamos médicos prohibidos' : `${detectedForbidden.length} palabras de riesgo`}
+          <div style={{ fontSize: '0.72rem', color: '#a1a1aa', marginTop: '4px' }}>
+            {detectedForbidden.length === 0 ? 'Sin afirmaciones de riesgo' : `${detectedForbidden.length} términos detectados`}
           </div>
         </div>
 
         {/* Metric 4 */}
         <div
           style={{
-            backgroundColor: '#19120e',
-            border: '1px solid #332418',
+            backgroundColor: '#111113',
+            border: '1px solid #1f1f23',
             borderRadius: '8px',
             padding: '1rem',
           }}
         >
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 700 }}>
-            ENTREGABLES EN EL PROYECTO
+          <div style={{ fontSize: '0.72rem', color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Entregables del Proyecto
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: hasDeliverables ? '#faae33' : '#9ca3af', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: hasDeliverables ? '#faae33' : '#a1a1aa', marginTop: '4px' }}>
             {Object.keys(deliverables).length} / 11
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#9ca3af', marginTop: '4px' }}>
-            {hasDeliverables ? 'Generados para tu marca' : 'Proyecto vacío (Listo para ejecutar)'}
+          <div style={{ fontSize: '0.72rem', color: '#a1a1aa', marginTop: '4px' }}>
+            {hasDeliverables ? 'Completados para el catálogo' : 'En cola de ejecución'}
           </div>
         </div>
       </div>
@@ -332,44 +439,44 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
       {/* 5-Pillar Detailed Audit Breakdown */}
       <div
         style={{
-          backgroundColor: '#19120e',
-          border: '1px solid #332418',
-          borderRadius: '10px',
+          backgroundColor: '#111113',
+          border: '1px solid #1f1f23',
+          borderRadius: '8px',
           padding: '1.25rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
         }}
       >
-        <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#faae33' }}>
-          DESGLOSE DE LOS 5 CRITERIOS DE CALIDAD DROPSHIPPING
+        <div style={{ fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#faae33' }}>
+          Desglose de los 5 Criterios de Calidad
         </div>
 
         {/* Item 1 */}
         <div
           style={{
-            backgroundColor: '#140d09',
-            border: '1px solid #2a1a12',
-            borderRadius: '8px',
+            backgroundColor: '#18181b',
+            border: '1px solid #27272a',
+            borderRadius: '6px',
             padding: '1rem',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '1rem',
           }}
         >
-          <div style={{ fontSize: '1.4rem' }}>{markupPass ? '✅' : '❌'}</div>
+          <div>{markupPass ? <CheckStatusIcon /> : <FailStatusIcon />}</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <strong style={{ color: '#fff', fontSize: '0.88rem' }}>
                 1. Fórmula Financiera: Multiplicador &ge; 3.5x y Margen Bruto &gt; 70%
               </strong>
-              <span style={{ fontSize: '0.75rem', color: markupPass ? '#34d399' : '#f87171', fontWeight: 800 }}>
-                {markupPass ? 'APROBADO' : 'NO CUMPLE'}
+              <span style={{ fontSize: '0.72rem', color: markupPass ? '#34d399' : '#f87171', fontWeight: 700, textTransform: 'uppercase' }}>
+                {markupPass ? 'Aprobado' : 'No Cumple'}
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0', lineHeight: 1.5 }}>
-              En dropshipping con tráfico de pago (Meta/TikTok), un producto con multiplicador inferior a 3.5x quema el margen operativo en ad spend.
-              Con un PVP de <strong>{pvp}€</strong> y un coste de proveedor de <strong>{costo_proveedor}€</strong>, tu multiplicador es de <strong>{eco.multiplicador_markup}x</strong>.
+              En dropshipping con tráfico de pago (Meta/TikTok), un producto con multiplicador inferior a 3.5x compromete el margen operativo en adquisición.
+              Con un PVP de <strong>{pvp}€</strong> y un coste de proveedor de <strong>{costo_proveedor}€</strong>, el multiplicador es de <strong>{eco.multiplicador_markup}x</strong>.
             </p>
           </div>
         </div>
@@ -377,28 +484,28 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
         {/* Item 2 */}
         <div
           style={{
-            backgroundColor: '#140d09',
-            border: '1px solid #2a1a12',
-            borderRadius: '8px',
+            backgroundColor: '#18181b',
+            border: '1px solid #27272a',
+            borderRadius: '6px',
             padding: '1rem',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '1rem',
           }}
         >
-          <div style={{ fontSize: '1.4rem' }}>{legalPass ? '✅' : '⚠️'}</div>
+          <div>{legalPass ? <CheckStatusIcon /> : <AlertStatusIcon />}</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <strong style={{ color: '#fff', fontSize: '0.88rem' }}>
                 2. Filtro Antiban y Legal: Cumplimiento de Políticas de Anuncios
               </strong>
-              <span style={{ fontSize: '0.75rem', color: legalPass ? '#34d399' : '#faae33', fontWeight: 800 }}>
-                {legalPass ? 'APROBADO' : 'REVISAR'}
+              <span style={{ fontSize: '0.72rem', color: legalPass ? '#34d399' : '#faae33', fontWeight: 700, textTransform: 'uppercase' }}>
+                {legalPass ? 'Aprobado' : 'Revisar'}
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0', lineHeight: 1.5 }}>
-              Auditoría sobre el copy de Carlos. Prohíbe afirmaciones de cura médica, pérdida milagrosa o falsas garantías.
-              {hasDeliverables ? ' Tu landing page y anuncios utilizan un lenguaje persuasivo pero seguro para evitar bloqueos en Meta Ads Manager.' : ' Se evaluará automáticamente en cuanto ejecutes el pipeline.'}
+              Auditoría del copy redactado. Prohíbe afirmaciones de curación médica, pérdida acelerada o garantías desmedidas.
+              {hasDeliverables ? ' La landing page y anuncios utilizan un lenguaje persuasivo sin riesgo de bloqueo en Meta Ads Manager.' : ' Se evaluará automáticamente al ejecutar el pipeline.'}
             </p>
           </div>
         </div>
@@ -406,27 +513,27 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
         {/* Item 3 */}
         <div
           style={{
-            backgroundColor: '#140d09',
-            border: '1px solid #2a1a12',
-            borderRadius: '8px',
+            backgroundColor: '#18181b',
+            border: '1px solid #27272a',
+            borderRadius: '6px',
             padding: '1rem',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '1rem',
           }}
         >
-          <div style={{ fontSize: '1.4rem' }}>{hasDeliverables ? '✅' : '⏳'}</div>
+          <div>{hasDeliverables ? <CheckStatusIcon /> : <PendingStatusIcon />}</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <strong style={{ color: '#fff', fontSize: '0.88rem' }}>
-                3. Calidad Visual &amp; Retención: Ganchos de 0-3 Segundos (TikTok / Reels)
+                3. Calidad Visual y Retención: Ganchos de 0-3 Segundos (TikTok / Reels)
               </strong>
-              <span style={{ fontSize: '0.75rem', color: hasDeliverables ? '#34d399' : '#9ca3af', fontWeight: 800 }}>
-                {hasDeliverables ? 'OPTIMIZADO' : 'PENDIENTE'}
+              <span style={{ fontSize: '0.72rem', color: hasDeliverables ? '#34d399' : '#9ca3af', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hasDeliverables ? 'Optimizado' : 'Pendiente'}
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0', lineHeight: 1.5 }}>
-              Marco y Leo generan los guiones UGC y renders de producto en formato nativo 9:16 con corte dinámico y 3 variantes de gancho inicial (Visual, Problema y Curiosidad) para maximizar el Thumb-Stop Rate.
+              Guiones UGC y composiciones de producto en formato vertical 9:16 con cortes dinámicos y 3 variantes de gancho inicial (Visual, Problema y Curiosidad).
             </p>
           </div>
         </div>
@@ -434,27 +541,27 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
         {/* Item 4 */}
         <div
           style={{
-            backgroundColor: '#140d09',
-            border: '1px solid #2a1a12',
-            borderRadius: '8px',
+            backgroundColor: '#18181b',
+            border: '1px solid #27272a',
+            borderRadius: '6px',
             padding: '1rem',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '1rem',
           }}
         >
-          <div style={{ fontSize: '1.4rem' }}>{hasDeliverables ? '✅' : '⏳'}</div>
+          <div>{hasDeliverables ? <CheckStatusIcon /> : <PendingStatusIcon />}</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <strong style={{ color: '#fff', fontSize: '0.88rem' }}>
-                4. Blindaje Publicitario: Reglas de Stop-Loss Sincronizadas
+                4. Control Presupuestario: Reglas de Stop-Loss Sincronizadas
               </strong>
-              <span style={{ fontSize: '0.75rem', color: hasDeliverables ? '#34d399' : '#9ca3af', fontWeight: 800 }}>
-                {hasDeliverables ? 'BLINDADO' : 'PENDIENTE'}
+              <span style={{ fontSize: '0.72rem', color: hasDeliverables ? '#34d399' : '#9ca3af', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hasDeliverables ? 'Configurado' : 'Pendiente'}
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0', lineHeight: 1.5 }}>
-              Tomás programa la campaña Meta Ads CBO con una regla inquebrantable: Si un conjunto de anuncios gasta 1.5x el CPA máximo rentable ({ (eco.cpa_maximo_rentable * 1.5).toFixed(2) }€) sin registrar compra, se pausa automáticamente para proteger tu dinero.
+              Configuración de campaña Meta Ads con regla preventiva: Si un conjunto de anuncios gasta 1.5x el CPA máximo ({ (eco.cpa_maximo_rentable * 1.5).toFixed(2) }€) sin registrar compras, se pausa automáticamente.
             </p>
           </div>
         </div>
@@ -462,27 +569,27 @@ Por favor, evalúa si estos resultados son adecuados para mi negocio de dropship
         {/* Item 5 */}
         <div
           style={{
-            backgroundColor: '#140d09',
-            border: '1px solid #2a1a12',
-            borderRadius: '8px',
+            backgroundColor: '#18181b',
+            border: '1px solid #27272a',
+            borderRadius: '6px',
             padding: '1rem',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '1rem',
           }}
         >
-          <div style={{ fontSize: '1.4rem' }}>{hasDeliverables ? '✅' : '⏳'}</div>
+          <div>{hasDeliverables ? <CheckStatusIcon /> : <PendingStatusIcon />}</div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <strong style={{ color: '#fff', fontSize: '0.88rem' }}>
-                5. Resiliencia Operativa: Envíos &le; 10 Días y Árbol de Devoluciones
+                5. Resiliencia Operativa: Envíos &le; 10 Días y Protocolo de Postventa
               </strong>
-              <span style={{ fontSize: '0.75rem', color: hasDeliverables ? '#34d399' : '#9ca3af', fontWeight: 800 }}>
-                {hasDeliverables ? 'PROTEGIDO' : 'PENDIENTE'}
+              <span style={{ fontSize: '0.72rem', color: hasDeliverables ? '#34d399' : '#9ca3af', fontWeight: 700, textTransform: 'uppercase' }}>
+                {hasDeliverables ? 'Validado' : 'Pendiente'}
               </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0', lineHeight: 1.5 }}>
-              Marta e Iván validan tiempos de entrega de 8 a 10 días laborables con número de seguimiento y manual de devoluciones con garantía de satisfacción de 30 días para evitar disputas bancarias o chargebacks.
+              Plazos de entrega validados de 8 a 10 días laborables con seguimiento automatizado y política de devoluciones con garantía de 30 días para evitar contracargos.
             </p>
           </div>
         </div>

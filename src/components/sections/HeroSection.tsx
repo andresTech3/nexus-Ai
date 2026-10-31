@@ -22,8 +22,12 @@ export default function HeroSection() {
           {/* Eyebrow & Star Rating (Matches screenshot top-left) */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <div style={{ display: 'flex', color: 'var(--color-tiger-gold)', fontSize: '13px', letterSpacing: '3px' }}>
-                ★★★★★
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--color-tiger-gold)' }}>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                ))}
               </div>
               <span style={{ fontFamily: 'var(--font-graphikx)', fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 300+ Clientes Globales
@@ -58,7 +62,11 @@ export default function HeroSection() {
                   margin: '0 8px',
                 }}
               >
-                ✦
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
               </span>
               AGENCY
             </span>
@@ -129,7 +137,11 @@ export default function HeroSection() {
                     flexShrink: 0,
                   }}
                 >
-                  ⚡
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: 'var(--font-salmond)', fontSize: '15px', color: '#ffffff', fontWeight: 700 }}>

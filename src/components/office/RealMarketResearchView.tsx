@@ -16,9 +16,14 @@ export function RealMarketResearchView() {
 
   if (!productName) {
     return (
-      <div style={{ padding: '3rem 2rem', textAlign: 'center', background: '#17110d', borderRadius: '12px', border: '1px solid #3d2a1d' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔍</div>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>Averiguación de Mercado de Iván y Lucas</h3>
+      <div style={{ padding: '3rem 2rem', textAlign: 'center', background: '#111113', borderRadius: '8px', border: '1px solid #1f1f23' }}>
+        <div style={{ width: 44, height: 44, margin: '0 auto 0.75rem auto', borderRadius: '8px', backgroundColor: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#faae33' }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>Investigación de Mercado</h3>
         <p style={{ fontSize: '0.85rem', color: '#9ca3af', maxWidth: 500, margin: '0 auto' }}>
           Configura un producto o nicho en la cabecera para que Iván y Lucas consulten en tiempo real competidores, quejas recurrentes y costes de fábrica en AliExpress / CJ Dropshipping.
         </p>
@@ -199,8 +204,22 @@ export function RealMarketResearchView() {
             gap: '0.5rem',
           }}
         >
-          <span>{isLoading ? '⏳' : '🔍'}</span>
-          <span>{isLoading ? 'Consultando FreeLLMAPI en Vivo...' : 'Ejecutar Averiguación Real en Vivo'}</span>
+          {isLoading ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
+              <line x1="12" y1="2" x2="12" y2="6"></line>
+              <line x1="12" y1="18" x2="12" y2="22"></line>
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+              <line x1="2" y1="12" x2="6" y2="12"></line>
+              <line x1="18" y1="12" x2="22" y2="12"></line>
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          )}
+          <span>{isLoading ? 'Consultando Mercado...' : 'Ejecutar Consulta en Vivo'}</span>
         </button>
       </div>
 
@@ -309,9 +328,9 @@ export function RealMarketResearchView() {
         {/* Customer Friction Points & Unfair Advantages */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
           {/* Complaints */}
-          <div style={{ backgroundColor: '#1c1511', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem' }}>
-            <div style={{ fontSize: '0.78rem', color: '#f87171', fontWeight: 800, marginBottom: '0.6rem' }}>
-              ⚠️ QUEJAS Y PUNTOS DE DOLOR DE COMPRADORES DE LA COMPETENCIA
+          <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '6px', padding: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#f87171', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.6rem' }}>
+              Puntos de Fricción y Quejas de Compradores
             </div>
             <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.75rem', color: '#d1d5db', lineHeight: 1.6 }}>
               {displayData.consumer_friction_points.map((point: string, idx: number) => (
@@ -321,9 +340,9 @@ export function RealMarketResearchView() {
           </div>
 
           {/* Unfair Advantages */}
-          <div style={{ backgroundColor: '#1c1511', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem' }}>
-            <div style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 800, marginBottom: '0.6rem' }}>
-              🛡️ CÓMO NUESTRA MARCA ({brandName}) GANA LA CUOTA DE MERCADO
+          <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '6px', padding: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.6rem' }}>
+              Ventajas Competitivas de la Marca ({brandName})
             </div>
             <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.75rem', color: '#d1d5db', lineHeight: 1.6 }}>
               {displayData.unfair_advantages.map((adv: string, idx: number) => (
@@ -334,9 +353,9 @@ export function RealMarketResearchView() {
         </div>
 
         {/* High ROAS Marketing Angles */}
-        <div style={{ backgroundColor: '#1c1511', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem' }}>
-          <div style={{ fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800, marginBottom: '0.75rem' }}>
-            🎯 ÁNGULOS PUBLICITARIOS CON ALTO POTENCIAL DE ROAS
+        <div style={{ backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '6px', padding: '1rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+            Ángulos Publicitarios con Alto Potencial de ROAS
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '0.75rem' }}>
             {displayData.marketing_angles_high_roas.map((ang: any, idx: number) => (

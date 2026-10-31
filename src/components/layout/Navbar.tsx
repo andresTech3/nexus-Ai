@@ -42,7 +42,11 @@ export default function Navbar() {
                   marginRight: 4,
                 }}
               >
-                ✦
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
               </span>
               NEXUS<span style={{ color: '#ffffff' }}>AI</span>
             </Link>
@@ -85,7 +89,7 @@ export default function Navbar() {
           {/* Actions */}
           <div className="nav-actions">
             <Link href="/dashboard" className="btn btn-primary btn-sm" id="nav-cta-btn">
-              ⚡ Entrar a Oficina 3D <span style={{ marginLeft: 4, fontWeight: 900 }}>&rarr;</span>
+              Entrar al Dashboard <span style={{ marginLeft: 4, fontWeight: 900 }}>&rarr;</span>
             </Link>
 
             {/* Mobile toggle */}

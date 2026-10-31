@@ -839,9 +839,9 @@ export function Office3D() {
         <button
           onClick={() => store.setCameraZone('all')}
           style={{
-            background: cameraZone === 'all' ? '#faae33' : 'rgba(30, 22, 17, 0.85)',
+            background: cameraZone === 'all' ? '#faae33' : 'rgba(18, 18, 20, 0.85)',
             color: cameraZone === 'all' ? '#181008' : '#f3f4f6',
-            border: '1px solid #faae33',
+            border: `1px solid ${cameraZone === 'all' ? '#faae33' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.72rem',
@@ -849,14 +849,14 @@ export function Office3D() {
             cursor: 'pointer',
           }}
         >
-          🏢 Vista General
+          Vista General
         </button>
         <button
           onClick={() => store.setCameraZone('dora')}
           style={{
-            background: cameraZone === 'dora' ? '#faae33' : 'rgba(30, 22, 17, 0.85)',
+            background: cameraZone === 'dora' ? '#faae33' : 'rgba(18, 18, 20, 0.85)',
             color: cameraZone === 'dora' ? '#181008' : '#f3f4f6',
-            border: '1px solid #faae33',
+            border: `1px solid ${cameraZone === 'dora' ? '#faae33' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.72rem',
@@ -864,14 +864,14 @@ export function Office3D() {
             cursor: 'pointer',
           }}
         >
-          👑 Dirección
+          Dirección
         </button>
         <button
           onClick={() => store.setCameraZone('producto')}
           style={{
-            background: cameraZone === 'producto' ? '#38bdf8' : 'rgba(30, 22, 17, 0.85)',
+            background: cameraZone === 'producto' ? '#38bdf8' : 'rgba(18, 18, 20, 0.85)',
             color: cameraZone === 'producto' ? '#082f49' : '#f3f4f6',
-            border: '1px solid #38bdf8',
+            border: `1px solid ${cameraZone === 'producto' ? '#38bdf8' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.72rem',
@@ -879,14 +879,14 @@ export function Office3D() {
             cursor: 'pointer',
           }}
         >
-          🔬 Producto
+          Producto
         </button>
         <button
           onClick={() => store.setCameraZone('marketing')}
           style={{
-            background: cameraZone === 'marketing' ? '#e879f9' : 'rgba(30, 22, 17, 0.85)',
+            background: cameraZone === 'marketing' ? '#e879f9' : 'rgba(18, 18, 20, 0.85)',
             color: cameraZone === 'marketing' ? '#4a044e' : '#f3f4f6',
-            border: '1px solid #e879f9',
+            border: `1px solid ${cameraZone === 'marketing' ? '#e879f9' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.72rem',
@@ -894,14 +894,14 @@ export function Office3D() {
             cursor: 'pointer',
           }}
         >
-          🎨 Marketing
+          Marketing
         </button>
         <button
           onClick={() => store.setCameraZone('ecommerce')}
           style={{
-            background: cameraZone === 'ecommerce' ? '#2dd4bf' : 'rgba(30, 22, 17, 0.85)',
+            background: cameraZone === 'ecommerce' ? '#2dd4bf' : 'rgba(18, 18, 20, 0.85)',
             color: cameraZone === 'ecommerce' ? '#134e4a' : '#f3f4f6',
-            border: '1px solid #2dd4bf',
+            border: `1px solid ${cameraZone === 'ecommerce' ? '#2dd4bf' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.72rem',
@@ -909,14 +909,14 @@ export function Office3D() {
             cursor: 'pointer',
           }}
         >
-          💻 Ecommerce
+          Ecommerce
         </button>
         <button
           onClick={() => store.setCameraZone('operaciones')}
           style={{
-            background: cameraZone === 'operaciones' ? '#facc15' : 'rgba(30, 22, 17, 0.85)',
+            background: cameraZone === 'operaciones' ? '#facc15' : 'rgba(18, 18, 20, 0.85)',
             color: cameraZone === 'operaciones' ? '#422006' : '#f3f4f6',
-            border: '1px solid #facc15',
+            border: `1px solid ${cameraZone === 'operaciones' ? '#facc15' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.72rem',
@@ -924,7 +924,7 @@ export function Office3D() {
             cursor: 'pointer',
           }}
         >
-          🚀 Tráfico & Ops
+          Tráfico y Ops
         </button>
       </div>
 
@@ -943,48 +943,48 @@ export function Office3D() {
           onClick={store.toggleAutoFocus}
           title={store.autoFocusActiveAgent ? 'Desactivar auto-enfoque' : 'Activar auto-enfoque al agente activo'}
           style={{
-            background: store.autoFocusActiveAgent ? 'rgba(250, 174, 51, 0.25)' : 'rgba(30, 22, 17, 0.85)',
+            background: store.autoFocusActiveAgent ? 'rgba(250, 174, 51, 0.25)' : 'rgba(18, 18, 20, 0.85)',
             color: store.autoFocusActiveAgent ? '#faae33' : '#a1a1aa',
-            border: `1px solid ${store.autoFocusActiveAgent ? '#faae33' : '#4e3423'}`,
+            border: `1px solid ${store.autoFocusActiveAgent ? '#faae33' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.75rem',
             cursor: 'pointer',
           }}
         >
-          🎯 Auto-Foco {store.autoFocusActiveAgent ? 'ON' : 'OFF'}
+          Auto-Foco: {store.autoFocusActiveAgent ? 'ON' : 'OFF'}
         </button>
 
         <button
           onClick={store.toggleOfficeLights}
           title="Encender o atenuar luces de la oficina 3D"
           style={{
-            background: officeLightsOn ? 'rgba(250, 174, 51, 0.25)' : 'rgba(30, 22, 17, 0.85)',
+            background: officeLightsOn ? 'rgba(250, 174, 51, 0.25)' : 'rgba(18, 18, 20, 0.85)',
             color: officeLightsOn ? '#faae33' : '#a1a1aa',
-            border: `1px solid ${officeLightsOn ? '#faae33' : '#4e3423'}`,
+            border: `1px solid ${officeLightsOn ? '#faae33' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.75rem',
             cursor: 'pointer',
           }}
         >
-          💡 {officeLightsOn ? 'Día' : 'Noche'}
+          Luz: {officeLightsOn ? 'Día' : 'Noche'}
         </button>
 
         <button
           onClick={() => setSoundEnabled(!soundEnabled)}
           title="Activar/desactivar efectos sonoros de la oficina"
           style={{
-            background: soundEnabled ? 'rgba(250, 174, 51, 0.25)' : 'rgba(30, 22, 17, 0.85)',
+            background: soundEnabled ? 'rgba(250, 174, 51, 0.25)' : 'rgba(18, 18, 20, 0.85)',
             color: soundEnabled ? '#faae33' : '#a1a1aa',
-            border: `1px solid ${soundEnabled ? '#faae33' : '#4e3423'}`,
+            border: `1px solid ${soundEnabled ? '#faae33' : '#27272a'}`,
             borderRadius: '4px',
             padding: '0.3rem 0.55rem',
             fontSize: '0.75rem',
             cursor: 'pointer',
           }}
         >
-          🔊 {soundEnabled ? 'Audio ON' : 'Mute'}
+          Audio: {soundEnabled ? 'ON' : 'Mute'}
         </button>
       </div>
 

@@ -11,17 +11,17 @@ const stats = [
 
 const pillars = [
   {
-    icon: '✦',
+    icon: '01',
     title: 'Soberanía Absoluta del Código',
     description: 'Tus datos, tus modelos y tus prompts son 100% de tu propiedad. Sin dependencias opacas ni contratos cautivos.',
   },
   {
-    icon: '⚡',
+    icon: '02',
     title: 'Despliegues en Semanas, no Años',
     description: 'Arquitectura modular prediseñada que se integra a tus canales en días, garantizando tracción comercial inmediata.',
   },
   {
-    icon: '🎯',
+    icon: '03',
     title: 'ROI Medido al Centavo',
     description: 'Cada automatización y cada agente está anclado a un KPI comercial: aumento de margen, ahorro de horas o conversión.',
   },
@@ -49,7 +49,7 @@ export default function AboutSection() {
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 60px' }}>
           <div className="section-eyebrow" style={{ justifyContent: 'center' }}>
-            ✦ EL MANIFIESTO DE NEXUS AI
+            EL MANIFIESTO DE NEXUS AI
           </div>
           <h2 className="section-title">
             INGENIERÍA COGNITIVA
@@ -139,7 +139,7 @@ export default function AboutSection() {
           }}
         >
           <div>
-            <div className="section-eyebrow">✦ EL FUTURO ES AUTÓNOMO</div>
+            <div className="section-eyebrow">EL FUTURO ES AUTÓNOMO</div>
             <h3
               style={{
                 fontFamily: 'var(--font-salmond)',
@@ -187,7 +187,7 @@ export default function AboutSection() {
             </div>
             <div style={{ marginTop: '20px' }}>
               <Link href="/register" className="btn btn-primary btn-sm">
-                Agendar Consulta Estratégica ➔
+                Agendar Consulta Estratégica &rarr;
               </Link>
             </div>
           </div>

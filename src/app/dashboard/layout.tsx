@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Sidebar } from '@/components/dashboard/Sidebar'
 
 export const metadata: Metadata = {
-  title: 'Dashboard — NexusAI',
-  description: 'Panel de control de NexusAI.',
+  title: 'Panel de Control — Nexus',
+  description: 'Panel de operaciones de Nexus Dropshipping OS.',
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -14,8 +14,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       style={{
         display: 'flex',
         minHeight: '100vh',
-        backgroundColor: '#222222',
-        color: '#f3f4f6',
+        backgroundColor: '#0c0c0d',
+        color: '#f4f4f5',
         position: 'relative',
         width: '100%',
         overflowX: 'hidden',
@@ -26,14 +26,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         className="main-content"
         id="dashboard-main"
         style={{
-          marginLeft: '260px',
+          marginLeft: '250px',
           flex: 1,
           minHeight: '100vh',
-          backgroundColor: '#222222',
+          backgroundColor: '#0c0c0d',
           padding: '1.25rem 2rem',
           boxSizing: 'border-box',
-          width: 'calc(100% - 260px)',
-          maxWidth: 'calc(100% - 260px)',
+          width: 'calc(100% - 250px)',
+          maxWidth: 'calc(100% - 250px)',
           overflowX: 'hidden',
         }}
       >

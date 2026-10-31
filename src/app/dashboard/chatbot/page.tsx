@@ -174,7 +174,7 @@ export default function ChatbotPage() {
         const errorMsg: Message = {
           id: `bot-err-${Date.now()}`,
           role: 'assistant',
-          content: `⚠️ ${errJson.message || 'No se pudo obtener respuesta del modelo en este momento.'}`,
+          content: `${errJson.message || 'No se pudo obtener respuesta del modelo en este momento.'}`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           model: 'Sistema',
         }
@@ -190,7 +190,7 @@ export default function ChatbotPage() {
       const errorMsg: Message = {
         id: `bot-err-${Date.now()}`,
         role: 'assistant',
-        content: '⚠️ Error de conexión con el servicio de IA.',
+        content: 'Error de conexión con el servicio de IA.',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         model: 'Sistema',
       }
@@ -301,10 +301,10 @@ export default function ChatbotPage() {
               cursor: 'pointer',
             }}
           >
-            <option value="">🤖 Asistente General (NexusAI)</option>
+            <option value="">Asistente General (NexusAI)</option>
             {availableAgents.map((ag) => (
               <option key={ag.id} value={ag.id}>
-                ⚡ {ag.name} ({ag.role})
+                {ag.name} ({ag.role})
               </option>
             ))}
           </select>
@@ -441,7 +441,13 @@ export default function ChatbotPage() {
                       boxShadow: '0 2px 8px rgba(124, 58, 237, 0.3)',
                     }}
                   >
-                    🤖
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                      <circle cx="12" cy="5" r="2"></circle>
+                      <path d="M12 7v4"></path>
+                      <line x1="8" y1="16" x2="8" y2="16"></line>
+                      <line x1="16" y1="16" x2="16" y2="16"></line>
+                    </svg>
                   </div>
                 )}
 
@@ -476,13 +482,13 @@ export default function ChatbotPage() {
                         justifyContent: 'space-between',
                       }}
                     >
-                      <span>✓ Acción Real Ejecutada: <code>{m.toolExecuted.name}()</code></span>
+                      <span>Acción Real Ejecutada: <code>{m.toolExecuted.name}()</code></span>
                       {m.toolExecuted.name === 'crm_create_lead' && (
                         <Link
                           href="/dashboard/clients"
                           style={{ color: '#86efac', textDecoration: 'underline', fontSize: '0.72rem', marginLeft: '0.5rem' }}
                         >
-                          Ver en CRM ➔
+                          Ver en CRM &rarr;
                         </Link>
                       )}
                     </div>
@@ -528,7 +534,9 @@ export default function ChatbotPage() {
                   flexShrink: 0,
                 }}
               >
-                ⚡
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
               </div>
               <div
                 style={{

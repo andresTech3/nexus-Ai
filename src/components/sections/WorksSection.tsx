@@ -92,7 +92,7 @@ export default function WorksSection() {
             <h2 className="section-title">
               AVALADOS POR
               <br />
-              <span style={{ color: '#ffffff' }}>➔ EQUIPOS EN ESCALABILIDAD</span>
+              <span style={{ color: '#ffffff' }}>EQUIPOS EN ESCALABILIDAD</span>
             </h2>
           </div>
 

@@ -39,7 +39,7 @@ export default function CampaignsPage() {
     setGenerating(true)
     setTimeout(() => {
       setGeneratedResult(
-        `🚀 [Copy Optimizado por Gemini 2.0]\n\nTema: ${promptTopic}\n\nEn un entorno empresarial cada vez más exigente, delegar tareas repetitivas en sistemas autónomos marca la diferencia entre estancarse o escalar.\n\nEn NexusAI diseñamos soluciones personalizadas que integran tus datos de forma 100% segura.\n\n👉 Comenta "AGENTE" para enviarte una auditoría gratuita.\n\n#InteligenciaArtificial #Automatizacion #Productividad #Tech2026`
+        `[Copy Publicitario]\n\nTema: ${promptTopic}\n\nEn un entorno empresarial cada vez más exigente, delegar tareas repetitivas en sistemas autónomos marca la diferencia entre estancarse o escalar.\n\nEn NexusAI diseñamos soluciones personalizadas que integran tus datos de forma 100% segura.\n\nComenta "AGENTE" para enviarte una auditoría gratuita.\n\n#InteligenciaArtificial #Automatizacion #Productividad #Tech2026`
       )
       setGenerating(false)
     }, 1000)
@@ -78,9 +78,8 @@ export default function CampaignsPage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-          <span style={{ fontSize: '1.25rem' }}>✨</span>
           <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'white' }}>
-            Generador de Copys Publicitarios con Gemini IA
+            Generador de Copys Publicitarios
           </h2>
         </div>
         <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1rem' }}>
@@ -110,7 +109,7 @@ export default function CampaignsPage() {
             className="btn btn-primary"
             style={{ padding: '0.65rem 1.25rem' }}
           >
-            {generating ? 'Generando...' : 'Generar Copy ⚡'}
+            {generating ? 'Generando...' : 'Generar Copy'}
           </button>
         </div>
 
@@ -133,7 +132,7 @@ export default function CampaignsPage() {
                 }}
                 style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', fontSize: '0.75rem', cursor: 'pointer' }}
               >
-                📋 Copiar
+                Copiar
               </button>
             </div>
             <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '0.875rem', color: 'rgba(255,255,255,0.9)', lineHeight: 1.6 }}>
@@ -163,7 +162,11 @@ export default function CampaignsPage() {
               justifyContent: 'center',
             }}
           >
-            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>📢</div>
+            <div style={{ width: 44, height: 44, margin: '0 auto 1rem auto', borderRadius: '8px', backgroundColor: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#faae33' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
               No tienes campañas programadas todavía
             </h3>
@@ -235,7 +238,7 @@ export default function CampaignsPage() {
                       fontWeight: 600,
                     }}
                   >
-                    {camp.status === 'pending_approval' ? 'Aprobar Contenido ✓' : 'Publicar Ahora 🚀'}
+                    {camp.status === 'pending_approval' ? 'Aprobar Contenido' : 'Publicar Ahora'}
                   </button>
                 )}
               </div>

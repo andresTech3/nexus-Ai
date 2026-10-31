@@ -41,81 +41,111 @@ export default function ForgotPasswordPage() {
       style={{
         minHeight: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem 1.25rem',
+        padding: '2.5rem 1.25rem',
         boxSizing: 'border-box',
+        backgroundColor: '#0a0a0b',
       }}
     >
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <Link
+          href="/"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.65rem',
+            textDecoration: 'none',
+            marginBottom: '0.75rem',
+          }}
+        >
+          <div
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: '7px',
+              backgroundColor: '#faae33',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                stroke="#090807"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <span
+            style={{
+              fontFamily: 'var(--font-display, inherit)',
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            NEXUS
+          </span>
+        </Link>
+        <p style={{ fontSize: '0.825rem', color: '#71717a', margin: 0 }}>
+          Recuperación de Acceso
+        </p>
+      </div>
+
       <div
         style={{
           width: '100%',
-          maxWidth: '440px',
-          background: 'rgba(18, 16, 14, 0.92)',
-          border: '1px solid rgba(250, 174, 51, 0.2)',
-          borderRadius: '1.25rem',
-          padding: '2.25rem 2rem',
-          boxShadow: '0 20px 48px rgba(0, 0, 0, 0.7), 0 0 32px rgba(250, 174, 51, 0.08)',
-          backdropFilter: 'blur(16px)',
+          maxWidth: '420px',
+          backgroundColor: '#111113',
+          border: '1px solid #1f1f23',
+          borderRadius: '12px',
+          padding: '2rem 1.75rem',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <div
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: '0.75rem',
-              background: 'rgba(250, 174, 51, 0.12)',
-              border: '1px solid rgba(250, 174, 51, 0.3)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1rem',
-              color: '#faae33',
-            }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          </div>
-          <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
-            Recuperar Contraseña
-          </h1>
-          <p style={{ fontSize: '0.85rem', color: '#a1a1aa', margin: 0, lineHeight: 1.5 }}>
-            Ingresa tu correo para recibir un enlace de restablecimiento seguro
-          </p>
-        </div>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+          Recuperar Contraseña
+        </h1>
+        <p style={{ fontSize: '0.825rem', color: '#71717a', margin: '0 0 1.5rem 0', lineHeight: 1.5 }}>
+          Ingresa el correo electrónico asociado a tu cuenta para recibir el enlace de restablecimiento.
+        </p>
 
         {submitted ? (
-          <div style={{ textAlign: 'center' }}>
+          <div>
             <div
               style={{
-                padding: '1rem',
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
-                borderRadius: '0.625rem',
+                padding: '0.85rem',
+                backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                border: '1px solid rgba(16, 185, 129, 0.25)',
+                borderRadius: '6px',
                 color: '#6ee7b7',
-                fontSize: '0.85rem',
+                fontSize: '0.825rem',
                 marginBottom: '1.5rem',
                 lineHeight: 1.5,
               }}
             >
-              ✓ Te hemos enviado un enlace de recuperación. Revisa tu bandeja de entrada o spam.
+              Se ha enviado un enlace de recuperación. Revisa tu bandeja de entrada o carpeta de spam.
             </div>
             <Link
               href="/login"
               style={{
                 display: 'block',
                 width: '100%',
-                padding: '0.75rem',
+                padding: '0.7rem',
                 boxSizing: 'border-box',
-                background: 'linear-gradient(135deg, #faae33 0%, #d97706 100%)',
-                borderRadius: '0.55rem',
+                backgroundColor: '#faae33',
+                borderRadius: '6px',
                 color: '#090807',
-                fontSize: '0.875rem',
+                fontSize: '0.85rem',
                 fontWeight: 700,
                 textDecoration: 'none',
+                textAlign: 'center',
               }}
             >
               Volver a Iniciar Sesión
@@ -126,23 +156,23 @@ export default function ForgotPasswordPage() {
             {errorMsg && (
               <div
                 style={{
-                  padding: '0.75rem 1rem',
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  borderRadius: '0.625rem',
+                  padding: '0.7rem 0.85rem',
+                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  borderRadius: '6px',
                   color: '#fca5a5',
-                  fontSize: '0.825rem',
+                  fontSize: '0.8rem',
                   marginBottom: '1rem',
                 }}
               >
-                ⚠ {errorMsg}
+                {errorMsg}
               </div>
             )}
 
             <div style={{ marginBottom: '1.25rem' }}>
               <label
                 htmlFor="forgot-email"
-                style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: '#e4e4e7', marginBottom: '0.4rem' }}
+                style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#d4d4d8', marginBottom: '0.35rem' }}
               >
                 Correo Electrónico
               </label>
@@ -150,20 +180,22 @@ export default function ForgotPasswordPage() {
                 id="forgot-email"
                 type="email"
                 required
-                placeholder="tu@empresa.com"
+                placeholder="nombre@empresa.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.68rem 0.85rem',
+                  padding: '0.65rem 0.8rem',
                   boxSizing: 'border-box',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '0.55rem',
+                  backgroundColor: '#0c0c0e',
+                  border: '1px solid #27272e',
+                  borderRadius: '6px',
                   color: '#ffffff',
                   fontSize: '0.85rem',
                   outline: 'none',
                 }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#faae33')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = '#27272e')}
               />
             </div>
 
@@ -172,16 +204,15 @@ export default function ForgotPasswordPage() {
               disabled={isPending}
               style={{
                 width: '100%',
-                padding: '0.75rem 1rem',
-                background: 'linear-gradient(135deg, #faae33 0%, #d97706 100%)',
+                padding: '0.7rem 1rem',
+                backgroundColor: '#faae33',
                 border: 'none',
-                borderRadius: '0.55rem',
+                borderRadius: '6px',
                 color: '#090807',
-                fontSize: '0.875rem',
+                fontSize: '0.85rem',
                 fontWeight: 700,
                 cursor: isPending ? 'wait' : 'pointer',
                 opacity: isPending ? 0.7 : 1,
-                boxShadow: '0 4px 14px rgba(250, 174, 51, 0.35)',
               }}
             >
               {isPending ? 'Enviando...' : 'Enviar Enlace de Recuperación'}
@@ -190,11 +221,11 @@ export default function ForgotPasswordPage() {
             <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
               <Link
                 href="/login"
-                style={{ fontSize: '0.8rem', color: '#a1a1aa', textDecoration: 'none' }}
+                style={{ fontSize: '0.78rem', color: '#71717a', textDecoration: 'none' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#a1a1aa')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#71717a')}
               >
-                ← Volver al inicio de sesión
+                Volver a Iniciar Sesión
               </Link>
             </div>
           </form>

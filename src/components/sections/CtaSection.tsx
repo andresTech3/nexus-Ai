@@ -19,7 +19,7 @@ export default function CtaSection() {
       <div className="container">
         <div className="cta-content">
           <div className="section-eyebrow" style={{ justifyContent: 'center' }}>
-            ✦ CONECTA CON NUESTRO EQUIPO
+            CONECTA CON NUESTRO EQUIPO
           </div>
 
           <h2
@@ -78,7 +78,7 @@ export default function CtaSection() {
                 />
               </div>
               <button type="submit" className="btn btn-primary btn-lg">
-                Solicitar Demo ➔
+                Solicitar Demo &rarr;
               </button>
             </form>
           ) : (
@@ -96,7 +96,7 @@ export default function CtaSection() {
                 fontWeight: 600,
               }}
             >
-              ✓ Solicitud recibida. Un arquitecto te contactará hoy mismo.
+              Solicitud recibida. Un arquitecto te contactará hoy mismo.
             </div>
           )}
 
@@ -111,13 +111,13 @@ export default function CtaSection() {
             }}
           >
             <span className="badge badge-secondary">
-              🔒 NDA & Privacidad Garantizada
+              NDA & Privacidad Garantizada
             </span>
             <span className="badge badge-secondary">
-              ⚡ Prototipo en 72h
+              Prototipo en 72h
             </span>
             <span className="badge badge-alert">
-              ✦ Cupos Limitados por Trimestre
+              Disponibilidad Limitada
             </span>
           </div>
         </div>

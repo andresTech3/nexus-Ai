@@ -67,17 +67,17 @@ export function AgentInspector() {
   const getStatusBadge = () => {
     switch (currentStatus) {
       case 'ANALYZING':
-        return <span style={{ color: '#38bdf8', background: '#082f49', border: '1px solid #38bdf8', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>● ANALIZANDO</span>
+        return <span style={{ color: '#38bdf8', background: '#082f49', border: '1px solid #38bdf8', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>ANALIZANDO</span>
       case 'GENERATING':
-        return <span style={{ color: '#facc15', background: '#422006', border: '1px solid #facc15', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>● GENERANDO</span>
+        return <span style={{ color: '#facc15', background: '#422006', border: '1px solid #facc15', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>GENERANDO</span>
       case 'NEEDS_APPROVAL':
-        return <span style={{ color: '#f43f5e', background: '#4c0519', border: '1px solid #f43f5e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>▲ CHECKPOINT PENDIENTE</span>
+        return <span style={{ color: '#f43f5e', background: '#4c0519', border: '1px solid #f43f5e', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>APROBACIÓN PENDIENTE</span>
       case 'DONE':
-        return <span style={{ color: '#34d399', background: '#064e3b', border: '1px solid #34d399', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>✓ FINALIZADO</span>
+        return <span style={{ color: '#34d399', background: '#064e3b', border: '1px solid #34d399', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>FINALIZADO</span>
       case 'VACANT':
-        return <span style={{ color: '#9ca3af', background: '#27272a', border: '1px solid #52525b', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>○ PUESTO LIBRE</span>
+        return <span style={{ color: '#9ca3af', background: '#27272a', border: '1px solid #52525b', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>DISPONIBLE</span>
       default:
-        return <span style={{ color: '#9ca3af', background: '#27272a', border: '1px solid #52525b', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>● EN ESPERA</span>
+        return <span style={{ color: '#9ca3af', background: '#27272a', border: '1px solid #52525b', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>EN ESPERA</span>
     }
   }
 
@@ -148,13 +148,20 @@ export function AgentInspector() {
             background: 'transparent',
             border: 'none',
             color: '#9ca3af',
-            fontSize: '1.25rem',
+            width: '28px',
+            height: '28px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             cursor: 'pointer',
-            padding: '4px 8px',
+            borderRadius: '4px',
           }}
           title="Cerrar Ficha"
         >
-          ✕
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
 
@@ -286,7 +293,7 @@ export function AgentInspector() {
                     textAlign: 'center',
                   }}
                 >
-                  ⚡ Asignar {getRecommendedModelForAgent(agentId)} a la Oficina
+                  Asignar {getRecommendedModelForAgent(agentId)} a la Oficina
                 </button>
               )}
             </div>
@@ -301,15 +308,15 @@ export function AgentInspector() {
                   <span
                     key={idx}
                     style={{
-                      background: '#241a14',
-                      border: '1px solid #4a3424',
+                      background: '#18181b',
+                      border: '1px solid #27272a',
                       borderRadius: '16px',
                       padding: '0.25rem 0.65rem',
                       fontSize: '0.72rem',
                       color: '#faae33',
                     }}
                   >
-                    ✦ {s}
+                    {s}
                   </span>
                 ))}
               </div>
@@ -416,7 +423,7 @@ export function AgentInspector() {
                     cursor: 'pointer',
                   }}
                 >
-                  {copied ? '✓ Copiado' : 'Copiar Archivo'}
+                  {copied ? 'Copiado' : 'Copiar Archivo'}
                 </button>
               )}
             </div>

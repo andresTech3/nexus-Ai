@@ -189,7 +189,7 @@ class OfficeScheduler {
         officeId,
         agentId,
         agentName: agentDef.name,
-        message: `✨ [IA REAL: ${llmRes.providerUsed.toUpperCase()} (${llmRes.modelUsed}) • ${llmRes.tokensUsed} tokens] ${fallbackSuccessMsg}`,
+        message: `[${llmRes.providerUsed.toUpperCase()} • ${llmRes.tokensUsed} tokens] ${fallbackSuccessMsg}`,
         level: 'success',
       })
     } else {
@@ -217,7 +217,7 @@ class OfficeScheduler {
       officeId,
       agentId: sourceAgent,
       agentName: AGENT_DEFINITIONS[sourceAgent].name,
-      message: `📦 Traspaso de entregable [${documentName}] hacia ${AGENT_DEFINITIONS[targetAgent].name}.`,
+      message: `Traspaso de entregable [${documentName}] hacia ${AGENT_DEFINITIONS[targetAgent].name}.`,
       level: 'info',
     })
   }

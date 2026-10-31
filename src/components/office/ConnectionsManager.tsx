@@ -108,21 +108,21 @@ export function ConnectionsManager() {
         setTestResult({
           provider: providerId,
           success: true,
-          message: `✓ Conexión exitosa con ${providerId.toUpperCase()}. Respuesta del modelo: "${data.reply || 'OK'}" (${data.model})`,
+          message: `Conexión exitosa con ${providerId.toUpperCase()}. Respuesta del modelo: "${data.reply || 'OK'}" (${data.model})`,
         })
       } else {
         const err = await res.json()
         setTestResult({
           provider: providerId,
           success: false,
-          message: `✕ Error al conectar con ${providerId}: ${err.error || 'Revisa tu API Key o endpoint'}`,
+          message: `Error al conectar con ${providerId}: ${err.error || 'Revisa tu API Key o endpoint'}`,
         })
       }
     } catch (e: any) {
       setTestResult({
         provider: providerId,
         success: false,
-        message: `✕ Error de red: ${e.message}`,
+        message: `Error de red: ${e.message}`,
       })
     } finally {
       setTestingProvider(null)
@@ -185,8 +185,11 @@ export function ConnectionsManager() {
           }}
           title="Elimina datos previos y deja el proyecto 100% limpio"
         >
-          <span>🗑️</span>
-          <span>Dejar Proyecto Vacío / Reiniciar</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+          <span>Reiniciar Proyecto</span>
         </button>
       </div>
 
@@ -334,7 +337,16 @@ export function ConnectionsManager() {
                     opacity: !quota.apiKey && p.id !== 'freellmapi' ? 0.5 : 1,
                   }}
                 >
-                  <span>{isTesting ? '⏳' : '⚡'}</span>
+                  {isTesting ? (
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 1s linear infinite' }}>
+                      <line x1="12" y1="2" x2="12" y2="6"></line>
+                      <line x1="12" y1="18" x2="12" y2="22"></line>
+                    </svg>
+                  ) : (
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                  )}
                   <span>{isTesting ? 'Probando...' : 'Probar Conexión'}</span>
                 </button>
               </div>

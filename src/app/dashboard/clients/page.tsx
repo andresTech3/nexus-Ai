@@ -237,7 +237,14 @@ export default function ClientsPage() {
             ) : filteredClients.length === 0 ? (
               <tr>
                 <td colSpan={5} style={{ padding: '3.5rem 2rem', textAlign: 'center' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', opacity: 0.7 }}>👥</div>
+                  <div style={{ width: 44, height: 44, margin: '0 auto 0.75rem auto', borderRadius: '8px', backgroundColor: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#faae33' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                  </div>
                   <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.35rem' }}>
                     {clients.length === 0 ? 'No tienes clientes registrados todavía' : 'No se encontraron clientes con esa búsqueda'}
                   </div>
@@ -333,9 +340,13 @@ export default function ClientsPage() {
               <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'white' }}>Registrar Nuevo Cliente</h2>
               <button
                 onClick={() => setShowModal(false)}
-                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', fontSize: '1.25rem', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRadius: '4px' }}
+                aria-label="Cerrar modal"
               >
-                ✕
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
 

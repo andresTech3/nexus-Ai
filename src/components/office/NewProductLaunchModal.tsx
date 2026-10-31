@@ -137,26 +137,18 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>🚀</span>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#fff', margin: 0 }}>
-                Probar con un Nuevo Producto
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{ width: 28, height: 28, borderRadius: '6px', backgroundColor: 'rgba(250, 174, 51, 0.1)', color: '#faae33', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff', margin: 0 }}>
+                Nuevo Producto
               </h2>
-              <span
-                style={{
-                  backgroundColor: '#064e3b',
-                  color: '#34d399',
-                  fontSize: '0.65rem',
-                  fontWeight: 800,
-                  padding: '2px 8px',
-                  borderRadius: '10px',
-                }}
-              >
-                11 AGENTES EN ACCIÓN
-              </span>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#9ca3af', margin: '4px 0 0 0' }}>
-              Tus agentes investigarán el nicho, calcularán los márgenes, diseñarán la tienda Shopify y redactarán los anuncios UGC.
+              Configuración de catálogo para el pipeline de validación y automatización.
             </p>
           </div>
 
@@ -166,12 +158,20 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
               background: 'transparent',
               border: 'none',
               color: '#9ca3af',
-              fontSize: '1.3rem',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               cursor: 'pointer',
-              padding: '4px',
+              borderRadius: '4px',
             }}
+            aria-label="Cerrar modal"
           >
-            ✕
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
 
@@ -179,8 +179,8 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
         <form onSubmit={handleSubmit} style={{ overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Preset Quick Fill */}
           <div>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#faae33', marginBottom: '0.4rem' }}>
-              💡 O ELIGE UN PRODUCTO DE PRUEBA RÁPIDA (1 CLICK):
+            <div style={{ fontSize: '0.72rem', fontWeight: 600, color: '#a1a1aa', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.4rem' }}>
+              Plantillas preconfiguradas:
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
               {PRODUCT_PRESETS.map((p, idx) => (
@@ -189,17 +189,17 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
                   type="button"
                   onClick={() => handleApplyPreset(p)}
                   style={{
-                    backgroundColor: productName === p.name ? '#faae33' : '#271a12',
+                    backgroundColor: productName === p.name ? '#faae33' : '#18181b',
                     color: productName === p.name ? '#181008' : '#e5e7eb',
-                    border: `1px solid ${productName === p.name ? '#faae33' : '#3d2a1d'}`,
+                    border: `1px solid ${productName === p.name ? '#faae33' : '#27272a'}`,
                     borderRadius: '6px',
                     padding: '0.35rem 0.65rem',
                     fontSize: '0.72rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     cursor: 'pointer',
                   }}
                 >
-                  ✦ {p.name.split(' ')[0]} {p.name.split(' ')[1]} ({p.pvp}€)
+                  {p.name.split(' ')[0]} {p.name.split(' ')[1]} ({p.pvp}€)
                 </button>
               ))}
             </div>
@@ -342,7 +342,7 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
                   {multiplier}x
                 </div>
                 <div style={{ fontSize: '0.65rem', color: isMarkupValid ? '#34d399' : '#f87171', fontWeight: 700 }}>
-                  {isMarkupValid ? '✓ Aprobado por Dora' : '⚠️ Inferior a 3.5x'}
+                  {isMarkupValid ? 'Margen Aprobado' : 'Margen Inferior a 3.5x'}
                 </div>
               </div>
             </div>
@@ -360,17 +360,17 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
                   type="button"
                   onClick={() => setTrafficMode(mode)}
                   style={{
-                    backgroundColor: trafficMode === mode ? '#faae33' : '#201712',
+                    backgroundColor: trafficMode === mode ? '#faae33' : '#18181b',
                     color: trafficMode === mode ? '#181008' : '#d1d5db',
-                    border: `1px solid ${trafficMode === mode ? '#faae33' : '#3d2a1d'}`,
+                    border: `1px solid ${trafficMode === mode ? '#faae33' : '#27272a'}`,
                     borderRadius: '6px',
                     padding: '0.5rem',
                     fontSize: '0.72rem',
-                    fontWeight: 800,
+                    fontWeight: 700,
                     cursor: 'pointer',
                   }}
                 >
-                  {mode === 'HYBRID' ? '⚡ Híbrido (Ads + Viral)' : mode === 'ADS' ? '🎯 Solo Meta Ads' : '🌱 Solo Orgánico'}
+                  {mode === 'HYBRID' ? 'Híbrido (Ads + Viral)' : mode === 'ADS' ? 'Meta Ads Directo' : 'Orgánico TikTok'}
                 </button>
               ))}
             </div>
@@ -406,24 +406,25 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
               disabled={!productName.trim() || !niche.trim()}
               style={{
                 width: '100%',
-                background: 'linear-gradient(135deg, #faae33 0%, #d98216 100%)',
-                color: '#181008',
+                background: '#faae33',
+                color: '#120d09',
                 border: 'none',
-                borderRadius: '8px',
-                padding: '0.85rem',
-                fontSize: '0.95rem',
-                fontWeight: 900,
+                borderRadius: '6px',
+                padding: '0.75rem',
+                fontSize: '0.88rem',
+                fontWeight: 700,
                 cursor: !productName.trim() || !niche.trim() ? 'not-allowed' : 'pointer',
                 opacity: !productName.trim() || !niche.trim() ? 0.5 : 1,
-                boxShadow: '0 4px 20px rgba(250, 174, 51, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
               }}
             >
-              <span>🚀</span>
-              <span>Crear Oficina y Poner a Trabajar a los 11 Agentes</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Configurar Proyecto y Continuar</span>
             </button>
           </div>
         </form>

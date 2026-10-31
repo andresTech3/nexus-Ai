@@ -172,7 +172,7 @@ export function MultiOfficeManager() {
                   }}
                   title={isPowerOn ? 'Apagar oficina (dormir agentes)' : 'Encender oficina'}
                 >
-                  {isPowerOn ? '⚡ ON' : '💤 OFF'}
+                  {isPowerOn ? 'Activo' : 'En pausa'}
                 </button>
               </div>
 
@@ -370,9 +370,13 @@ export function MultiOfficeManager() {
               </h3>
               <button
                 onClick={() => setShowCreateModal(false)}
-                style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '1.2rem', cursor: 'pointer' }}
+                style={{ background: 'transparent', border: 'none', color: '#9ca3af', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', borderRadius: '4px' }}
+                aria-label="Cerrar modal"
               >
-                ✕
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
 

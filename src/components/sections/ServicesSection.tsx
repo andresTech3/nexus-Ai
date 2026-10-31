@@ -85,7 +85,7 @@ export default function ServicesSection() {
         >
           <div>
             <div className="section-eyebrow">
-              ✦ SERVICIOS COGNITIVOS DE ALTA PRECISIÓN
+              SERVICIOS COGNITIVOS DE ALTA PRECISIÓN
             </div>
             <h2 className="section-title">
               SUITE DE SOLUCIONES
@@ -176,7 +176,7 @@ export default function ServicesSection() {
                       letterSpacing: '0.04em',
                     }}
                   >
-                    Detalles ➔
+                    Detalles &rarr;
                   </Link>
                 </div>
               </div>

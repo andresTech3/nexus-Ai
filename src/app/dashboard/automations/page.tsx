@@ -57,7 +57,7 @@ export default function AutomationsPage() {
             animation: 'fadeIn 0.3s ease',
           }}
         >
-          ✓ {toastMessage}
+          {toastMessage}
         </div>
       )}
 
@@ -95,7 +95,11 @@ export default function AutomationsPage() {
               justifyContent: 'center',
             }}
           >
-            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: 0.7 }}>⚡</div>
+            <div style={{ width: 44, height: 44, margin: '0 auto 1rem auto', borderRadius: '8px', backgroundColor: '#18181b', border: '1px solid #27272a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#faae33' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f3f4f6', marginBottom: '0.5rem' }}>
               No tienes flujos de automatización todavía
             </h3>

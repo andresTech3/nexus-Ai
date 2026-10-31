@@ -179,7 +179,7 @@ El creador acerca su anillo a cámara mientras se quita un Apple Watch y lo deja
 Política especial de cambio de tallas: Si el cliente necesita otra talla, enviamos la nueva talla gratis sin esperar la devolución.`,
 
       '11_informe_lanzamiento_dora.html': `<!DOCTYPE html><html><body style="background:#12100e; color:#fff; font-family:sans-serif; padding:2rem;">
-<h1>🏛️ DOSSIER DE LANZAMIENTO — ${brandName}</h1>
+<h1>DOSSIER DE LANZAMIENTO — ${brandName}</h1>
 <p>Auditoría superada para ${productName}. Margen neto: ${econ.margen_neto_pct}%. Multiplicador: ${econ.multiplicador_markup}x.</p>
 </body></html>`,
 
@@ -346,7 +346,7 @@ Health_Score,${econ.health_score},-,${econ.health_reason}`,
 Árbol de devoluciones y plantillas de soporte con respuesta empática y resolución en menos de 2 horas.`,
 
     '11_informe_lanzamiento_dora.html': `<!DOCTYPE html><html><body style="background:#12100e; color:#fff; font-family:sans-serif; padding:2rem;">
-<h1>🏛️ DOSSIER EJECUTIVO DE LANZAMIENTO — ${brandName}</h1>
+<h1>DOSSIER EJECUTIVO DE LANZAMIENTO — ${brandName}</h1>
 <p>Producto: <strong>${productName}</strong> (${niche})</p>
 <p>Multiplicador: <strong>${econ.multiplicador_markup}x</strong> • CPA Máximo: <strong>${econ.cpa_maximo_rentable}€</strong></p>
 <p>Auditoría de cumplimiento: APROBADA.</p>

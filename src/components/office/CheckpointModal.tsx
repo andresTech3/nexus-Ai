@@ -89,7 +89,9 @@ export function CheckpointModal() {
                 color: '#faae33',
               }}
             >
-              🛡️
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
             </span>
             <div>
               <div style={{ fontSize: '0.75rem', color: '#faae33', fontWeight: 700, letterSpacing: '0.05em' }}>
@@ -127,29 +129,29 @@ export function CheckpointModal() {
               marginBottom: '1.25rem',
             }}
           >
-            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#faae33', marginBottom: '0.5rem' }}>
-              ⚖️ Auditoría de Cumplimiento & Quality Gates de Dora:
+            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#faae33', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Auditoría de Calidad y Criterios de Aprobación:
             </div>
             <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.82rem', color: '#e5e7eb', lineHeight: 1.6 }}>
               <li>
-                <strong style={{ color: '#34d399' }}>✓ Multiplicador de Margen:</strong> &gt;= 3.5x verificado en código puro determinista por Eva.
+                <strong style={{ color: '#34d399' }}>Multiplicador de Margen:</strong> &gt;= 3.5x verificado en modelo determinista de Eva.
               </li>
               <li>
-                <strong style={{ color: '#34d399' }}>✓ Claims Publicitarios:</strong> 100% purgados de promesas médicas prohibidas ("sin agujas", "elimina arrugas", testimonios falsos).
+                <strong style={{ color: '#34d399' }}>Filtro de Claims Publicitarios:</strong> Auditado sin promesas desmesuradas ni afirmaciones no comprobadas.
               </li>
               <li>
-                <strong style={{ color: '#34d399' }}>✓ Gancho Visual demostrable:</strong> Verificado en guiones de Marco para formato 9:16 (0-3 segundos).
+                <strong style={{ color: '#34d399' }}>Gancho Visual Inicial:</strong> Verificado en guiones de Marco para formato vertical 9:16 (0-3 segundos).
               </li>
               <li>
-                <strong style={{ color: '#34d399' }}>✓ Coherencia de Tarifas:</strong> Precios idénticos entre ficha de Eva, copy de Carlos y selector Liquid de Diego.
+                <strong style={{ color: '#34d399' }}>Coherencia Tarifaria:</strong> Precios alineados entre desglose financiero, copy comercial y selector de variantes.
               </li>
             </ul>
           </div>
 
           {/* Deliverables summary in this checkpoint */}
           <div style={{ marginBottom: '1.25rem' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
-              📦 Entregables listos para aprobación:
+            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Entregables listos para aprobación:
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
               {checkpoint.checkpointId === 'CP_01_PRODUCTO' && (
@@ -291,7 +293,7 @@ export function CheckpointModal() {
                   cursor: 'pointer',
                 }}
               >
-                ✕ Rechazar y Regenerar
+                Rechazar y Regenerar
               </button>
 
               <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -308,24 +310,23 @@ export function CheckpointModal() {
                     cursor: 'pointer',
                   }}
                 >
-                  ✎ Aprobar con Cambios
+                  Aprobar con Cambios
                 </button>
 
                 <button
                   onClick={handleApprove}
                   style={{
-                    background: 'linear-gradient(135deg, #15803d, #16a34a)',
+                    background: '#faae33',
                     border: 'none',
-                    color: '#fff',
+                    color: '#120d09',
                     padding: '0.55rem 1.4rem',
                     borderRadius: '6px',
-                    fontSize: '0.85rem',
-                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)',
                   }}
                 >
-                  ✓ Aprobar y Continuar Pipeline
+                  Aprobar y Continuar
                 </button>
               </div>
             </>
