@@ -8,8 +8,8 @@ export const createProjectSchema = z.object({
   status: z.enum(['planning', 'in_progress', 'review', 'completed', 'cancelled']).default('planning'),
   budget: z.union([z.number(), z.string()]).optional().default(0),
   currency: z.string().default('USD'),
-  startDate: z.string().optional().nullable(),
-  dueDate: z.string().optional().nullable(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'La fecha de inicio debe tener formato AAAA-MM-DD (ej. 2026-10-29)').optional().nullable(),
+  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'La fecha de entrega debe tener formato AAAA-MM-DD (ej. 2026-11-15)').optional().nullable(),
 })
 
 export const updateProjectSchema = createProjectSchema.partial()

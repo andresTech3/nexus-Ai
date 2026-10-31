@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { ActionToast, ActionToastData } from '@/components/ui/ActionToast'
 
 interface ClientOption {
   id: string
@@ -40,6 +41,7 @@ export default function ProjectsPage() {
   const [search, setSearch] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
   const [selectedClientId, setSelectedClientId] = useState<string>('')
+  const [actionToast, setActionToast] = useState<ActionToastData | null>(null)
   const [newProject, setNewProject] = useState({
     title: '',
     clientName: '',
@@ -88,18 +90,62 @@ export default function ProjectsPage() {
 
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newProject.title) return
+
+    // 1. Validación de Título
+    if (!newProject.title.trim() || newProject.title.trim().length < 2) {
+      setActionToast({
+        title: 'Título de Proyecto Obligatorio',
+        problem: 'El proyecto no tiene título o tiene menos de 2 caracteres.',
+        actionRequired: 'Escribe un nombre descriptivo para el entregable o proyecto.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 2. Validación de Cliente
+    if (!selectedClientId && !newProject.clientName.trim()) {
+      setActionToast({
+        title: 'Cliente Asociado Obligatorio',
+        problem: 'No has seleccionado un cliente existente ni ingresado una empresa destinataria.',
+        actionRequired: 'Selecciona un cliente del menú o escribe el nombre del cliente en el formulario.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 3. Validación de Fecha (tipo date estricto AAAA-MM-DD)
+    if (newProject.dueDate && !/^\d{4}-\d{2}-\d{2}$/.test(newProject.dueDate)) {
+      setActionToast({
+        title: 'Fecha de Entrega Inválida',
+        problem: 'El formato de fecha no cumple con el estándar estricto AAAA-MM-DD.',
+        actionRequired: 'Selecciona una fecha válida con el selector de calendario.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 4. Validación de Presupuesto
+    const cleanBudget = newProject.budget ? parseFloat(newProject.budget.replace(/[^0-9.]/g, '')) : 0
+    if (newProject.budget && (isNaN(cleanBudget) || cleanBudget < 0)) {
+      setActionToast({
+        title: 'Presupuesto Inválido',
+        problem: 'El valor de presupuesto ingresado no es un número válido o es menor a cero.',
+        actionRequired: 'Ingresa una cifra numérica válida (ejemplo: 2500).',
+        type: 'error',
+      })
+      return
+    }
 
     setSubmitting(true)
     try {
       const payload = {
-        title: newProject.title,
+        title: newProject.title.trim(),
         clientId: selectedClientId || undefined,
-        clientName: !selectedClientId ? newProject.clientName : undefined,
-        budget: newProject.budget ? parseFloat(newProject.budget.replace(/[^0-9.]/g, '')) || 0 : 0,
+        clientName: !selectedClientId ? newProject.clientName.trim() : undefined,
+        budget: cleanBudget,
         currency: 'USD',
         dueDate: newProject.dueDate || undefined,
-        description: newProject.description || undefined,
+        description: newProject.description ? newProject.description.trim() : undefined,
         status: newProject.status,
       }
 
@@ -115,13 +161,28 @@ export default function ProjectsPage() {
         setShowModal(false)
         setNewProject({ title: '', clientName: '', budget: '', dueDate: '', description: '', status: 'in_progress' })
         setSelectedClientId('')
+        setActionToast({
+          title: 'Proyecto Creado Exitosamente',
+          problem: 'Ninguno. Datos validados correctamente en Supabase.',
+          actionRequired: 'El proyecto ya se encuentra registrado y visible en tu panel de control.',
+          type: 'success',
+        })
       } else {
-        const errJson = await res.json()
-        alert(errJson.message || 'Error al guardar el proyecto en Supabase.')
+        const errJson = await res.json().catch(() => ({}))
+        setActionToast({
+          title: 'Error al Crear Proyecto',
+          problem: errJson.problem || errJson.message || 'Error en la base de datos.',
+          actionRequired: errJson.actionRequired || 'Verifica los campos del formulario y vuelve a intentarlo.',
+          type: 'error',
+        })
       }
-    } catch (err) {
-      console.error('Error al crear proyecto:', err)
-      alert('Error de conexión al guardar el proyecto.')
+    } catch {
+      setActionToast({
+        title: 'Error de Red',
+        problem: 'No se pudo conectar con el servidor para registrar el proyecto.',
+        actionRequired: 'Revisa tu conexión a internet y vuelve a intentar.',
+        type: 'error',
+      })
     } finally {
       setSubmitting(false)
     }
@@ -475,6 +536,9 @@ export default function ProjectsPage() {
           </div>
         </div>
       )}
+
+      {/* Ventana emergente rectangular abajo a la derecha */}
+      <ActionToast toast={actionToast} onClose={() => setActionToast(null)} />
     </div>
   )
 }

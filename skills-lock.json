@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "dropshipping-product-research": {
+      "source": "nexscope-ai/ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "dropshipping-product-research/SKILL.md",
+      "computedHash": "31d9c2261421b8f57a2e92b1f143f3ed9c3601854490f5526f1f9f24f58bbcaa"
+    },
+    "ego-browser": {
+      "source": "citrolabs/ego-lite",
+      "sourceType": "github",
+      "skillPath": "skills/ego-browser/SKILL.md",
+      "computedHash": "8a5b416212cad982a6b5ae591a204b22ddb3b36f508eb9af0c6f488e8d7c0d46"
+    },
+    "shopify-dropshipping": {
+      "source": "nexscope-ai/ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "shopify-dropshipping/SKILL.md",
+      "computedHash": "3684e5ca0482df23d6ff13c8264da3e08e9f653eea32ca8cafd86b882829b2d4"
+    }
+  }
+}

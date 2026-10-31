@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import { ActionToast, type ActionToastData } from '@/components/ui/ActionToast'
 
 interface Message {
   id: string
@@ -47,7 +48,15 @@ export default function ChatbotPage() {
   const [selectedDoc, setSelectedDoc] = useState<string>('all')
   const [availableAgents, setAvailableAgents] = useState<AgentOption[]>([])
   const [selectedAgentId, setSelectedAgentId] = useState<string>('')
+  const [actionToast, setActionToast] = useState<ActionToastData | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const showActionToast = (data: ActionToastData) => {
+    setActionToast(data)
+    setTimeout(() => {
+      setActionToast((current) => (current === data ? null : current))
+    }, 7000)
+  }
 
   // Cargar lista de agentes guardados para permitir seleccionarlos
   useEffect(() => {
@@ -77,6 +86,28 @@ export default function ChatbotPage() {
     if (!textToSend.trim() || loading) return
 
     const userText = textToSend.trim()
+    const lower = userText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const isLeadIntent =
+      lower.includes('crea un lead') ||
+      lower.includes('crear lead') ||
+      lower.includes('registra un lead') ||
+      lower.includes('registrar cliente') ||
+      lower.includes('nuevo cliente') ||
+      lower.includes('nuevo prospecto') ||
+      lower.includes('agrega un lead') ||
+      lower.includes('crear un cliente')
+
+    // VALIDACIÓN PREVENTIVA: Si intenta registrar un cliente sin correo electrónico
+    if (isLeadIntent && !userText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
+      showActionToast({
+        title: 'Correo Obligatorio Faltante',
+        problem: 'Intentaste registrar un prospecto sin incluir su correo electrónico.',
+        actionRequired: 'Escribe el correo con formato válido (ej. cliente@empresa.com) junto con el nombre para que el agente pueda registrarlo en el CRM.',
+        type: 'error',
+      })
+      return
+    }
+
     const userMsg: Message = {
       id: `usr-${Date.now()}`,
       role: 'user',
@@ -122,6 +153,22 @@ export default function ChatbotPage() {
           toolExecuted: json.toolExecuted,
         }
         setMessages((prev) => [...prev, botMsg])
+
+        if (json.validationError) {
+          showActionToast({
+            title: 'Dato Faltante / Validación',
+            problem: json.problem || 'Falta información requerida.',
+            actionRequired: json.actionRequired || 'Completa los datos antes de continuar.',
+            type: 'error',
+          })
+        } else if (json.toolExecuted) {
+          showActionToast({
+            title: 'Acción Ejecutada en CRM',
+            problem: 'Ninguno. Operación completada en Supabase.',
+            actionRequired: `El cliente fue registrado exitosamente con la herramienta ${json.toolExecuted.name}().`,
+            type: 'success',
+          })
+        }
       } else {
         const errJson = await res.json().catch(() => ({}))
         const errorMsg: Message = {
@@ -132,6 +179,12 @@ export default function ChatbotPage() {
           model: 'Sistema',
         }
         setMessages((prev) => [...prev, errorMsg])
+        showActionToast({
+          title: 'Error en la Solicitud',
+          problem: errJson.message || 'No se pudo procesar la solicitud.',
+          actionRequired: 'Revisa tu conexión o intenta con otra instrucción.',
+          type: 'error',
+        })
       }
     } catch {
       const errorMsg: Message = {
@@ -142,6 +195,12 @@ export default function ChatbotPage() {
         model: 'Sistema',
       }
       setMessages((prev) => [...prev, errorMsg])
+      showActionToast({
+        title: 'Error de Conexión',
+        problem: 'Fallo al conectar con el servicio de IA.',
+        actionRequired: 'Verifica que tu servidor esté activo y vuelve a intentar.',
+        type: 'error',
+      })
     } finally {
       setLoading(false)
     }
@@ -598,6 +657,10 @@ export default function ChatbotPage() {
           </button>
         </form>
       </div>
+
+      {/* Ventana emergente rectangular abajo a la derecha con problema y qué debes hacer */}
+      <ActionToast toast={actionToast} onClose={() => setActionToast(null)} />
     </div>
   )
 }
+

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { ActionToast, ActionToastData } from '@/components/ui/ActionToast'
 
 interface Client {
   id: string
@@ -24,6 +25,7 @@ export default function ClientsPage() {
   const [search, setSearch] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
   const [submitting, setSubmitting] = useState<boolean>(false)
+  const [actionToast, setActionToast] = useState<ActionToastData | null>(null)
   const [newClient, setNewClient] = useState({
     name: '',
     companyName: '',
@@ -55,7 +57,42 @@ export default function ClientsPage() {
 
   const handleCreateClient = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newClient.name || !newClient.companyName || !newClient.email) return
+
+    // 1. VALIDACIÓN PREVENTIVA: Correo electrónico obligatorio primero
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!newClient.email || !emailRegex.test(newClient.email.trim())) {
+      setActionToast({
+        title: 'Correo Electrónico Obligatorio',
+        problem: !newClient.email.trim()
+          ? 'El campo de correo electrónico está vacío.'
+          : 'El formato de correo no es válido (debe tener estructura nombre@dominio.com).',
+        actionRequired: 'Por favor, introduce primero un correo electrónico válido antes de guardar el cliente.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 2. Validación de nombre
+    if (!newClient.name.trim() || newClient.name.trim().length < 2) {
+      setActionToast({
+        title: 'Nombre de Contacto Obligatorio',
+        problem: 'El nombre del cliente está vacío o tiene menos de 2 caracteres.',
+        actionRequired: 'Escribe el nombre y apellido del contacto comercial.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 3. Validación de empresa
+    if (!newClient.companyName.trim()) {
+      setActionToast({
+        title: 'Empresa Obligatoria',
+        problem: 'No se indicó la empresa u organización del cliente.',
+        actionRequired: 'Escribe el nombre comercial o razón social de la empresa.',
+        type: 'error',
+      })
+      return
+    }
 
     setSubmitting(true)
     try {
@@ -68,22 +105,30 @@ export default function ClientsPage() {
       if (res.ok) {
         const json = await res.json()
         setClients([json.data, ...clients])
+        setShowModal(false)
+        setNewClient({ name: '', companyName: '', email: '', phone: '', status: 'prospect' })
+        setActionToast({
+          title: 'Cliente Guardado Exitosamente',
+          problem: 'Ninguno. Datos validados correctamente en Supabase.',
+          actionRequired: 'El nuevo contacto ya está disponible en tu CRM para asignarle cotizaciones o proyectos.',
+          type: 'success',
+        })
       } else {
-        // Fallback optimista en UI
-        const optimistic: Client = {
-          id: `c-${Date.now()}`,
-          name: newClient.name,
-          company_name: newClient.companyName,
-          email: newClient.email,
-          phone: newClient.phone || null,
-          status: newClient.status,
-        }
-        setClients([optimistic, ...clients])
+        const errJson = await res.json().catch(() => ({}))
+        setActionToast({
+          title: 'Error al Guardar Cliente',
+          problem: errJson.problem || errJson.message || 'Error en la base de datos.',
+          actionRequired: errJson.actionRequired || 'Verifica que el correo no esté duplicado e intenta nuevamente.',
+          type: 'error',
+        })
       }
-      setShowModal(false)
-      setNewClient({ name: '', companyName: '', email: '', phone: '', status: 'prospect' })
-    } catch (err) {
-      console.error(err)
+    } catch {
+      setActionToast({
+        title: 'Error de Red',
+        problem: 'No se pudo conectar con el servidor para guardar el cliente.',
+        actionRequired: 'Revisa tu conexión a internet y vuelve a intentar.',
+        type: 'error',
+      })
     } finally {
       setSubmitting(false)
     }
@@ -377,6 +422,9 @@ export default function ClientsPage() {
           </div>
         </div>
       )}
+
+      {/* Ventana emergente rectangular abajo a la derecha */}
+      <ActionToast toast={actionToast} onClose={() => setActionToast(null)} />
     </div>
   )
 }

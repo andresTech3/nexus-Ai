@@ -20,9 +20,15 @@ interface NavSection {
 
 const sidebarSections: NavSection[] = [
   {
-    section: 'Principal',
+    section: 'Oficina Autónoma 3D',
     links: [
-      { id: 'dash-overview', icon: '◉', label: 'Resumen', href: '/dashboard' },
+      { id: 'dash-overview', icon: '🏛️', label: 'Oficina 3D en Vivo', href: '/dashboard' },
+      { id: 'dash-agents', icon: '⚡', label: '11 Agentes Dropshipping', href: '/dashboard/agents' },
+    ],
+  },
+  {
+    section: 'Gestión & CRM',
+    links: [
       { id: 'dash-projects', icon: '◈', label: 'Proyectos', href: '/dashboard/projects' },
       { id: 'dash-tasks', icon: '✓', label: 'Tareas', href: '/dashboard/tasks' },
       { id: 'dash-clients', icon: '◎', label: 'Clientes CRM', href: '/dashboard/clients' },

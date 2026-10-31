@@ -111,10 +111,18 @@ export function generateRequestId(): string {
 export function errorResponse(
   message: string,
   statusCode: number,
-  requestId: string
+  requestId: string,
+  actionDetails?: { problem?: string; actionRequired?: string }
 ) {
   return Response.json(
-    { error: getErrorCode(statusCode), message, requestId, statusCode },
+    {
+      error: getErrorCode(statusCode),
+      message,
+      requestId,
+      statusCode,
+      ...(actionDetails?.problem ? { problem: actionDetails.problem } : {}),
+      ...(actionDetails?.actionRequired ? { actionRequired: actionDetails.actionRequired } : {}),
+    },
     { status: statusCode }
   )
 }

@@ -71,8 +71,7 @@ export const POST = createApiHandler(
       const email = emailMatch ? emailMatch[0] : null
 
       // Intentar extraer nombre y empresa
-      // Patrones comunes: "llamado Juan Pérez de DentalPro", "cliente Carlos Gómez de la empresa Acme"
-      let name = 'Nuevo Prospecto'
+      let name = ''
       let company = 'Empresa Prospecto'
 
       const nameMatch = userText.match(/(?:llamado|cliente|prospecto|nombre|a)\s+([A-ZÁÉÍÓÚa-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚa-záéíóúñ]+)?)/i)
@@ -85,7 +84,35 @@ export const POST = createApiHandler(
         company = companyMatch[1].trim()
       }
 
-      const resolvedEmail = email || `contacto@${company.toLowerCase().replace(/[^a-z0-9]/g, '') || 'prospecto'}.com`
+      // VALIDACIÓN ESTRICTA: Correo electrónico primero
+      if (!email) {
+        return NextResponse.json({
+          validationError: true,
+          field: 'email',
+          problem: 'No se ingresó un correo electrónico válido para el nuevo lead.',
+          actionRequired: 'Debes proporcionar un correo con formato válido (ej. usuario@empresa.com) junto con el nombre para registrar al cliente en el CRM.',
+          reply: '⚠️ No puedo registrar al cliente porque no se ingresó un correo electrónico válido. Para mantener la integridad de los datos en tu CRM, debes indicar el email (ej. carlos@dentalpro.com).',
+          model: `${agentName} (Validación)`,
+          tokensUsed: { prompt: 25, completion: 45, total: 70 },
+          isFallback: false,
+          requestId,
+        })
+      }
+
+      // VALIDACIÓN ESTRICTA: Nombre del cliente
+      if (!name) {
+        return NextResponse.json({
+          validationError: true,
+          field: 'name',
+          problem: 'No se identificó el nombre de la persona o contacto.',
+          actionRequired: 'Indica el nombre del cliente (ej. "Carlos Gómez") y su empresa para guardarlo en el CRM.',
+          reply: '⚠️ No puedo registrar al cliente sin su nombre. Por favor indica el nombre de la persona junto con su correo.',
+          model: `${agentName} (Validación)`,
+          tokensUsed: { prompt: 20, completion: 35, total: 55 },
+          isFallback: false,
+          requestId,
+        })
+      }
 
       try {
         const { data: newLead, error: insertError } = await supabase
@@ -94,7 +121,7 @@ export const POST = createApiHandler(
             organization_id: auth.organizationId,
             name,
             company_name: company,
-            email: resolvedEmail,
+            email: email.toLowerCase(),
             status: 'lead',
             notes: `Creado de forma autónoma por agente IA (${agentName}) mediante solicitud de usuario.`,
           })

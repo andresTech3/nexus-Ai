@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
+import { ActionToast, ActionToastData } from '@/components/ui/ActionToast'
+import { AutonomousOfficeDashboard } from '@/components/office/AutonomousOfficeDashboard'
 
 interface Agent {
   id: string
@@ -89,7 +91,10 @@ export default function AgentsPage() {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [showConfigModal, setShowConfigModal] = useState<boolean>(false)
   const [saving, setSaving] = useState<boolean>(false)
-  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
+  const [actionToast, setActionToast] = useState<ActionToastData | null>(null)
+
+  // View Mode
+  const [viewMode, setViewMode] = useState<'office3d' | 'classic'>('office3d')
 
   // Filtros
   const [search, setSearch] = useState<string>('')
@@ -112,9 +117,11 @@ export default function AgentsPage() {
   const [testLoading, setTestLoading] = useState(false)
   const testEndRef = useRef<HTMLDivElement>(null)
 
-  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
-    setToastMessage({ text, type })
-    setTimeout(() => setToastMessage(null), 4000)
+  const showActionToast = (toast: ActionToastData) => {
+    setActionToast(toast)
+    setTimeout(() => {
+      setActionToast((current) => (current === toast ? null : current))
+    }, 7000)
   }
 
   const fetchAgents = useCallback(async () => {
@@ -130,10 +137,20 @@ export default function AgentsPage() {
         setAgents(json.data || [])
         setStats(json.stats || null)
       } else {
-        showToast('Error al cargar agentes de IA', 'error')
+        showActionToast({
+          title: 'Error al Cargar Agentes',
+          problem: 'No se pudo obtener la lista de agentes de IA desde el servidor.',
+          actionRequired: 'Verifica que la base de datos esté accesible y recarga la página.',
+          type: 'error',
+        })
       }
     } catch {
-      showToast('Error de conexión al cargar agentes', 'error')
+      showActionToast({
+        title: 'Error de Red',
+        problem: 'Fallo de conexión al cargar agentes.',
+        actionRequired: 'Revisa tu conectividad a internet.',
+        type: 'error',
+      })
     } finally {
       setLoading(false)
     }
@@ -191,10 +208,34 @@ export default function AgentsPage() {
   const sendTestMessage = async (text: string) => {
     if (!text.trim() || testLoading || !testingAgent) return
 
+    const userText = text.trim()
+    const lower = userText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const isLeadIntent =
+      lower.includes('lead') ||
+      lower.includes('prospecto') ||
+      lower.includes('cliente')
+
+    const hasCreationVerb =
+      lower.includes('crea') ||
+      lower.includes('registra') ||
+      lower.includes('agrega') ||
+      lower.includes('inserta')
+
+    // VALIDACIÓN PREVENTIVA: Si intenta registrar un lead o cliente sin correo electrónico
+    if (isLeadIntent && hasCreationVerb && !userText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)) {
+      showActionToast({
+        title: 'Correo Electrónico Obligatorio',
+        problem: 'Intentas registrar un contacto o prospecto sin proveer una dirección de correo válida.',
+        actionRequired: 'Escribe el correo electrónico válido (ej. usuario@empresa.com) junto con el nombre del contacto en tu mensaje.',
+        type: 'error',
+      })
+      return
+    }
+
     const userMsg: TestMessage = {
       id: `usr-${Date.now()}`,
       role: 'user',
-      content: text.trim(),
+      content: userText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     }
 
@@ -209,7 +250,7 @@ export default function AgentsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: text.trim(),
+          message: userText,
           agentId: testingAgent.id,
           history,
         }),
@@ -225,6 +266,15 @@ export default function AgentsPage() {
           toolExecuted: json.toolExecuted,
         }
         setTestMessages((prev) => [...prev, botMsg])
+
+        if (json.toolExecuted) {
+          showActionToast({
+            title: 'Acción Ejecutada en CRM',
+            problem: 'Ninguno. Operación completada con éxito en la base de datos.',
+            actionRequired: `El agente ejecutó la función ${json.toolExecuted.name}() y los datos quedaron registrados en Supabase.`,
+            type: 'success',
+          })
+        }
       } else {
         const err = await res.json().catch(() => ({}))
         const errorMsg: TestMessage = {
@@ -234,6 +284,13 @@ export default function AgentsPage() {
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         }
         setTestMessages((prev) => [...prev, errorMsg])
+
+        showActionToast({
+          title: 'Error de Ejecución del Agente',
+          problem: err.problem || err.message || 'Fallo en la comunicación con el modelo.',
+          actionRequired: err.actionRequired || 'Verifica los parámetros y las herramientas configuradas para este agente.',
+          type: 'error',
+        })
       }
     } catch {
       const errorMsg: TestMessage = {
@@ -243,6 +300,13 @@ export default function AgentsPage() {
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }
       setTestMessages((prev) => [...prev, errorMsg])
+
+      showActionToast({
+        title: 'Error de Conexión de Red',
+        problem: 'No se pudo conectar con el servidor de agentes.',
+        actionRequired: 'Verifica tu conexión y recarga la página.',
+        type: 'error',
+      })
     } finally {
       setTestLoading(false)
     }
@@ -266,8 +330,34 @@ export default function AgentsPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!formName.trim() || !formRole.trim() || formSystemPrompt.trim().length < 10) {
-      showToast('Completa el nombre, rol y un prompt de al menos 10 caracteres', 'error')
+
+    if (!formName.trim() || formName.trim().length < 2) {
+      showActionToast({
+        title: 'Nombre de Agente Inválido',
+        problem: 'El nombre del agente está vacío o tiene menos de 2 caracteres.',
+        actionRequired: 'Escribe un nombre descriptivo (ejemplo: "LeadBot Pro" o "Cotizador IA").',
+        type: 'error',
+      })
+      return
+    }
+
+    if (!formRole.trim() || formRole.trim().length < 2) {
+      showActionToast({
+        title: 'Rol o Especialidad Obligatoria',
+        problem: 'No has especificado el rol o especialidad del agente.',
+        actionRequired: 'Indica la función principal del agente (ejemplo: "Calificador de Leads B2B").',
+        type: 'error',
+      })
+      return
+    }
+
+    if (formSystemPrompt.trim().length < 10) {
+      showActionToast({
+        title: 'Instrucciones Insuficientes',
+        problem: 'El System Prompt tiene menos de 10 caracteres y no proporciona contexto al modelo LLM.',
+        actionRequired: 'Redacta un System Prompt detallado con las directrices, tono y restricciones del agente.',
+        type: 'error',
+      })
       return
     }
 
@@ -293,12 +383,22 @@ export default function AgentsPage() {
         })
 
         if (res.ok) {
-          showToast('Agente actualizado exitosamente')
+          showActionToast({
+            title: 'Agente Actualizado Exitosamente',
+            problem: 'Ninguno. Parámetros persistidos en Supabase.',
+            actionRequired: 'El agente ya está actualizado para responder en el chatbot.',
+            type: 'success',
+          })
           setShowConfigModal(false)
           fetchAgents()
         } else {
           const err = await res.json().catch(() => ({}))
-          showToast(err.message || 'Error al actualizar agente', 'error')
+          showActionToast({
+            title: 'Error al Actualizar Agente',
+            problem: err.problem || err.message || 'Error en la base de datos.',
+            actionRequired: err.actionRequired || 'Revisa los campos e intenta de nuevo.',
+            type: 'error',
+          })
         }
       } else {
         // Crear
@@ -309,16 +409,31 @@ export default function AgentsPage() {
         })
 
         if (res.ok) {
-          showToast('Agente creado exitosamente en Supabase')
+          showActionToast({
+            title: 'Agente Creado Exitosamente',
+            problem: 'Ninguno. Nuevo agente registrado en Supabase.',
+            actionRequired: 'Haz clic en "💬 Probar Agente" para validar sus herramientas.',
+            type: 'success',
+          })
           setShowConfigModal(false)
           fetchAgents()
         } else {
           const err = await res.json().catch(() => ({}))
-          showToast(err.message || 'Error al crear agente', 'error')
+          showActionToast({
+            title: 'Error al Crear Agente',
+            problem: err.problem || err.message || 'No se pudo insertar el agente.',
+            actionRequired: err.actionRequired || 'Verifica que el nombre sea único y los datos sean válidos.',
+            type: 'error',
+          })
         }
       }
     } catch {
-      showToast('Error de red al guardar el agente', 'error')
+      showActionToast({
+        title: 'Error de Red',
+        problem: 'Fallo al enviar la solicitud al servidor.',
+        actionRequired: 'Revisa tu conexión y vuelve a intentar.',
+        type: 'error',
+      })
     } finally {
       setSaving(false)
     }
@@ -343,15 +458,30 @@ export default function AgentsPage() {
         setAgents((prev) =>
           prev.map((a) => (a.id === agent.id ? { ...a, isActive: agent.isActive } : a))
         )
-        showToast('No se pudo cambiar el estado del agente', 'error')
+        showActionToast({
+          title: 'Error de Estado',
+          problem: 'No se pudo actualizar el estado del agente en el servidor.',
+          actionRequired: 'Reintenta en unos instantes.',
+          type: 'error',
+        })
       } else {
-        showToast(newStatus ? `Agente "${agent.name}" activado` : `Agente "${agent.name}" pausado`)
+        showActionToast({
+          title: newStatus ? 'Agente Activado' : 'Agente Pausado',
+          problem: 'Ninguno.',
+          actionRequired: newStatus ? `El agente "${agent.name}" ahora responderá peticiones.` : `El agente "${agent.name}" está en pausa.`,
+          type: 'success',
+        })
       }
     } catch {
       setAgents((prev) =>
         prev.map((a) => (a.id === agent.id ? { ...a, isActive: agent.isActive } : a))
       )
-      showToast('Error de red al actualizar estado', 'error')
+      showActionToast({
+        title: 'Error de Red',
+        problem: 'No se pudo conectar con el servidor para actualizar el estado.',
+        actionRequired: 'Revisa tu conexión a internet.',
+        type: 'error',
+      })
     }
   }
 
@@ -366,14 +496,29 @@ export default function AgentsPage() {
       })
 
       if (res.ok) {
-        showToast(`Agente "${agent.name}" eliminado`)
+        showActionToast({
+          title: 'Agente Eliminado',
+          problem: 'Ninguno.',
+          actionRequired: `El agente "${agent.name}" fue removido de Supabase.`,
+          type: 'success',
+        })
         setAgents((prev) => prev.filter((a) => a.id !== agent.id))
       } else {
         const err = await res.json().catch(() => ({}))
-        showToast(err.message || 'No se pudo eliminar el agente', 'error')
+        showActionToast({
+          title: 'Error al Eliminar',
+          problem: err.problem || err.message || 'No se pudo eliminar el agente.',
+          actionRequired: err.actionRequired || 'Verifica que tengas permisos de administrador.',
+          type: 'error',
+        })
       }
     } catch {
-      showToast('Error de red al eliminar el agente', 'error')
+      showActionToast({
+        title: 'Error de Red',
+        problem: 'No se pudo conectar para eliminar el agente.',
+        actionRequired: 'Revisa tu conexión e intenta de nuevo.',
+        type: 'error',
+      })
     }
   }
 
@@ -383,48 +528,83 @@ export default function AgentsPage() {
 
   return (
     <div id="agents-page" style={{ color: '#f3f4f6' }}>
-      {/* Toast Alert */}
-      {toastMessage && (
-        <div
+      {/* View Switcher Bar */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.5rem',
+          backgroundColor: '#1b1410',
+          border: '1px solid #3d2a1d',
+          borderRadius: '8px',
+          padding: '4px',
+          marginBottom: '1.5rem',
+          width: 'fit-content',
+        }}
+      >
+        <button
+          onClick={() => setViewMode('office3d')}
           style={{
-            position: 'fixed',
-            top: '1.5rem',
-            right: '1.5rem',
-            background: toastMessage.type === 'error' ? 'rgba(239, 68, 68, 0.95)' : 'rgba(16, 185, 129, 0.95)',
-            color: 'white',
-            padding: '0.875rem 1.5rem',
-            borderRadius: '0.75rem',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.6)',
-            zIndex: 9999,
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            animation: 'fadeIn 0.3s ease',
-            backdropFilter: 'blur(8px)',
+            background: viewMode === 'office3d' ? '#faae33' : 'transparent',
+            color: viewMode === 'office3d' ? '#181008' : '#9ca3af',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '0.45rem 1rem',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
           }}
         >
-          {toastMessage.type === 'error' ? '⚠️' : '✓'} {toastMessage.text}
-        </div>
-      )}
+          <span>🏛️</span>
+          <span>11 Agentes Dropshipping (Oficina 3D)</span>
+        </button>
 
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', fontWeight: 800, color: 'white', marginBottom: '0.375rem' }}>
-            Agentes Autónomos de IA
-          </h1>
-          <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)' }}>
-            Configuración, ejecución y monitorización de agentes inteligentes conectados a Supabase y Google Gemini.
-          </p>
-        </div>
         <button
-          onClick={() => openModal()}
-          className="btn btn-primary"
-          id="btn-new-agent"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.25rem' }}
+          onClick={() => setViewMode('classic')}
+          style={{
+            background: viewMode === 'classic' ? '#faae33' : 'transparent',
+            color: viewMode === 'classic' ? '#181008' : '#9ca3af',
+            border: 'none',
+            borderRadius: '6px',
+            padding: '0.45rem 1rem',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+          }}
         >
-          <span>⚡</span> Crear Agente
+          <span>⚡</span>
+          <span>Agentes Clásicos de Agencia (CRM)</span>
         </button>
       </div>
+
+      {viewMode === 'office3d' ? (
+        <AutonomousOfficeDashboard />
+      ) : (
+        <>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', fontWeight: 800, color: 'white', marginBottom: '0.375rem' }}>
+                Agentes Autónomos de IA
+              </h1>
+              <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)' }}>
+                Configuración, ejecución y monitorización de agentes inteligentes conectados a Supabase y Google Gemini.
+              </p>
+            </div>
+            <button
+              onClick={() => openModal()}
+              className="btn btn-primary"
+              id="btn-new-agent"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.25rem' }}
+            >
+              <span>⚡</span> Crear Agente
+            </button>
+          </div>
 
       {/* Quota & Status Banner */}
       <div
@@ -1248,6 +1428,11 @@ export default function AgentsPage() {
           </div>
         </div>
       )}
+        </>
+      )}
+
+      {/* Ventana Emergente Rectangular de Acciones y Errores (Abajo a la Derecha) */}
+      <ActionToast toast={actionToast} onClose={() => setActionToast(null)} />
     </div>
   )
 }

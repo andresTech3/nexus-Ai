@@ -92,7 +92,10 @@ export const POST = createApiHandler(
 
     if (error) {
       console.error(`[CRM Insert Error][${requestId}]`, error.message)
-      return errorResponse('No se pudo registrar el cliente', 500, requestId)
+      return errorResponse('No se pudo registrar el cliente', 500, requestId, {
+        problem: error.message || 'Error en la base de datos al insertar el contacto.',
+        actionRequired: 'Verifica que el correo no esté duplicado o intenta de nuevo en unos momentos.',
+      })
     }
 
     return NextResponse.json(

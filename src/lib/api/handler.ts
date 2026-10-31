@@ -105,11 +105,16 @@ export function createApiHandler<TBody = any, TQuery = any>(
         const bodyResult = options.bodySchema.safeParse(rawBody)
         if (!bodyResult.success) {
           const firstIssue = (bodyResult.error as ZodError).issues[0]
+          const field = firstIssue.path.join('.') || 'payload'
           return applySecurityHeaders(
             errorResponse(
-              `Campo inválido '${firstIssue.path.join('.')}': ${firstIssue.message}`,
+              `Campo inválido '${field}': ${firstIssue.message}`,
               422,
-              requestId
+              requestId,
+              {
+                problem: `El campo '${field}' no cumple con la validación requerida: ${firstIssue.message}`,
+                actionRequired: `Verifica el valor de '${field}' y vuelve a enviar el formulario con datos válidos.`,
+              }
             ),
             requestId
           )

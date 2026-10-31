@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { ActionToast, ActionToastData } from '@/components/ui/ActionToast'
 
 interface QuoteItem {
   id: string
@@ -45,6 +46,7 @@ export default function QuotesPage() {
   const [submitting, setSubmitting] = useState<boolean>(false)
   const [showModal, setShowModal] = useState<boolean>(false)
   const [selectedClientId, setSelectedClientId] = useState<string>('')
+  const [actionToast, setActionToast] = useState<ActionToastData | null>(null)
   const [newQuote, setNewQuote] = useState({
     clientName: '',
     serviceName: 'Despliegue de Chatbot RAG Multicanal',
@@ -95,8 +97,50 @@ export default function QuotesPage() {
 
   const handleCreateQuote = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // 1. Validación de cliente
     if (!selectedClientId && !newQuote.clientName.trim()) {
-      alert('Por favor selecciona o escribe el nombre del cliente.')
+      setActionToast({
+        title: 'Cliente Requerido',
+        problem: 'La cotización no tiene ningún cliente asignado.',
+        actionRequired: 'Selecciona un cliente de la lista o escribe el nombre del cliente destinatario.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 2. Validación de servicio
+    if (!newQuote.serviceName.trim() || newQuote.serviceName.trim().length < 2) {
+      setActionToast({
+        title: 'Servicio Obligatorio',
+        problem: 'El concepto o servicio a cotizar no puede estar vacío.',
+        actionRequired: 'Indica el nombre del paquete o servicio de desarrollo.',
+        type: 'error',
+      })
+      return
+    }
+
+    // 3. Validación de precio numérico
+    const priceNum = Number(newQuote.price)
+    if (isNaN(priceNum) || priceNum <= 0) {
+      setActionToast({
+        title: 'Precio Inválido',
+        problem: 'El importe de la cotización debe ser un número positivo mayor a 0.',
+        actionRequired: 'Introduce un precio válido en USD (ejemplo: 2500).',
+        type: 'error',
+      })
+      return
+    }
+
+    // 4. Validación de vigencia
+    const validDaysNum = Number(newQuote.validDays)
+    if (isNaN(validDaysNum) || validDaysNum < 1 || validDaysNum > 90) {
+      setActionToast({
+        title: 'Vigencia Inválida',
+        problem: 'El periodo de vigencia debe estar entre 1 y 90 días.',
+        actionRequired: 'Introduce un plazo entre 1 y 90 días laborables.',
+        type: 'error',
+      })
       return
     }
 
@@ -106,13 +150,13 @@ export default function QuotesPage() {
         clientId: selectedClientId || undefined,
         clientName: selectedClientId
           ? clients.find((c) => c.id === selectedClientId)?.name || 'Cliente'
-          : newQuote.clientName,
-        serviceName: newQuote.serviceName,
-        price: Number(newQuote.price) || 0,
+          : newQuote.clientName.trim(),
+        serviceName: newQuote.serviceName.trim(),
+        price: priceNum,
         currency: 'USD',
-        validDays: Number(newQuote.validDays) || 15,
+        validDays: validDaysNum,
         status: 'sent',
-        notes: newQuote.notes || undefined,
+        notes: newQuote.notes ? newQuote.notes.trim() : undefined,
       }
 
       const res = await fetch('/api/v1/quotes', {
@@ -127,13 +171,28 @@ export default function QuotesPage() {
         setShowModal(false)
         setNewQuote({ clientName: '', serviceName: 'Despliegue de Chatbot RAG Multicanal', price: 3800, validDays: 15, notes: '' })
         setSelectedClientId('')
+        setActionToast({
+          title: 'Cotización Emitida Exitosamente',
+          problem: 'Ninguno. Cotización guardada en Supabase.',
+          actionRequired: 'Puedes consultar el estado y el importe total en el resumen superior.',
+          type: 'success',
+        })
       } else {
-        const errJson = await res.json()
-        alert(errJson.message || 'Error al emitir la cotización.')
+        const errJson = await res.json().catch(() => ({}))
+        setActionToast({
+          title: 'Error al Emitir Cotización',
+          problem: errJson.problem || errJson.message || 'Error en la base de datos.',
+          actionRequired: errJson.actionRequired || 'Verifica los campos ingresados e intenta nuevamente.',
+          type: 'error',
+        })
       }
-    } catch (err) {
-      console.error('Error creando cotización:', err)
-      alert('Error de conexión al emitir la cotización.')
+    } catch {
+      setActionToast({
+        title: 'Error de Red',
+        problem: 'No se pudo conectar con el servidor para emitir la cotización.',
+        actionRequired: 'Revisa tu conexión a internet y vuelve a intentar.',
+        type: 'error',
+      })
     } finally {
       setSubmitting(false)
     }
@@ -477,6 +536,9 @@ export default function QuotesPage() {
           </div>
         </div>
       )}
+
+      {/* Ventana emergente rectangular abajo a la derecha */}
+      <ActionToast toast={actionToast} onClose={() => setActionToast(null)} />
     </div>
   )
 }
