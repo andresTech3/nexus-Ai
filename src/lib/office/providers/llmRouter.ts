@@ -46,9 +46,9 @@ export async function callAgentLLM(
     selectedProvider = 'deepseek'
     apiKey = quotas.deepseek.apiKey.trim()
     modelName = quotas.deepseek.modelName || 'deepseek-chat'
-  } else if (quotas.freellmapi?.apiKey && quotas.freellmapi.isHealthy !== false) {
+  } else if (quotas.freellmapi && quotas.freellmapi.isHealthy !== false) {
     selectedProvider = 'freellmapi'
-    apiKey = quotas.freellmapi.apiKey || 'freellmapi-ab594e82b2ee92f972d72406358969f6bff80d5132d2a3f7'
+    apiKey = quotas.freellmapi.apiKey?.trim() || ''
     modelName = quotas.freellmapi.modelName || 'gpt-4o-mini'
     hostUrl = quotas.freellmapi.hostUrl || 'http://127.0.0.1:31415/v1'
   } else if (quotas.opensource?.apiKey && quotas.opensource.apiKey.trim() !== '') {

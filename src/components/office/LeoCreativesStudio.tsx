@@ -27,9 +27,9 @@ interface CreativeFormat {
 export function LeoCreativesStudio() {
   const store = useOfficeStore()
   const activeOffice = store.offices[store.activeOfficeId]
-  const productName = activeOffice?.product?.name || 'Anillo Inteligente de Titanio'
-  const brandName = activeOffice?.brand?.name || 'AuraTitanium'
-  const niche = activeOffice?.product?.niche || 'Wellness y Joyería Inteligente'
+  const productName = activeOffice?.product?.name || ''
+  const brandName = activeOffice?.brand?.name || ''
+  const niche = activeOffice?.product?.niche || ''
 
   // Style selector
   const [styleMode, setStyleMode] = useState<'lujo' | 'nordico' | 'cyber' | 'calido'>('lujo')
@@ -37,6 +37,18 @@ export function LeoCreativesStudio() {
   const [isZipping, setIsZipping] = useState(false)
   const [customEdits, setCustomEdits] = useState<Record<string, string>>({})
   const [activeTab, setActiveTab] = useState<'all' | 'meta' | 'tiktok' | 'infographic'>('all')
+
+  if (!productName) {
+    return (
+      <div style={{ padding: '3rem 2rem', textAlign: 'center', background: '#17110d', borderRadius: '12px', border: '1px solid #3d2a1d' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🎨</div>
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>Estudio Creativo de Leo Preparado</h3>
+        <p style={{ fontSize: '0.85rem', color: '#9ca3af', maxWidth: 500, margin: '0 auto' }}>
+          Configura tu producto en la oficina para que Leo genere automáticamente las imágenes, mockups de producto, ganchos de 3 segundos y guiones UGC.
+        </p>
+      </div>
+    )
+  }
 
   const getStyleModifier = () => {
     switch (styleMode) {

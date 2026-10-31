@@ -81,7 +81,7 @@ Debes responder ÚNICAMENTE con un objeto JSON válido con la siguiente estructu
       'http://localhost:3001/v1',
     ]
 
-    const apiKey = 'freellmapi-ab594e82b2ee92f972d72406358969f6bff80d5132d2a3f7'
+    const apiKey = process.env.FREELLM_API_KEY || 'freellmapi-ab594e82b2ee92f972d72406358969f6bff80d5132d2a3f7'
     let researchData: any = null
 
     for (const host of candidateHosts) {

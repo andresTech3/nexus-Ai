@@ -385,26 +385,34 @@ export function AutonomousOfficeDashboard() {
               <span style={{ fontSize: '0.7rem', color: '#faae33', fontWeight: 800 }}>PASO 1: PRODUCTO &amp; MARCA</span>
               <span style={{ fontSize: '0.65rem', color: '#34d399', fontWeight: 700 }}>● Activo</span>
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {activeOffice.product.name}
-            </div>
-            <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{activeOffice.brand.name}</div>
+            {activeOffice.product.name ? (
+              <>
+                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {activeOffice.product.name}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{activeOffice.brand.name || 'Sin marca'}</div>
+              </>
+            ) : (
+              <div style={{ fontSize: '0.8rem', color: '#faae33', fontWeight: 700, marginTop: '4px' }}>
+                ✨ Sin producto asignado
+              </div>
+            )}
           </div>
           <button
             onClick={() => setIsLaunchModalOpen(true)}
             style={{
               marginTop: '0.5rem',
-              background: '#241a14',
-              border: '1px solid #4a3424',
-              color: '#faae33',
+              background: activeOffice.product.name ? '#241a14' : 'linear-gradient(135deg, #faae33, #d98216)',
+              border: `1px solid ${activeOffice.product.name ? '#4a3424' : '#faae33'}`,
+              color: activeOffice.product.name ? '#faae33' : '#181008',
               borderRadius: '4px',
-              padding: '0.35rem',
+              padding: '0.4rem',
               fontSize: '0.72rem',
-              fontWeight: 700,
+              fontWeight: 800,
               cursor: 'pointer',
             }}
           >
-            + Probar Otro Producto
+            {activeOffice.product.name ? '+ Probar Otro Producto' : '🚀 Configurar Primer Producto'}
           </button>
         </div>
 

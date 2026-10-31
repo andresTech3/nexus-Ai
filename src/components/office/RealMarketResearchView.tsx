@@ -6,13 +6,25 @@ import { useOfficeStore } from '@/lib/office/store'
 export function RealMarketResearchView() {
   const store = useOfficeStore()
   const activeOffice = store.offices[store.activeOfficeId]
-  const productName = activeOffice?.product?.name || 'Anillo Inteligente de Titanio'
-  const brandName = activeOffice?.brand?.name || 'AuraTitanium'
-  const niche = activeOffice?.product?.niche || 'Wellness y Joyería Inteligente'
+  const productName = activeOffice?.product?.name || ''
+  const brandName = activeOffice?.brand?.name || ''
+  const niche = activeOffice?.product?.niche || ''
 
   const [isLoading, setIsLoading] = useState(false)
   const [researchData, setResearchData] = useState<any>(null)
-  const [lastScanned, setLastScanned] = useState<string>('Hoy, hace unos minutos')
+  const [lastScanned, setLastScanned] = useState<string>('Hoy')
+
+  if (!productName) {
+    return (
+      <div style={{ padding: '3rem 2rem', textAlign: 'center', background: '#17110d', borderRadius: '12px', border: '1px solid #3d2a1d' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔍</div>
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: '0.5rem' }}>Averiguación de Mercado de Iván y Lucas</h3>
+        <p style={{ fontSize: '0.85rem', color: '#9ca3af', maxWidth: 500, margin: '0 auto' }}>
+          Configura un producto o nicho en la cabecera para que Iván y Lucas consulten en tiempo real competidores, quejas recurrentes y costes de fábrica en AliExpress / CJ Dropshipping.
+        </p>
+      </div>
+    )
+  }
 
   // Execute real live market research via FreeLLMAPI
   const handleRunRealResearch = async () => {

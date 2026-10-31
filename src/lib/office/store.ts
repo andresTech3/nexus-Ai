@@ -116,18 +116,19 @@ function createInitialOffice(id: string, name: string, productName: string, nich
 const initialPrimaryOffice = createInitialOffice(
   'off_principal',
   'Mi Marca Dropshipping',
-  'Anillo Inteligente de Titanio',
-  'Wellness y Wearables',
+  '',
+  '',
   'HYBRID'
 )
-initialPrimaryOffice.brand.name = 'AuraTitanium'
-initialPrimaryOffice.brand.style = 'Tecnología invisible y diseño nórdico prémium'
+initialPrimaryOffice.brand.name = ''
+initialPrimaryOffice.brand.style = ''
+initialPrimaryOffice.currentStep = 'Listo para empezar. Configura tu producto o nicho para activar a los 11 agentes.'
 
 const initialQuotas: Record<string, ProviderQuota> = {
   freellmapi: {
-    name: 'FreeLLMAPI (Router Unificado Local)',
+    name: 'FreeLLMAPI (Router Unificado)',
     provider: 'freellmapi',
-    apiKey: 'freellmapi-ab594e82b2ee92f972d72406358969f6bff80d5132d2a3f7',
+    apiKey: '', // Protegido: se gestiona internamente en servidor sin exponer al usuario
     hostUrl: 'http://127.0.0.1:31415/v1',
     modelName: 'gpt-4o-mini',
     requestsToday: 0,
@@ -708,7 +709,7 @@ export const useOfficeStore = create<OfficeStoreState>()(
       },
     }),
     {
-      name: 'nexus-autonomous-office-v3-clean',
+      name: 'nexus-autonomous-office-v5-clean',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         offices: state.offices,

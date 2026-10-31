@@ -14,8 +14,8 @@ export function ConnectionsManager() {
     {
       id: 'freellmapi',
       name: 'FreeLLMAPI (Router Unificado)',
-      badge: 'RECOMENDADO · 279 MODELOS',
-      description: 'Tu pasarela local gratuita con acceso a GPT-4o, Claude 3.5, DeepSeek y Gemini sin cuotas.',
+      badge: 'CONEXIÓN INTERNA INCLUIDA',
+      description: 'Conector inteligente interno incluido en el servidor. Las personas pueden subir su propia API Key opcionalmente aquí, o dejarlo vacío para usar la pasarela predeterminada.',
       endpoint: quotas.freellmapi?.hostUrl || 'http://127.0.0.1:31415/v1',
       defaultModel: quotas.freellmapi?.modelName || 'gpt-4o-mini',
       models: [
@@ -25,8 +25,8 @@ export function ConnectionsManager() {
         { id: 'gemini-3.7-flash', name: 'Gemini 3.7 Flash' },
         { id: 'qwen3.8-flash', name: 'Qwen 3.8 Flash' },
       ],
-      placeholderKey: 'freellmapi-...',
-      isConfigured: Boolean(quotas.freellmapi?.apiKey),
+      placeholderKey: 'Opcional: ingresa tu propia clave o déjalo vacío',
+      isConfigured: true,
     },
     {
       id: 'openai',
@@ -131,6 +131,7 @@ export function ConnectionsManager() {
 
   const handleResetCleanProject = () => {
     if (confirm('¿Estás seguro de que deseas limpiar el proyecto? Se borrarán los datos previos y quedará completamente vacío y listo para trabajar desde cero.')) {
+      localStorage.removeItem('nexus-autonomous-office-v5-clean')
       localStorage.removeItem('nexus-autonomous-office-v3-clean')
       localStorage.removeItem('nexus-autonomous-office-v2')
       window.location.reload()
@@ -241,8 +242,8 @@ export function ConnectionsManager() {
                     style={{
                       fontSize: '0.7rem',
                       fontWeight: 700,
-                      color: p.isConfigured ? '#34d399' : '#6b7280',
-                      background: p.isConfigured ? 'rgba(52, 211, 153, 0.1)' : 'rgba(107, 114, 128, 0.1)',
+                      color: (p.id === 'freellmapi' || p.isConfigured) ? '#34d399' : '#6b7280',
+                      background: (p.id === 'freellmapi' || p.isConfigured) ? 'rgba(52, 211, 153, 0.1)' : 'rgba(107, 114, 128, 0.1)',
                       padding: '2px 6px',
                       borderRadius: '4px',
                       display: 'flex',
@@ -250,8 +251,10 @@ export function ConnectionsManager() {
                       gap: '4px',
                     }}
                   >
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: p.isConfigured ? '#34d399' : '#6b7280' }} />
-                    {p.isConfigured ? 'Configurado' : 'Sin Clave'}
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: (p.id === 'freellmapi' || p.isConfigured) ? '#34d399' : '#6b7280' }} />
+                    {p.id === 'freellmapi'
+                      ? (quota.apiKey ? 'Clave Propia Activa' : 'Servidor Interno Activo')
+                      : (p.isConfigured ? 'Configurado' : 'Sin Clave')}
                   </span>
                 </div>
 

@@ -20,7 +20,7 @@ export function MultiOfficeManager() {
   const [newProduct, setNewProduct] = useState('')
   const [newNiche, setNewNiche] = useState('')
   const [newTrafficMode, setNewTrafficMode] = useState<TrafficMode>('HYBRID')
-  const [newTemplate, setNewTemplate] = useState<'nubae' | 'empty'>('nubae')
+  const [newTemplate, setNewTemplate] = useState<'nubae' | 'empty'>('empty')
 
   // Change Product Form State
   const [changeProductName, setChangeProductName] = useState('')

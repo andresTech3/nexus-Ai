@@ -58,7 +58,8 @@ export async function POST(req: NextRequest) {
         'http://localhost:3001/v1',
       ].filter(Boolean) as string[]
 
-      const bearerToken = apiKey && !apiKey.startsWith('http') ? apiKey : 'freellmapi'
+      const internalKey = process.env.FREELLM_API_KEY || 'freellmapi-ab594e82b2ee92f972d72406358969f6bff80d5132d2a3f7'
+      const bearerToken = apiKey && apiKey.trim() !== '' && !apiKey.startsWith('http') ? apiKey : internalKey
       const requestedModel = modelName && modelName !== 'auto' ? modelName : 'gpt-4o-mini'
 
       for (const host of candidateHosts) {
