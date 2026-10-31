@@ -6,8 +6,8 @@ import { checkBotAndMultiIpSecurity, createBlockedResponse, unblockEntity } from
    MIDDLEWARE — Protección de rutas, control anti-bots y concurrencia
    ============================================================ */
 
-const PROTECTED_PREFIXES: string[] = []
-const AUTH_ROUTES = ['/login', '/register']
+const PROTECTED_PREFIXES: string[] = ['/dashboard']
+const AUTH_ROUTES = ['/login', '/register', '/forgot-password']
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -58,8 +58,7 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // IMPORTANTE: Refrescar la sesión sin acceder a session.user
-  // para evitar romper el flujo de autenticación de Supabase SSR.
+  // Refrescar sesión
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -72,35 +71,9 @@ export async function middleware(request: NextRequest) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
     loginUrl.searchParams.set('redirect', pathname)
-    return NextResponse.redirect(loginUrl)
-  }
-
-  // Verificar si la sesión de este dispositivo fue desplazada por otro
-  if (isProtected && user) {
-    const sessionToken = request.cookies.get('nexus_session_token')?.value
-    if (sessionToken) {
-      const { data: isValid } = await supabase.rpc('validate_user_session', {
-        p_user_id: user.id,
-        p_session_token: sessionToken,
-      })
-
-      if (isValid === false) {
-        // La sesión en este navegador ya no es válida (iniciaron sesión en otro dispositivo)
-        await supabase.auth.signOut()
-        const loginUrl = request.nextUrl.clone()
-        loginUrl.pathname = '/login'
-        loginUrl.searchParams.set('auth_error', 'session_displaced')
-        const response = NextResponse.redirect(loginUrl)
-        response.cookies.delete('nexus_session_token')
-        return response
-      }
-
-      // Mantener activo el timestamp de actividad
-      await supabase.rpc('touch_user_session', {
-        p_user_id: user.id,
-        p_session_token: sessionToken,
-      })
-    }
+    const response = NextResponse.redirect(loginUrl)
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    return response
   }
 
   // Rutas de auth → redirigir a /dashboard si ya hay sesión
@@ -110,6 +83,11 @@ export async function middleware(request: NextRequest) {
     dashboardUrl.pathname = '/dashboard'
     dashboardUrl.searchParams.delete('redirect')
     return NextResponse.redirect(dashboardUrl)
+  }
+
+  // Evitar almacenamiento en caché del navegador en el dashboard
+  if (isProtected) {
+    supabaseResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
   }
 
   return supabaseResponse
