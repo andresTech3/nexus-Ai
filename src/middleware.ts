@@ -6,7 +6,7 @@ import { checkBotAndMultiIpSecurity, createBlockedResponse, unblockEntity } from
    MIDDLEWARE — Protección de rutas, control anti-bots y concurrencia
    ============================================================ */
 
-const PROTECTED_PREFIXES = ['/dashboard']
+const PROTECTED_PREFIXES: string[] = []
 const AUTH_ROUTES = ['/login', '/register']
 
 export async function middleware(request: NextRequest) {

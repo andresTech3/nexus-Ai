@@ -84,11 +84,8 @@ export default function Navbar() {
 
           {/* Actions */}
           <div className="nav-actions">
-            <Link href="/login" className="btn btn-outline btn-sm" id="nav-login-btn">
-              Iniciar Sesión
-            </Link>
-            <Link href="/register" className="btn btn-primary btn-sm" id="nav-cta-btn">
-              Iniciar Proyecto <span style={{ marginLeft: 4, fontWeight: 900 }}>+</span>
+            <Link href="/dashboard" className="btn btn-primary btn-sm" id="nav-cta-btn">
+              ⚡ Entrar a Oficina 3D <span style={{ marginLeft: 4, fontWeight: 900 }}>&rarr;</span>
             </Link>
 
             {/* Mobile toggle */}
