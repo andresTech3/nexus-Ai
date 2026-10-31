@@ -30,18 +30,9 @@ const userIpHistory = new Map<string, { ips: Set<string>; lastSeen: number }>()
 // Lista de bloqueos activos
 const blockedEntities = new Map<string, BlockedEntity>()
 
-// Firmas de User-Agent conocidas de bots maliciosos y scrapers no autorizados
+// Firmas de herramientas de escaneo malicioso no autorizadas
 export const MALICIOUS_BOT_PATTERNS = [
-  /python-requests/i,
-  /aiohttp/i,
-  /scrapy/i,
   /sqlmap/i,
-  /headlesschrome/i,
-  /puppeteer/i,
-  /phantomjs/i,
-  /selenium/i,
-  /curl\//i,
-  /wget/i,
   /gobuster/i,
   /nikto/i,
   /zgrab/i,

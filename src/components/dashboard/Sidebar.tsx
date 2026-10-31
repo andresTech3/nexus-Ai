@@ -20,43 +20,18 @@ interface NavSection {
 
 const sidebarSections: NavSection[] = [
   {
-    section: 'Oficina Autónoma 3D',
+    section: 'Dropshipping OS',
     links: [
       { id: 'dash-overview', icon: '🏛️', label: 'Oficina 3D en Vivo', href: '/dashboard' },
-      { id: 'dash-agents', icon: '⚡', label: '11 Agentes Dropshipping', href: '/dashboard/agents' },
+      { id: 'dash-agents', icon: '⚡', label: '11 Agentes Especialistas', href: '/dashboard/agents' },
+      { id: 'dash-deliverables', icon: '📦', label: 'Proyectos & Entregables', href: '/dashboard/projects' },
     ],
   },
   {
-    section: 'Gestión & CRM',
+    section: 'Configuración & Conexiones',
     links: [
-      { id: 'dash-projects', icon: '◈', label: 'Proyectos', href: '/dashboard/projects' },
-      { id: 'dash-tasks', icon: '✓', label: 'Tareas', href: '/dashboard/tasks' },
-      { id: 'dash-clients', icon: '◎', label: 'Clientes CRM', href: '/dashboard/clients' },
-    ],
-  },
-  {
-    section: 'IA & Automatización',
-    links: [
-      { id: 'dash-agents', icon: '⚡', label: 'Agentes IA', href: '/dashboard/agents' },
-      { id: 'dash-chatbot', icon: '◐', label: 'Chatbot', href: '/dashboard/chatbot' },
-      { id: 'dash-automations', icon: '↻', label: 'Automatizaciones', href: '/dashboard/automations' },
-      { id: 'dash-campaigns', icon: '◻', label: 'Campañas', href: '/dashboard/campaigns' },
-    ],
-  },
-  {
-    section: 'Finanzas',
-    links: [
-      { id: 'dash-catalog', icon: '$', label: 'Catálogo', href: '/dashboard/catalog' },
-      { id: 'dash-quotes', icon: '❑', label: 'Cotizaciones', href: '/dashboard/quotes' },
-      { id: 'dash-orders', icon: '◉', label: 'Órdenes & Pagos', href: '/dashboard/orders' },
-      { id: 'dash-reports', icon: '▤', label: 'Informes', href: '/dashboard/reports' },
-    ],
-  },
-  {
-    section: 'Sistema',
-    links: [
-      { id: 'dash-settings', icon: '⚙', label: 'Configuración', href: '/dashboard/settings' },
-      { id: 'dash-support', icon: '?', label: 'Soporte & Ayuda', href: '/dashboard/support' },
+      { id: 'dash-settings', icon: '⚙️', label: 'Conectores IA & Ajustes', href: '/dashboard/settings' },
+      { id: 'dash-support', icon: '❓', label: 'Soporte Dropshipping', href: '/dashboard/support' },
     ],
   },
 ]
