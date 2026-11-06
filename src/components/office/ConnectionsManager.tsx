@@ -9,6 +9,53 @@ export function ConnectionsManager() {
 
   const [testingProvider, setTestingProvider] = useState<string | null>(null)
   const [testResult, setTestResult] = useState<{ provider: string; success: boolean; message: string } | null>(null)
+  const [verifiedProviders, setVerifiedProviders] = useState<Record<string, boolean>>({})
+
+  const handleTest = async (providerId: string) => {
+    setTestingProvider(providerId)
+    setTestResult(null)
+
+    const q = quotas[providerId]
+    try {
+      const res = await fetch('/api/v1/office/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider: providerId,
+          apiKey: q?.apiKey,
+          hostUrl: q?.hostUrl,
+          modelName: q?.modelName,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok && data.success) {
+        setVerifiedProviders((prev) => ({ ...prev, [providerId]: true }))
+        setTestResult({
+          provider: providerId,
+          success: true,
+          message: data.message || `Conexión verificada exitosamente con ${providerId.toUpperCase()}.`,
+        })
+      } else {
+        setVerifiedProviders((prev) => ({ ...prev, [providerId]: false }))
+        setTestResult({
+          provider: providerId,
+          success: false,
+          message: data.error || `Error al verificar ${providerId.toUpperCase()}. Revisa tus credenciales.`,
+        })
+      }
+    } catch (e: any) {
+      setVerifiedProviders((prev) => ({ ...prev, [providerId]: false }))
+      setTestResult({
+        provider: providerId,
+        success: false,
+        message: `Error de red al comprobar ${providerId}: ${e.message}`,
+      })
+    } finally {
+      setTestingProvider(null)
+    }
+  }
 
   const providers = [
     {
@@ -82,52 +129,57 @@ export function ConnectionsManager() {
       placeholderKey: 'http://localhost:11434 o gsk_...',
       isConfigured: Boolean(quotas.opensource?.apiKey),
     },
+    {
+      id: 'higgsfield',
+      name: 'Higgsfield AI (Generador de Vídeos UGC)',
+      badge: 'VÍDEO CON IA (OPCIONAL)',
+      description: 'Si tienes suscripción a Higgsfield, conecta tu API Key para generar los vídeos automáticamente. Si no, los agentes te entregarán el guion y el prompt en texto listo para usar gratis.',
+      defaultModel: 'higgsfield-ugc-v1',
+      models: [
+        { id: 'higgsfield-ugc-v1', name: 'Higgsfield UGC Ads (9:16)' },
+        { id: 'higgsfield-product-showcase', name: 'Product Showcase (1:1)' },
+      ],
+      placeholderKey: 'hf_live_... o déjalo vacío para modo prompts gratis',
+      isConfigured: Boolean(quotas.higgsfield?.apiKey),
+    },
+    {
+      id: 'elevenlabs',
+      name: 'ElevenLabs (Voces Humanas Hiperrealistas)',
+      badge: 'AUDIO & VOZ (OPCIONAL)',
+      description: 'Si tienes cuenta en ElevenLabs, conecta tu clave para narrar los guiones con voz profesional. Sin suscripción, obtendrás el guion completo con marcas de tiempo.',
+      defaultModel: 'eleven_multilingual_v2',
+      models: [
+        { id: 'eleven_multilingual_v2', name: 'Multilingual v2 (Español Natural)' },
+        { id: 'eleven_turbo_v2', name: 'Turbo v2 (Ultra Rápido)' },
+      ],
+      placeholderKey: 'xi-api-key-...',
+      isConfigured: Boolean(quotas.elevenlabs?.apiKey),
+    },
+    {
+      id: 'meta_ads',
+      name: 'Facebook & Instagram Ads (Meta MCP)',
+      badge: 'CANAL DE TRÁFICO',
+      description: 'Conecta tu cuenta publicitaria de Meta para exportar campañas CBO/ABO y reglas de stop-loss directamente a tu Administrador de Anuncios.',
+      defaultModel: 'meta-marketing-api-v20',
+      models: [
+        { id: 'meta-marketing-api-v20', name: 'Meta Marketing API (v20.0)' },
+      ],
+      placeholderKey: 'act_1234567890 o Access Token',
+      isConfigured: Boolean(quotas.meta_ads?.apiKey),
+    },
+    {
+      id: 'shopify',
+      name: 'Shopify Store (Admin API)',
+      badge: 'TIENDA & ECOMMERCE',
+      description: 'Conecta tu tienda Shopify para sincronizar productos, inyectar el código Liquid Dawn para bundles y leer pedidos.',
+      defaultModel: 'shopify-admin-2026',
+      models: [
+        { id: 'shopify-admin-2026', name: 'Shopify Admin API (Storefront & Theme)' },
+      ],
+      placeholderKey: 'shpat_... (Access Token de App Privada)',
+      isConfigured: Boolean(quotas.shopify?.apiKey),
+    },
   ]
-
-  const handleTest = async (providerId: string) => {
-    setTestingProvider(providerId)
-    setTestResult(null)
-
-    const q = quotas[providerId]
-    try {
-      const res = await fetch('/api/v1/office/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          provider: providerId,
-          apiKey: q?.apiKey,
-          hostUrl: q?.hostUrl,
-          modelName: q?.modelName,
-          systemPrompt: 'Responde brevemente confirmando conexion.',
-          userPrompt: 'Di "CONEXION_EXITOSA" y tu modelo.',
-        }),
-      })
-
-      if (res.ok) {
-        const data = await res.json()
-        setTestResult({
-          provider: providerId,
-          success: true,
-          message: `Conexión exitosa con ${providerId.toUpperCase()}. Respuesta del modelo: "${data.reply || 'OK'}" (${data.model})`,
-        })
-      } else {
-        const err = await res.json()
-        setTestResult({
-          provider: providerId,
-          success: false,
-          message: `Error al conectar con ${providerId}: ${err.error || 'Revisa tu API Key o endpoint'}`,
-        })
-      }
-    } catch (e: any) {
-      setTestResult({
-        provider: providerId,
-        success: false,
-        message: `Error de red: ${e.message}`,
-      })
-    } finally {
-      setTestingProvider(null)
-    }
-  }
 
   const handleResetCleanProject = () => {
     if (confirm('¿Estás seguro de que deseas limpiar el proyecto? Se borrarán los datos previos y quedará completamente vacío y listo para trabajar desde cero.')) {
@@ -241,24 +293,52 @@ export function ConnectionsManager() {
                       {p.badge}
                     </span>
                   </div>
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
-                      color: (p.id === 'freellmapi' || p.isConfigured) ? '#34d399' : '#6b7280',
-                      background: (p.id === 'freellmapi' || p.isConfigured) ? 'rgba(52, 211, 153, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: (p.id === 'freellmapi' || p.isConfigured) ? '#34d399' : '#6b7280' }} />
-                    {p.id === 'freellmapi'
-                      ? (quota.apiKey ? 'Clave Propia Activa' : 'Servidor Interno Activo')
-                      : (p.isConfigured ? 'Configurado' : 'Sin Clave')}
-                  </span>
+                  {(() => {
+                    const isVerified = verifiedProviders[p.id] === true
+                    const hasFailed = verifiedProviders[p.id] === false
+                    const hasKey = Boolean(quota.apiKey)
+
+                    let statusText = 'Sin Clave'
+                    let statusColor = '#6b7280'
+                    let statusBg = 'rgba(107, 114, 128, 0.1)'
+
+                    if (p.id === 'freellmapi') {
+                      statusText = quota.apiKey ? 'Clave Propia' : 'Servidor Interno Activo'
+                      statusColor = '#34d399'
+                      statusBg = 'rgba(52, 211, 153, 0.1)'
+                    } else if (hasFailed) {
+                      statusText = 'Fallo de Verificación'
+                      statusColor = '#f87171'
+                      statusBg = 'rgba(239, 68, 68, 0.12)'
+                    } else if (isVerified) {
+                      statusText = 'Verificado con Éxito'
+                      statusColor = '#34d399'
+                      statusBg = 'rgba(52, 211, 153, 0.12)'
+                    } else if (hasKey) {
+                      statusText = 'Clave Sin Verificar'
+                      statusColor = '#fbbf24'
+                      statusBg = 'rgba(251, 191, 36, 0.12)'
+                    }
+
+                    return (
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 700,
+                          color: statusColor,
+                          background: statusBg,
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                        }}
+                      >
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: statusColor }} />
+                        {statusText}
+                      </span>
+                    )
+                  })()}
                 </div>
 
                 <p style={{ fontSize: '0.74rem', color: '#9ca3af', margin: '0 0 1rem 0', lineHeight: 1.4 }}>

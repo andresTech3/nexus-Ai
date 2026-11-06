@@ -217,7 +217,7 @@ export default function CampaignsPage() {
               </div>
 
               <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5, marginBottom: '1.25rem', flex: 1 }}>
-                "{camp.contentSnippet}"
+                &ldquo;{camp.contentSnippet}&rdquo;
               </p>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>

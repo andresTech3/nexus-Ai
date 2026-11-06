@@ -46,20 +46,17 @@ function AlertIcon() {
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, initialState)
-  const [authError, setAuthError] = useState<string | null>(null)
-  const [showPassword, setShowPassword] = useState(false)
-  const emailRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
+  const [authError, setAuthError] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       if (params.get('auth_error') === 'session_displaced') {
-        setAuthError(
-          'Tu sesión se cerró porque se inició sesión en esta cuenta desde otro dispositivo.'
-        )
+        return 'Tu sesión se cerró porque se inició sesión en esta cuenta desde otro dispositivo.'
       }
     }
-  }, [])
+    return null
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const emailRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (state && !state.success && state.field === 'email') {

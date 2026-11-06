@@ -37,6 +37,7 @@ interface OfficeStoreState {
   setTrafficMode: (id: string, mode: TrafficMode) => void
   setWorkflow: (id: string, workflow: WorkflowType) => void
   changeProduct: (id: string, newProduct: { name: string; niche: string }) => void
+  clearProduct: (id: string) => void
   undoProductChange: (id: string) => void
   duplicateOffice: (id: string) => string
   archiveOffice: (id: string) => void
@@ -385,6 +386,43 @@ export const useOfficeStore = create<OfficeStoreState>()(
         })
       },
 
+      clearProduct: (id) => {
+        const office = get().offices[id]
+        if (!office) return
+
+        const updatedOffice: Office = {
+          ...office,
+          product: {
+            name: '',
+            niche: '',
+            source: 'USER_PROVIDED',
+          },
+          brand: {
+            name: '',
+            style: '',
+          },
+          deliverables: {},
+          agentStates: { ...DEFAULT_AGENT_STATES },
+          currentStep: 'Espacio de trabajo limpio. Sin producto asignado.',
+          updatedAt: new Date().toISOString(),
+        }
+
+        set((state) => ({
+          offices: {
+            ...state.offices,
+            [id]: updatedOffice,
+          },
+        }))
+
+        get().addLog({
+          officeId: id,
+          agentId: 'dora',
+          agentName: 'Dora',
+          message: 'Producto eliminado del espacio de trabajo. Espacio limpio y listo.',
+          level: 'info',
+        })
+      },
+
       undoProductChange: (id) => {
         const office = get().offices[id]
         if (!office || office.productHistory.length === 0) return
@@ -460,7 +498,28 @@ export const useOfficeStore = create<OfficeStoreState>()(
       deleteOffice: (id) => {
         const { offices, activeOfficeId } = get()
         if (Object.keys(offices).length <= 1) {
-          return false // Never delete last remaining office
+          // Reset the workspace to a 100% clean, empty office
+          const cleanOffice = createInitialOffice(
+            'off_principal',
+            'Mi Espacio de Trabajo',
+            '',
+            '',
+            'HYBRID'
+          )
+          cleanOffice.brand.name = ''
+          cleanOffice.brand.style = ''
+          set({
+            offices: { off_principal: cleanOffice },
+            activeOfficeId: 'off_principal',
+          })
+          get().addLog({
+            officeId: 'off_principal',
+            agentId: 'dora',
+            agentName: 'Dora',
+            message: 'Espacio de trabajo reiniciado a un estado limpio desde cero.',
+            level: 'info',
+          })
+          return true
         }
         const updated = { ...offices }
         delete updated[id]

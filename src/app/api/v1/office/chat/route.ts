@@ -14,8 +14,7 @@ interface OfficeChatPayload {
 export async function POST(req: NextRequest) {
   try {
     const body: OfficeChatPayload = await req.json()
-    let {
-      provider = 'freellmapi',
+    const {
       apiKey: clientKey,
       modelName,
       hostUrl,
@@ -23,6 +22,7 @@ export async function POST(req: NextRequest) {
       userPrompt,
       jsonMode = false,
     } = body
+    let { provider = 'freellmapi' } = body
 
     // 1. Resolve API key
     let apiKey = clientKey?.trim()

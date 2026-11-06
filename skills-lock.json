@@ -37,17 +37,107 @@
       "skillPath": "skills/ask-sonner/SKILL.md",
       "computedHash": "0168a6a129ba0a3561ccbda3a3d8d0dc0af1d556f373e315e9479e3364420dd3"
     },
+    "agent-md-refactor": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/agent-md-refactor/SKILL.md",
+      "computedHash": "246ad7e5f9baee8654c21c0ae09812155d9814f1725bc9d3b98cf74a170635c1"
+    },
+    "backend-to-frontend-handoff-docs": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/backend-to-frontend-handoff-docs/SKILL.md",
+      "computedHash": "12597a9f58d0e2d4c5632eac0d69a3d65b96d370be428a25d7ed12fe4f65281b"
+    },
+    "c4-architecture": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/c4-architecture/SKILL.md",
+      "computedHash": "452826998ce046e6329e02ecb48fc05fd1b421749dd80c23127b2d0f8e7ed63c"
+    },
     "break-ui": {
       "source": "emilkowalski/skill",
       "sourceType": "github",
       "skillPath": "skills/break-ui/SKILL.md",
       "computedHash": "79e9e01e3f2fe2ced55448b55de1835c6e641826ee0a81991289e79d3f50cdc7"
     },
+    "codex": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/codex/SKILL.md",
+      "computedHash": "7d446fc5cdd6bd987286b591760d91a1962224b106d56244540d1320be23abf1"
+    },
+    "command-creator": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/command-creator/SKILL.md",
+      "computedHash": "1acdd306bbcdbace8177afa29b4a779238c2fb275fa496b38d62a4b4b02d3a85"
+    },
+    "commit-work": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/commit-work/SKILL.md",
+      "computedHash": "b96ce47a9b3180ad90a818a9649d9fb773b2cfa37f558a0ff576943d14c09d40"
+    },
+    "crafting-effective-readmes": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/crafting-effective-readmes/SKILL.md",
+      "computedHash": "619468a739d081ba1e4842002f6fda5e5a9e7d13a03771451033e943c6abaf09"
+    },
+    "daily-meeting-update": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/daily-meeting-update/SKILL.md",
+      "computedHash": "917713716f907801472d2518f7cc5d176c6d2a0e591f7f30ce40b70360fa2e8c"
+    },
+    "database-schema-designer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/database-schema-designer/SKILL.md",
+      "computedHash": "5b5fe793dd05dd0a4016a453232a93015669cc75776cb3367cd8118a84af4292"
+    },
+    "datadog-cli": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/datadog-cli/SKILL.md",
+      "computedHash": "0cae33f37bd7854d1959ce3a5ee62bb4c6d2ceca80b379d3aa33f9483c9ee758"
+    },
+    "design-system-starter": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/design-system-starter/SKILL.md",
+      "computedHash": "51904219d92ebd99df9a176a345febb5fe0365b3fd85a3c17d3a34bd34bd2190"
+    },
+    "dependency-updater": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/dependency-updater/SKILL.md",
+      "computedHash": "efa9bc0b5a2750088208a750325fa1c5ab7a6d9dd13d93b73a2599782fa22c3f"
+    },
     "design-taste-frontend": {
       "source": "Leonxlnx/taste-skill",
       "sourceType": "github",
       "skillPath": "skills/taste-skill/SKILL.md",
       "computedHash": "53590ee9325bee34d7888bf0d81bd3941a108b1e7850df46802d93104e3f2b90"
+    },
+    "difficult-workplace-conversations": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/difficult-workplace-conversations/SKILL.md",
+      "computedHash": "0b178c335bd3a56205601c47c11bf5896c340e9d1b89c633f421d552c2d3845a"
+    },
+    "domain-name-brainstormer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/domain-name-brainstormer/SKILL.md",
+      "computedHash": "08573ce9a582d47c3ec54b8997585f4afac3c3cc8f17fff03791466623a66f11"
+    },
+    "draw-io": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/draw-io/SKILL.md",
+      "computedHash": "d179aff326a814c03977c12e15158189d904d39f2fadd5067fcc3a1108e1d5f3"
     },
     "dropshipping-product-research": {
       "source": "nexscope-ai/ecommerce-skills",
@@ -67,11 +157,53 @@
       "skillPath": "skills/emil-design-eng/SKILL.md",
       "computedHash": "77853cec799207f80868c611374c6ed5fdf34a55355c5ab544b59e791c63ad98"
     },
+    "excalidraw": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/excalidraw/SKILL.md",
+      "computedHash": "6c1796e3474350ad219a27869b581909f21e8c0bc6c2db45265b7c3f5ddf730e"
+    },
+    "feedback-mastery": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/feedback-mastery/SKILL.md",
+      "computedHash": "b1dc5ecfd2f7e1e1839488f5ea6957792a873cc1da6de0a7c47f3aea84cc3f98"
+    },
     "find-animation-opportunities": {
       "source": "emilkowalski/skill",
       "sourceType": "github",
       "skillPath": "skills/find-animation-opportunities/SKILL.md",
       "computedHash": "c6673fadf179233cc0a52c978ea9acc9b82a210665c749307a571a86ed4c092e"
+    },
+    "frontend-to-backend-requirements": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-to-backend-requirements/SKILL.md",
+      "computedHash": "c5cdc56f6fb2a5e008b12e5081cc50629d1067359457f76137bb138c9ebc3340"
+    },
+    "game-changing-features": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/game-changing-features/SKILL.md",
+      "computedHash": "6ce465b2fce61b5f5de342eb6dc7d820a4d7eaa2143351652bfccaf5a25f34f1"
+    },
+    "gemini": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/gemini/SKILL.md",
+      "computedHash": "5406ec216c00663919a72e391f133672c1ce35fc7fe79e3ef891912d911222dc"
+    },
+    "gepetto": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/gepetto/SKILL.md",
+      "computedHash": "cd7550bfe2b2b0f8192f8cf77f812a6835bcd31f2835463ac4c9e9386eb3216b"
+    },
+    "humanizer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/humanizer/SKILL.md",
+      "computedHash": "66edb10a60f7f0b1ede6b33d6737faba52689c02deccde71e1a632e56e354bed"
     },
     "improve-animations": {
       "source": "emilkowalski/skill",
@@ -79,11 +211,65 @@
       "skillPath": "skills/improve-animations/SKILL.md",
       "computedHash": "b913ec7ef2b1aa900060eb6e5dbdccc94b6ea631059ec3474c4b61e2ffefeeb4"
     },
+    "jira": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/jira/SKILL.md",
+      "computedHash": "5cf1c43de6405887904c79619738a1c2a44ebcdf504e4f9c8443406b34ee77cd"
+    },
+    "lesson-learned": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/lesson-learned/SKILL.md",
+      "computedHash": "6342f1976ac715f395405a81d09189589c69233f03981165b37e7b283563161f"
+    },
+    "marp-slide": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/marp-slide/SKILL.md",
+      "computedHash": "a26bb01f3467e4ff86395482a4f82a901a2d773a2de20fc3e8bd7ce8cd38bc48"
+    },
+    "meme-factory": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/meme-factory/SKILL.md",
+      "computedHash": "657ee2a559e079c11e0d2e0d04f936e1f6135348c5da98f85bb0a3e195b165ef"
+    },
+    "mermaid-diagrams": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/mermaid-diagrams/SKILL.md",
+      "computedHash": "27ccb714c44f567b8c77727d257a86c398e9f3dee7a9129c7fb42b8ec7d37ea0"
+    },
     "mobile-native": {
       "source": "emilkowalski/skill",
       "sourceType": "github",
       "skillPath": "skills/mobile-native/SKILL.md",
       "computedHash": "8d77850a34ec20f745aed3215aa0d587e90438599bb09dc72d9d09ce896a5765"
+    },
+    "mui": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/mui/SKILL.md",
+      "computedHash": "1e30aa333c6a95654a2f019435a46e5abbaf729c1e2c31206e5442e6b018bcce"
+    },
+    "naming-analyzer": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/naming-analyzer/SKILL.md",
+      "computedHash": "0319f934d10e968ff15e67446191050cb8d579e313a6cee2fe7ceb5d6df3bd76"
+    },
+    "openapi-to-typescript": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/openapi-to-typescript/SKILL.md",
+      "computedHash": "5b0b83225b84dc2c105f99e1611949bee907cfd371331256023d22e11e104f47"
+    },
+    "perplexity": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/perplexity/SKILL.md",
+      "computedHash": "cabc8f5988e529d07b77fbc5bd4d75c47a4b1da2c15b3681fb5e988825bbbf2b"
     },
     "pick-ui-library": {
       "source": "emilkowalski/skill",
@@ -91,11 +277,47 @@
       "skillPath": "skills/pick-ui-library/SKILL.md",
       "computedHash": "95f37cddc1c5f7cf5c60c8f8f07c938f2ddd1a70dd45f50c37e7e522fcde5bb9"
     },
+    "plugin-forge": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/plugin-forge/SKILL.md",
+      "computedHash": "032974d96398ec97f3bd18037092bf13d20a71f00f5c47ad215081398e550141"
+    },
+    "portfolio": {
+      "source": "emilkowalski/skill",
+      "sourceType": "github",
+      "skillPath": "skills/portfolio/SKILL.md",
+      "computedHash": "1f8a428f1c4e51f0f61b40f3c5f2d4e3a5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e"
+    },
+    "professional-communication": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/professional-communication/SKILL.md",
+      "computedHash": "df850680a07ec521f357a6798189272bf0000f75b5d2ef51561a7655127324c6"
+    },
     "prototype": {
       "source": "emilkowalski/skill",
       "sourceType": "github",
       "skillPath": "skills/prototype/SKILL.md",
       "computedHash": "165c803775adbe0df600b961167747b6ba6577e6e1dc9ae1b87fcf5dee800645"
+    },
+    "qa-test-planner": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/qa-test-planner/SKILL.md",
+      "computedHash": "819735fd34a9b73bc59c5605e7bdcce08647f67ea7f12c6d64a76ae364486d2f"
+    },
+    "react-dev": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/react-dev/SKILL.md",
+      "computedHash": "6906012fe308a0ed1976761d7d80c9604eb0f0273ccdcfcbe66096d91d00f52e"
+    },
+    "react-useeffect": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/react-useeffect/SKILL.md",
+      "computedHash": "a04eb5d824fedab7378b9c8b900d31e0708892cce9144c26637a2a148baf6aad"
     },
     "remove-animations": {
       "source": "emilkowalski/skill",
@@ -103,11 +325,35 @@
       "skillPath": "skills/remove-animations/SKILL.md",
       "computedHash": "103811fdd3d8b040617a750a6cc825c20fb7e31f08098388289d36d9c751fd72"
     },
+    "reducing-entropy": {
+      "source": "emilkowalski/skill",
+      "sourceType": "github",
+      "skillPath": "skills/reducing-entropy/SKILL.md",
+      "computedHash": "aeb038f1b96f642a63de5e3a14ebde17f36901fcef3b3aba0cf247ee16128d90"
+    },
     "review-animations": {
       "source": "emilkowalski/skill",
       "sourceType": "github",
       "skillPath": "skills/review-animations/SKILL.md",
       "computedHash": "8c2befeb28bb484bf2de7b2fc228774857e266d32a65d76895e78651a536d8cf"
+    },
+    "requirements-clarity": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/requirements-clarity/SKILL.md",
+      "computedHash": "faa87d313afbf6014e9e6ad4c91633e9198f269ac4dfb3ab6745da31d535b716"
+    },
+    "session-handoff": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/session-handoff/SKILL.md",
+      "computedHash": "0b2a4ddfa14b41e63a3985d77342d4c9ce5d78b25998b9113388d4fdd0248361"
+    },
+    "ship-learn-next": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/ship-learn-next/SKILL.md",
+      "computedHash": "5d32f54d0778ec8544c1609d80623f5c8c1ff508c7621fdb188c2625e386aea2"
     },
     "shopify-dropshipping": {
       "source": "nexscope-ai/ecommerce-skills",
@@ -115,11 +361,59 @@
       "skillPath": "shopify-dropshipping/SKILL.md",
       "computedHash": "3684e5ca0482df23d6ff13c8264da3e08e9f653eea32ca8cafd86b882829b2d4"
     },
+    "skill-judge": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/skill-judge/SKILL.md",
+      "computedHash": "1c8405e076dc006eb86151714f84b7be10471e8aae0f7a8a312c59b32a985686"
+    },
+    "mobile-native": {
+      "source": "emilkowalski/skill",
+      "sourceType": "github",
+      "skillPath": "skills/mobile-native/SKILL.md",
+      "computedHash": "8d77850a34ec20f745aed3215aa0d587e90438599bb09dc72d9d09ce896a5765"
+    },
+    "web-to-markdown": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/web-to-markdown/SKILL.md",
+      "computedHash": "15d4cb85ecb87fddaac918a76d7d07068ee78406c6834b79bb65b3c049a08d9f"
+    },
     "write-swift": {
       "source": "emilkowalski/skill",
       "sourceType": "github",
       "skillPath": "skills/write-swift/SKILL.md",
       "computedHash": "3c4854221f2c654172c3532e71dcb4ece25ef62057d97bec1c26c3ab17eca191"
+    },
+    "writing-clearly-and-concisely": {
+      "source": "softaworks/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/writing-clearly-and-concisely/SKILL.md",
+      "computedHash": "d337739105a8a89443f436bc9f6448f960d703cb345a90c978a92bbe62630724"
+    },
+    "choreograph": {
+      "source": "emilkowalski/skill",
+      "sourceType": "github",
+      "skillPath": "skills/choreograph/SKILL.md",
+      "computedHash": "5de3f7d0fbdb411fb64027b3865fe2251b11c86ea2bd7a95549ecdeea70f2b09"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "b8009ae690dfa69edc7f08bb8715f32db8817112cfa4388741dbaf876c237df8"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "c1d9628984991d7ed59ab3a7bf6a4dad3d731ef68c71f409f64a0ca258e8028e"
+    },
+    "taste-skill": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "385b471b34b2195a80b8743c7035fd183ffe44c237c0b6b293fdf2cc97744b47"
     }
   }
 }

@@ -14,6 +14,7 @@ import { NewProductLaunchModal } from './NewProductLaunchModal'
 import { LeoCreativesStudio } from './LeoCreativesStudio'
 import { RealMarketResearchView } from './RealMarketResearchView'
 import { DoraQualityGateAuditView } from './DoraQualityGateAuditView'
+import { ExecutiveCommandCenter } from './ExecutiveCommandCenter'
 import { AgentId, TrafficMode, WorkflowType } from '@/types/office'
 
 export function AutonomousOfficeDashboard() {
@@ -23,8 +24,8 @@ export function AutonomousOfficeDashboard() {
   const speed = store.speed
 
   const [activeMainTab, setActiveMainTab] = useState<
-    'creatives' | 'market_research' | 'deliverables' | 'dora_audit' | 'office3d' | 'offices' | 'connections' | 'history'
-  >('creatives')
+    'command_center' | 'creatives' | 'market_research' | 'deliverables' | 'dora_audit' | 'offices' | 'connections' | 'history'
+  >('command_center')
 
   // Real Market Data Injection Modal State
   const [showRealDataModal, setShowRealDataModal] = useState(false)
@@ -512,6 +513,39 @@ export function AutonomousOfficeDashboard() {
         }}
       >
         <button
+          onClick={() => setActiveMainTab('command_center')}
+          style={{
+            background: activeMainTab === 'command_center' ? '#241812' : 'transparent',
+            border: `1px solid ${activeMainTab === 'command_center' ? '#faae33' : 'transparent'}`,
+            borderBottom: activeMainTab === 'command_center' ? '2px solid #faae33' : 'none',
+            color: activeMainTab === 'command_center' ? '#faae33' : '#9ca3af',
+            borderRadius: '6px 6px 0 0',
+            padding: '0.65rem 1.15rem',
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <span>Centro de Mando</span>
+          {isRunning && (
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: '50%',
+                backgroundColor: '#34d399',
+                display: 'inline-block',
+                boxShadow: '0 0 8px #34d399',
+              }}
+            />
+          )}
+        </button>
+
+        <button
           onClick={() => setActiveMainTab('creatives')}
           style={{
             background: activeMainTab === 'creatives' ? '#241812' : 'transparent',
@@ -529,7 +563,7 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Creativos &amp; Anuncios</span>
+          <span>Creativos &amp; Prompts</span>
         </button>
 
         <button
@@ -593,39 +627,6 @@ export function AutonomousOfficeDashboard() {
           }}
         >
           <span>Auditoría Técnica</span>
-        </button>
-
-        <button
-          onClick={() => setActiveMainTab('office3d')}
-          style={{
-            background: activeMainTab === 'office3d' ? '#241812' : 'transparent',
-            border: `1px solid ${activeMainTab === 'office3d' ? '#faae33' : 'transparent'}`,
-            borderBottom: activeMainTab === 'office3d' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'office3d' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
-            padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <span>Oficina 3D</span>
-          {isRunning && (
-            <span
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: '50%',
-                backgroundColor: '#34d399',
-                display: 'inline-block',
-                boxShadow: '0 0 8px #34d399',
-              }}
-            />
-          )}
         </button>
 
         <button
@@ -693,186 +694,15 @@ export function AutonomousOfficeDashboard() {
       </div>
 
       {/* ============================================================ */}
-      {/* TAB CONTENT 1: 3D INTERACTIVE OFFICE & REAL-TIME FEED        */}
+      {/* TAB CONTENT 1: EXECUTIVE COMMAND CENTER                      */}
       {/* ============================================================ */}
-      {activeMainTab === 'office3d' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* Main 3D Office Canvas */}
-          <Office3D />
-
-          {/* Under Canvas: Two Columns (Live Activity Stream & 11 Agent Roster) */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'minmax(320px, 1fr) minmax(320px, 1.4fr)',
-              gap: '1.25rem',
-            }}
-          >
-            {/* Column 1: Live Real-Time Feed */}
-            <div
-              style={{
-                backgroundColor: '#18120e',
-                border: '1px solid #3d2a1d',
-                borderRadius: '10px',
-                padding: '1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '380px',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#faae33' }}>
-                  Feed de Actividad en Tiempo Real
-                </div>
-                <button
-                  onClick={() => store.clearLogs(activeOffice.id)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#6b7280',
-                    fontSize: '0.7rem',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Limpiar feed
-                </button>
-              </div>
-
-              <div
-                style={{
-                  flex: 1,
-                  overflowY: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.45rem',
-                  paddingRight: '4px',
-                }}
-              >
-                {store.logs.map((log) => {
-                  const agentDef = AGENT_DEFINITIONS[log.agentId]
-                  return (
-                    <div
-                      key={log.id}
-                      style={{
-                        backgroundColor: '#1f1611',
-                        borderLeft: `3px solid ${agentDef ? agentDef.avatarColor : '#faae33'}`,
-                        borderRadius: '0 6px 6px 0',
-                        padding: '0.45rem 0.65rem',
-                        fontSize: '0.74rem',
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
-                        <span style={{ fontWeight: 700, color: agentDef ? agentDef.avatarColor : '#faae33' }}>
-                          {log.agentName}
-                        </span>
-                        <span style={{ fontSize: '0.65rem', color: '#6b7280' }}>{log.timestamp}</span>
-                      </div>
-                      <div style={{ color: '#e5e7eb', lineHeight: 1.35 }}>{log.message}</div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Column 2: 11 Agents Quick Status Grid */}
-            <div
-              style={{
-                backgroundColor: '#18120e',
-                border: '1px solid #3d2a1d',
-                borderRadius: '10px',
-                padding: '1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '380px',
-              }}
-            >
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#faae33', marginBottom: '0.75rem' }}>
-                Puestos de Trabajo (Inspección 3D)
-              </div>
-
-              <div
-                style={{
-                  flex: 1,
-                  overflowY: 'auto',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: '0.5rem',
-                  paddingRight: '4px',
-                }}
-              >
-                {Object.values(AGENT_DEFINITIONS).map((agent) => {
-                  const state = activeOffice.agentStates[agent.id] || 'IDLE'
-                  const isSelected = store.selectedAgentId === agent.id
-
-                  let stateColor = '#71717a'
-                  if (state === 'ANALYZING') stateColor = '#38bdf8'
-                  else if (state === 'GENERATING') stateColor = '#facc15'
-                  else if (state === 'DONE') stateColor = '#34d399'
-                  else if (state === 'NEEDS_APPROVAL') stateColor = '#f43f5e'
-                  else if (state === 'VACANT') stateColor = '#3f3f46'
-
-                  return (
-                    <div
-                      key={agent.id}
-                      onClick={() => store.selectAgent(agent.id)}
-                      style={{
-                        backgroundColor: isSelected ? '#2b1b11' : '#1f1611',
-                        border: `1px solid ${isSelected ? '#faae33' : '#332418'}`,
-                        borderRadius: '6px',
-                        padding: '0.55rem',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        transition: 'all 0.15s ease',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 30,
-                          height: 30,
-                          borderRadius: '50%',
-                          backgroundColor: `${agent.avatarColor}20`,
-                          border: `1px solid ${agent.avatarColor}`,
-                          color: agent.avatarColor,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.75rem',
-                          fontWeight: 800,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {agent.avatarInitials}
-                      </div>
-
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff' }}>
-                            {agent.name}
-                          </span>
-                          <span
-                            style={{
-                              width: 8,
-                              height: 8,
-                              borderRadius: '50%',
-                              backgroundColor: stateColor,
-                              boxShadow: `0 0 6px ${stateColor}`,
-                            }}
-                          />
-                        </div>
-                        <div style={{ fontSize: '0.65rem', color: '#9ca3af', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {agent.role}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
+      {activeMainTab === 'command_center' && (
+        <ExecutiveCommandCenter />
       )}
+
+
+
+
 
       {/* ============================================================ */}
       {/* TAB CONTENT: CREATIVE STUDIO (LEO)                           */}
