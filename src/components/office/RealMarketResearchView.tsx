@@ -24,9 +24,27 @@ export function RealMarketResearchView() {
           </svg>
         </div>
         <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>Investigación de Mercado</h3>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af', maxWidth: 500, margin: '0 auto' }}>
-          Configura un producto o nicho en la cabecera para que Iván y Lucas consulten en tiempo real competidores, quejas recurrentes y costes de fábrica en AliExpress / CJ Dropshipping.
+        <p style={{ fontSize: '0.85rem', color: '#9ca3af', maxWidth: 500, margin: '0 auto 1.25rem auto' }}>
+          Configura un producto o nicho en la cabecera o explora las sugerencias de Iván para que el equipo consulte en tiempo real competidores, quejas recurrentes y costes de fábrica en AliExpress / CJ Dropshipping.
         </p>
+        <a
+          href="/dashboard/catalog"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            background: 'linear-gradient(135deg, #faae33, #d98216)',
+            color: '#181008',
+            padding: '0.65rem 1.25rem',
+            borderRadius: '6px',
+            fontSize: '0.825rem',
+            fontWeight: 700,
+            textDecoration: 'none',
+          }}
+        >
+          <span>🔍</span>
+          <span>Abrir Cazador de Tendencias de Iván &rarr;</span>
+        </a>
       </div>
     )
   }

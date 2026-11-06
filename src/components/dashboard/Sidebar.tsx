@@ -17,6 +17,16 @@ function OverviewIcon({ className }: { className?: string }) {
   )
 }
 
+function RadarSearchIcon({ className }: { className?: string }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <path d="M11 8a3 3 0 0 0-3 3" />
+    </svg>
+  )
+}
+
 function AgentsIcon({ className }: { className?: string }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -113,6 +123,7 @@ const sidebarSections: NavSection[] = [
     section: 'Operaciones',
     links: [
       { id: 'dash-overview', icon: <OverviewIcon />, label: 'Centro de Control', href: '/dashboard' },
+      { id: 'dash-hunting', icon: <RadarSearchIcon />, label: 'Cazador de Productos (Iván)', href: '/dashboard/catalog' },
       { id: 'dash-agents', icon: <AgentsIcon />, label: 'Agentes Especialistas', href: '/dashboard/agents' },
       { id: 'dash-deliverables', icon: <DeliverablesIcon />, label: 'Proyectos & Prompts', href: '/dashboard/projects' },
     ],

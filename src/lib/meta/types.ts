@@ -2,8 +2,6 @@
  * Types for Meta (Facebook/Instagram) API integration
  */
 
-import type { Database } from '@/types/database'
-
 export interface MetaOAuthTokens {
   access_token: string
   token_type: string
@@ -55,7 +53,20 @@ export interface InstagramMedia {
   insights?: Array<{ name: string; values: Array<{ value: number }> }>
 }
 
-export interface SocialConnection extends Database['public']['Tables']['social_connections']['Row'] {}
+export interface SocialConnection {
+  id: string
+  user_id: string
+  provider: 'meta_ads' | 'instagram' | string
+  external_user_id: string | null
+  account_name: string | null
+  account_id: string | null
+  access_token: string
+  token_expires_at: string | null
+  scopes: string[] | null
+  raw_profile: Record<string, any> | null
+  connected_at: string
+  updated_at: string
+}
 
 export interface MetaConnectionState {
   connected: boolean

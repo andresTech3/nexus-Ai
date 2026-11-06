@@ -400,14 +400,15 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
                     color: '#38bdf8',
                     textDecoration: 'none',
                     borderRadius: '6px',
-                    padding: '0.6rem',
+                    padding: '0.65rem',
                     fontSize: '0.825rem',
                     fontWeight: 700,
                     textAlign: 'center',
                     display: 'block',
+                    transition: 'all 0.15s',
                   }}
                 >
-                  Abrir Catálogo de Tendencias →
+                  🔍 Explorar Productos Ganadores con Iván →
                 </Link>
               </div>
             </div>
