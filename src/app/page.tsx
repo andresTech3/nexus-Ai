@@ -4,120 +4,100 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/hooks/useCurrency'
 
+interface DemoProduct {
+  id: string
+  name: string
+  category: string
+  emoji: string
+  cost: number
+  price: number
+  profitPerUnit: number
+  videoUrl: string
+  image: string
+  headline: string
+}
+
+const DEMO_PRODUCTS: DemoProduct[] = [
+  {
+    id: 'luna',
+    name: 'Lámpara Lunar Flotante',
+    category: 'Hogar & Regalos',
+    emoji: '🌕',
+    cost: 12,
+    price: 49,
+    profitPerUnit: 37,
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    image: 'https://images.unsplash.com/photo-1532767153582-b1a0e5145009?w=600&auto=format&fit=crop&q=80',
+    headline: 'Levita y gira en el aire con luz cálida mágica.',
+  },
+  {
+    id: 'pet',
+    name: 'Cepillo de Vapor Mascotas',
+    category: 'Mascotas',
+    emoji: '🐶',
+    cost: 5,
+    price: 25,
+    profitPerUnit: 20,
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600&auto=format&fit=crop&q=80',
+    headline: 'Quita el 95% del pelo suelto con vapor suave sin tirones.',
+  },
+  {
+    id: 'galaxy',
+    name: 'Proyector Galaxia 360°',
+    category: 'Dormitorio & Relax',
+    emoji: '✨',
+    cost: 9,
+    price: 39,
+    profitPerUnit: 30,
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop&q=80',
+    headline: 'Convierte el techo en un cielo estrellado con nebulosas.',
+  },
+]
+
 export default function HomePage() {
   const { formatMoney } = useCurrency()
 
-  // Interactive Dopaminergic Profit Calculator State
-  const [dailyOrders, setDailyOrders] = useState<number>(25)
-  const [averageTicket, setAverageTicket] = useState<number>(38)
+  // Interactive Product Selector
+  const [selectedProduct, setSelectedProduct] = useState<DemoProduct>(DEMO_PRODUCTS[0])
+  const [salesPerDay, setSalesPerDay] = useState<number>(15)
+
+  // Interactive Video Modal
+  const [previewVideoUrl, setPreviewVideoUrl] = useState<string | null>(null)
 
   // Calculations
-  const monthlyOrders = dailyOrders * 30
-  const monthlyRevenue = monthlyOrders * averageTicket
-  const cogsCost = monthlyRevenue * 0.28 // 28% supplier product + shipping cost
-  const adsSpend = monthlyRevenue / 3.4 // ROAS 3.4x
-  const estimatedNetProfit = Math.round(monthlyRevenue - cogsCost - adsSpend)
-  const netMarginPct = Math.round((estimatedNetProfit / monthlyRevenue) * 100)
+  const monthlySales = salesPerDay * 30
+  const monthlyNetProfit = monthlySales * selectedProduct.profitPerUnit
+  const monthlyGrossRevenue = monthlySales * selectedProduct.price
 
-  // Interactive Agent Selector in Bento
-  const [activeAgentIndex, setActiveAgentIndex] = useState<number>(0)
+  // Simple steps interactive tab
+  const [activeStep, setActiveStep] = useState<number>(0)
 
-  const agents = [
+  const steps = [
     {
-      id: 'dora',
-      name: 'Dora',
-      role: 'Directora de Operaciones (COO)',
-      avatar: '👩‍💼',
-      badgeColor: '#faae33',
-      status: 'Activa · Orquestando Pipeline',
-      description: 'Supervisa la hoja de ruta de los 11 agentes, asigna prioridades de lanzamiento y asegura que cada producto cumpla los estándares de rentabilidad.',
-      deliverable: 'Plan maestro de lanzamiento en 5 fases con dependencias resueltas.',
+      step: 'Paso 1',
+      title: 'La IA encuentra productos que se venden solos',
+      emoji: '🎯',
+      desc: 'Escaneamos los almacenes para encontrar productos virales que la gente ya está comprando ahora mismo.',
+      action: 'Explorar Productos',
+      href: '/dashboard/catalog',
     },
     {
-      id: 'lucas_ivan',
-      name: 'Lucas & Iván',
-      role: 'Minería de Productos & Tendencias',
-      avatar: '🕵️‍♂️',
-      badgeColor: '#38bdf8',
-      status: 'Escaneando CJ Dropshipping & Google Trends',
-      description: 'Filtran millones de artículos en almacenes chinos y europeos buscando márgenes mínimos de 3.5x, stock garantizado y demanda al alza.',
-      deliverable: 'Ficha de producto con costes de fábrica, volumen de búsqueda y competidores.',
+      step: 'Paso 2',
+      title: 'Te crea tu tienda online en 1 clic',
+      emoji: '🛍️',
+      desc: 'Sin saber programar ni diseñar. Tu tienda lista para recibir pagos con tarjeta o contra reembolso.',
+      action: 'Ver Tienda',
+      href: '/dashboard',
     },
     {
-      id: 'eva',
-      name: 'Eva',
-      role: 'Directora Financiera (CFO)',
-      avatar: '📊',
-      badgeColor: '#34d399',
-      status: 'Fijando Stop-Loss Matemático',
-      description: 'Calcula los unit economics puros: CPA techo, ROAS de equilibrio, coste de pasarelas y provisión de devoluciones para blindar tu margen.',
-      deliverable: `CPA Techo calculado: ${formatMoney(18.20)} • ROAS Equilibrio: 1.82x`,
-    },
-    {
-      id: 'tomas',
-      name: 'Tomás',
-      role: 'Media Buyer (Meta Ads)',
-      avatar: '🎯',
-      badgeColor: '#818cf8',
-      status: 'Estructurando Conjuntos ABO/CBO',
-      description: 'Genera las arquitecturas de campaña completas, segmentaciones probadas, ganchos visuales de 3 segundos y reglas de apagado automático.',
-      deliverable: 'Estructuras de Testing ABO a 20€/día y CBO para ganadores validados.',
-    },
-    {
-      id: 'nora',
-      name: 'Nora',
-      role: 'Especialista Instagram & Contenido',
-      avatar: '📱',
-      badgeColor: '#f472b6',
-      status: 'Optimizando Reels Virales',
-      description: 'Guioniza Reels de alta retención, carruseles educativos sin lenguaje robótico y biografías persuasivas optimizadas para conversión.',
-      deliverable: 'Calendario semanal con ganchos de dolor/beneficio y copys listos.',
-    },
-    {
-      id: 'diego',
-      name: 'Diego',
-      role: 'Shopify Liquid Developer',
-      avatar: '🛍️',
-      badgeColor: '#fb923c',
-      status: 'Optimizando AOV & Conversión',
-      description: 'Genera snippets de código Liquid nativos para temas Dawn, integrando ofertas de cantidad (bundles), timers de urgencia y badges de confianza.',
-      deliverable: 'Snippet Liquid para Dawn con oferta Pack 2 unidades (-20% AOV boost).',
-    },
-  ]
-
-  const trendingProducts = [
-    {
-      name: 'Lámpara Lunar Flotante',
-      niche: 'Decoración & Gadgets',
-      image: 'https://images.unsplash.com/photo-1532767153582-b1a0e5145009?w=500&auto=format&fit=crop&q=80',
-      factoryCost: 11.80,
-      sellPrice: 49.99,
-      multiple: '4.2x',
-      daysActive: 34,
-      tag: '🔥 SUPER GANADOR',
-      tagColor: '#34d399',
-    },
-    {
-      name: 'Cepillo Vapor Anticaída Mascotas',
-      niche: 'Accesorios Mascotas',
-      image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=500&auto=format&fit=crop&q=80',
-      factoryCost: 4.50,
-      sellPrice: 24.99,
-      multiple: '5.5x',
-      daysActive: 28,
-      tag: '🚀 ESCALANDO',
-      tagColor: '#38bdf8',
-    },
-    {
-      name: 'Proyector Galaxia Astronauta 360°',
-      niche: 'Hogar & Iluminación',
-      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&auto=format&fit=crop&q=80',
-      factoryCost: 9.20,
-      sellPrice: 39.99,
-      multiple: '4.3x',
-      daysActive: 29,
-      tag: '🔥 SUPER GANADOR',
-      tagColor: '#34d399',
+      step: 'Paso 3',
+      title: 'Tú cobras, el fabricante envía el paquete',
+      emoji: '💰',
+      desc: 'No necesitas comprar stock por adelantado ni guardar cajas en tu casa. El proveedor lo envía directo a tu cliente.',
+      action: 'Abrir Mi Panel',
+      href: '/dashboard',
     },
   ]
 
@@ -126,80 +106,34 @@ export default function HomePage() {
       style={{
         minHeight: '100vh',
         backgroundColor: '#070709',
-        color: '#f4f4f5',
-        fontFamily: 'var(--font-sans, system-ui, -apple-system, sans-serif)',
+        color: '#ffffff',
+        fontFamily: "'Outfit', sans-serif",
         overflowX: 'hidden',
         position: 'relative',
       }}
     >
-      {/* ── AMBIENT BACKGROUND GLOWS ──────────────────────────────────── */}
+      {/* ── TOP AMBIENT GLOW ─────────────────────────────────────────── */}
       <div
         style={{
           position: 'fixed',
-          top: '-15%',
+          top: '-20%',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '75vw',
-          height: '550px',
-          background: 'radial-gradient(ellipse at center, rgba(250, 174, 51, 0.15) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 75%)',
-          filter: 'blur(70px)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '5%',
-          right: '-10%',
-          width: '45vw',
+          width: '90vw',
+          maxWidth: '900px',
           height: '400px',
-          background: 'radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%)',
-          filter: 'blur(90px)',
+          background: 'radial-gradient(circle, rgba(250, 174, 51, 0.16) 0%, transparent 70%)',
+          filter: 'blur(80px)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* ── LIVE PULSE TICKER ────────────────────────────────────────── */}
-      <div
-        style={{
-          background: 'linear-gradient(90deg, #100b06, #1f140a, #100b06)',
-          borderBottom: '1px solid rgba(250, 174, 51, 0.25)',
-          padding: '0.45rem 1rem',
-          textAlign: 'center',
-          fontSize: '0.74rem',
-          fontWeight: 700,
-          color: '#faae33',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0.6rem',
-          letterSpacing: '0.02em',
-          position: 'relative',
-          zIndex: 60,
-        }}
-      >
-        <span
-          style={{
-            width: 7,
-            height: 7,
-            borderRadius: '50%',
-            background: '#22c55e',
-            boxShadow: '0 0 8px #22c55e',
-            display: 'inline-block',
-          }}
-        />
-        <span>OFICINA DE 12 AGENTES AUTÓNOMOS OPERANDO EN VIVO</span>
-        <span style={{ color: 'rgba(250, 174, 51, 0.4)' }}>•</span>
-        <span style={{ color: '#ffffff' }}>CJ DROPSHIPPING API V2.0 &amp; META AD LIBRARY EN LÍNEA</span>
-      </div>
-
-      {/* ── TOP NAVBAR ──────────────────────────────────────────────── */}
+      {/* ── TOP HEADER / NAVBAR ──────────────────────────────────────── */}
       <header
         style={{
-          borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
-          backgroundColor: 'rgba(7, 7, 9, 0.85)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: 'rgba(7, 7, 9, 0.88)',
           backdropFilter: 'blur(16px)',
           position: 'sticky',
           top: 0,
@@ -208,75 +142,56 @@ export default function HomePage() {
       >
         <div
           style={{
-            maxWidth: 1240,
+            maxWidth: 1140,
             margin: '0 auto',
-            padding: '0.85rem 1.5rem',
+            padding: '0.85rem 1.25rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Logo */}
+          <Link
+            href="/"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.6rem',
+              textDecoration: 'none',
+            }}
+          >
             <div
               style={{
-                width: 34,
-                height: 34,
+                width: 32,
+                height: 32,
                 borderRadius: '8px',
                 background: 'linear-gradient(135deg, #faae33, #e08b1a)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 15px rgba(250, 174, 51, 0.4)',
+                boxShadow: '0 0 14px rgba(250, 174, 51, 0.4)',
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                  stroke="#090807"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <span style={{ fontSize: '1.1rem' }}>⚡</span>
             </div>
-            <div>
-              <span style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.03em' }}>
-                NEXUS<span style={{ color: '#faae33' }}>AI</span>
-              </span>
-              <span style={{ fontSize: '0.62rem', color: '#71717a', display: 'block', lineHeight: 1, letterSpacing: '0.08em', fontWeight: 700 }}>
-                DROPSHIPPING AUTONOMOUS OS
-              </span>
-            </div>
-          </div>
+            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em' }}>
+              NEXUS<span style={{ color: '#faae33' }}>AI</span>
+            </span>
+          </Link>
 
+          {/* Quick Buttons */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Link
               href="/dashboard/catalog"
               style={{
-                fontSize: '0.82rem',
+                fontSize: '0.85rem',
                 color: '#d4d4d8',
                 textDecoration: 'none',
                 fontWeight: 600,
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                transition: 'color 0.2s',
+                padding: '0.45rem 0.8rem',
               }}
             >
-              Cazador CJ &amp; Meta
-            </Link>
-            <Link
-              href="/dashboard/facebook-ads"
-              style={{
-                fontSize: '0.82rem',
-                color: '#d4d4d8',
-                textDecoration: 'none',
-                fontWeight: 600,
-                padding: '0.4rem 0.8rem',
-                borderRadius: '6px',
-                transition: 'color 0.2s',
-              }}
-            >
-              Meta Ads
+              Productos
             </Link>
             <Link
               href="/dashboard"
@@ -284,7 +199,7 @@ export default function HomePage() {
                 fontSize: '0.85rem',
                 background: 'linear-gradient(135deg, #faae33, #d98216)',
                 color: '#090807',
-                padding: '0.5rem 1.25rem',
+                padding: '0.5rem 1.2rem',
                 borderRadius: '8px',
                 textDecoration: 'none',
                 fontWeight: 800,
@@ -292,86 +207,405 @@ export default function HomePage() {
                 whiteSpace: 'nowrap',
               }}
             >
-              Abrir Oficina &rarr;
+              Entrar &rarr;
             </Link>
           </div>
         </div>
       </header>
 
-      {/* ── HERO SECTION: DOPAMINERGIC IMPACT ────────────────────────── */}
+      {/* ── HERO: DIRECTO, FÁCIL & SIN TECNICISMOS ────────────────────── */}
       <section
         style={{
-          maxWidth: 1180,
+          maxWidth: 960,
           margin: '0 auto',
-          padding: '5rem 1.5rem 3.5rem 1.5rem',
+          padding: '3.5rem 1.25rem 2rem 1.25rem',
           textAlign: 'center',
           position: 'relative',
           zIndex: 10,
         }}
       >
-        {/* Shimmering Badge */}
+        {/* Friendly Badge */}
         <div
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.55rem',
-            padding: '5px 14px',
+            gap: '0.5rem',
+            padding: '6px 14px',
             borderRadius: '999px',
-            backgroundColor: 'rgba(250, 174, 51, 0.1)',
-            border: '1px solid rgba(250, 174, 51, 0.35)',
-            fontSize: '0.78rem',
+            backgroundColor: 'rgba(250, 174, 51, 0.12)',
+            border: '1px solid rgba(250, 174, 51, 0.3)',
+            fontSize: '0.82rem',
             fontWeight: 800,
             color: '#faae33',
-            marginBottom: '1.75rem',
-            boxShadow: '0 0 20px rgba(250, 174, 51, 0.15)',
+            marginBottom: '1.5rem',
           }}
         >
-          <span>⚡ AGENCIA DE INTELIGENCIA ARTIFICIAL PARA DROPSHIPPING</span>
-          <span style={{ color: '#71717a' }}>|</span>
-          <span style={{ color: '#34d399' }}>12 AGENTES AUTÓNOMOS</span>
+          <span>🚀</span>
+          <span>GANA DINERO POR INTERNET SIN TENER STOCK</span>
         </div>
 
-        {/* Dopamine Main Headline */}
+        {/* Clear Headline */}
         <h1
           style={{
-            fontSize: 'clamp(2.4rem, 6vw, 4.4rem)',
+            fontSize: 'clamp(2.1rem, 6vw, 3.8rem)',
             fontWeight: 900,
-            lineHeight: 1.08,
-            letterSpacing: '-0.04em',
-            color: '#ffffff',
-            margin: '0 auto 1.5rem auto',
-            maxWidth: 1020,
+            lineHeight: 1.12,
+            letterSpacing: '-0.03em',
+            margin: '0 auto 1.2rem auto',
           }}
         >
-          Lanza Tiendas de Dropshipping a{' '}
+          Crea tu Negocio Digital con{' '}
           <span
             style={{
-              background: 'linear-gradient(135deg, #faae33 0%, #ffdf78 50%, #faae33 100%)',
+              background: 'linear-gradient(135deg, #faae33 0%, #ffdf78 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Escala Masiva
-          </span>{' '}
-          con 12 Agentes IA en Paralelo
+            Inteligencia Artificial
+          </span>
         </h1>
 
-        {/* Clear Subtitle */}
+        {/* 1-Sentence Non-Technical Subtitle */}
         <p
           style={{
-            fontSize: 'clamp(1rem, 2.2vw, 1.25rem)',
+            fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
             color: '#a1a1aa',
-            lineHeight: 1.6,
-            maxWidth: 780,
-            margin: '0 auto 2.5rem auto',
+            lineHeight: 1.5,
+            maxWidth: 620,
+            margin: '0 auto 2.2rem auto',
           }}
         >
-          Desde la <strong>minería de productos en almacenes de CJ Dropshipping</strong> con stock real y márgenes de 4x,
-          hasta el <strong>espionaje de anuncios activos en Meta Ad Library</strong> y la creación automática de copys de alta conversión.
+          La IA busca los productos más vendidos, te monta la tienda en minutos y tú ganas la diferencia en cada venta.
         </p>
 
-        {/* Action CTAs */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
+        {/* Fast Action Buttons */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.85rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
+          <Link
+            href="/dashboard"
+            style={{
+              padding: '0.9rem 2rem',
+              background: 'linear-gradient(135deg, #faae33, #d98216)',
+              color: '#090807',
+              borderRadius: '10px',
+              fontSize: '1rem',
+              fontWeight: 800,
+              textDecoration: 'none',
+              boxShadow: '0 8px 25px rgba(250, 174, 51, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
+            <span>🚀 Empezar Gratis</span>
+            <span>&rarr;</span>
+          </Link>
+          <Link
+            href="/dashboard/catalog"
+            style={{
+              padding: '0.9rem 1.6rem',
+              backgroundColor: '#16141a',
+              color: '#ffffff',
+              borderRadius: '10px',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              border: '1px solid #2e2838',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
+            <span>👀 Ver Productos Ganadores</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ── SIMULADOR INTERACTIVO: "¿CUÁNTO PUEDES GANAR?" ────────────── */}
+      <section
+        style={{
+          maxWidth: 960,
+          margin: '0 auto 4.5rem auto',
+          padding: '0 1.25rem',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #120e17, #0c0a10)',
+            border: '1px solid #2e243d',
+            borderRadius: '20px',
+            padding: 'clamp(1.25rem, 4vw, 2.25rem)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(250, 174, 51, 0.1)',
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <span
+              style={{
+                fontSize: '0.72rem',
+                color: '#34d399',
+                background: 'rgba(52, 211, 153, 0.12)',
+                border: '1px solid rgba(52, 211, 153, 0.3)',
+                padding: '4px 10px',
+                borderRadius: '999px',
+                fontWeight: 800,
+              }}
+            >
+              SIMULADOR EN VIVO
+            </span>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.85rem)', fontWeight: 900, color: '#ffffff', margin: '0.6rem 0 0.3rem 0' }}>
+              ¿Cuánto dinero quieres ganar al mes?
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#a1a1aa', margin: 0 }}>
+              Elige un producto y mueve la barra para calcular tus ganancias limpias.
+            </p>
+          </div>
+
+          {/* 1. Selector de Producto Interactivo */}
+          <div style={{ marginBottom: '1.75rem' }}>
+            <div style={{ fontSize: '0.78rem', color: '#a1a1aa', fontWeight: 700, marginBottom: '0.6rem', textAlign: 'center' }}>
+              Paso 1: Elige el producto que quieres vender:
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                gap: '0.65rem',
+              }}
+            >
+              {DEMO_PRODUCTS.map((prod) => {
+                const isSelected = selectedProduct.id === prod.id
+                return (
+                  <button
+                    key={prod.id}
+                    onClick={() => setSelectedProduct(prod)}
+                    style={{
+                      background: isSelected ? 'rgba(250, 174, 51, 0.15)' : '#0e0c12',
+                      border: `2px solid ${isSelected ? '#faae33' : '#231d2c'}`,
+                      borderRadius: '12px',
+                      padding: '0.75rem 0.5rem',
+                      color: '#ffffff',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    <span style={{ fontSize: '1.8rem' }}>{prod.emoji}</span>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'center', lineHeight: 1.2 }}>
+                      {prod.name}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', color: isSelected ? '#faae33' : '#a1a1aa', fontWeight: 700 }}>
+                      +{formatMoney(prod.profitPerUnit)} limpios/venta
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 2. Slider Interactivo de Ventas */}
+          <div
+            style={{
+              background: '#09080d',
+              border: '1px solid #1f1a28',
+              borderRadius: '14px',
+              padding: '1.25rem',
+              marginBottom: '1.75rem',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#e4e4e7' }}>
+                Paso 2: ¿Cuántas ventas haces al día?
+              </span>
+              <span
+                style={{
+                  fontSize: '1.15rem',
+                  fontWeight: 900,
+                  color: '#faae33',
+                  background: 'rgba(250, 174, 51, 0.1)',
+                  padding: '3px 10px',
+                  borderRadius: '6px',
+                }}
+              >
+                {salesPerDay} ventas al día
+              </span>
+            </div>
+
+            <input
+              type="range"
+              min="3"
+              max="60"
+              step="1"
+              value={salesPerDay}
+              onChange={(e) => setSalesPerDay(Number(e.target.value))}
+              style={{
+                width: '100%',
+                height: '8px',
+                accentColor: '#faae33',
+                cursor: 'pointer',
+              }}
+            />
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#71717a', marginTop: 6 }}>
+              <span>3 al día (Principiante)</span>
+              <span>15 al día (Negocio Sólido)</span>
+              <span>60 al día (Escala Máxima)</span>
+            </div>
+          </div>
+
+          {/* 3. Resultado de Ganancia Gigante y Claro */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.05))',
+              border: '2px solid #34d399',
+              borderRadius: '16px',
+              padding: '1.5rem',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: '0.8rem', color: '#34d399', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              🎉 TU GANANCIA LIMPIA ESTIMADA
+            </div>
+
+            <div style={{ fontSize: 'clamp(2.2rem, 7vw, 3.5rem)', fontWeight: 900, color: '#34d399', margin: '0.2rem 0' }}>
+              +{formatMoney(monthlyNetProfit)} <span style={{ fontSize: '1rem', color: '#a7f3d0' }}>/ mes</span>
+            </div>
+
+            <p style={{ fontSize: '0.82rem', color: '#d1fae5', margin: '0 0 1rem 0' }}>
+              Vendiendo {monthlySales} unidades de {selectedProduct.name} al mes. Tú no compras nada hasta que el cliente te paga.
+            </p>
+
+            {/* Video preview button */}
+            <button
+              onClick={() => setPreviewVideoUrl(selectedProduct.videoUrl)}
+              style={{
+                background: '#121216',
+                border: '1px solid #34d399',
+                color: '#34d399',
+                padding: '0.55rem 1.25rem',
+                borderRadius: '8px',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <span>▶</span>
+              <span>Ver Video de {selectedProduct.name}</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CÓMO FUNCIONA EN 3 PASOS INTERACTIVOS ─────────────────────── */}
+      <section
+        style={{
+          maxWidth: 960,
+          margin: '0 auto 5rem auto',
+          padding: '0 1.25rem',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 800, textTransform: 'uppercase' }}>
+            SENCILLO Y SIN COMPLICACIONES
+          </span>
+          <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', margin: '0.4rem 0 0 0' }}>
+            ¿Cómo funciona para ti?
+          </h2>
+        </div>
+
+        {/* Step Cards Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '1rem',
+          }}
+        >
+          {steps.map((s, idx) => (
+            <div
+              key={idx}
+              style={{
+                background: '#0e0c12',
+                border: '1px solid #201a28',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.3)',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '2rem' }}>{s.emoji}</span>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      color: '#faae33',
+                      background: 'rgba(250, 174, 51, 0.1)',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    {s.step}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0', lineHeight: 1.3 }}>
+                  {s.title}
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: '#a1a1aa', lineHeight: 1.5, margin: 0 }}>
+                  {s.desc}
+                </p>
+              </div>
+
+              <div style={{ marginTop: '1.5rem' }}>
+                <Link
+                  href={s.href}
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: '#faae33',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                  }}
+                >
+                  <span>{s.action}</span>
+                  <span>&rarr;</span>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── BOTÓN FINAL PARA EMPEZAR ─────────────────────────────────── */}
+      <section
+        style={{
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: '#050507',
+          padding: '3.5rem 1.25rem',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ maxWidth: 650, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: 900, color: '#ffffff', margin: '0 0 0.8rem 0' }}>
+            Empieza a Ganar Dinero con tu Tienda Digital
+          </h2>
+          <p style={{ fontSize: '0.9rem', color: '#a1a1aa', marginBottom: '1.75rem', lineHeight: 1.6 }}>
+            Accede al catálogo de productos ganadores y deja que la IA haga el trabajo pesado por ti.
+          </p>
           <Link
             href="/dashboard"
             style={{
@@ -382,569 +616,94 @@ export default function HomePage() {
               fontSize: '1rem',
               fontWeight: 800,
               textDecoration: 'none',
-              boxShadow: '0 10px 30px rgba(250, 174, 51, 0.35)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}
-          >
-            <span>🚀</span>
-            <span>Entrar al Centro de Mando</span>
-            <span>&rarr;</span>
-          </Link>
-          <Link
-            href="/dashboard/catalog"
-            style={{
-              padding: '0.9rem 1.8rem',
-              backgroundColor: '#121215',
-              color: '#ffffff',
-              borderRadius: '10px',
-              fontSize: '0.95rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              border: '1px solid #27272a',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.4)',
-            }}
-          >
-            <span>🕵️</span>
-            <span>Cazador de Productos Ganadores</span>
-          </Link>
-        </div>
-
-        {/* ── STATS RIBBON ───────────────────────────────────────────── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem',
-            maxWidth: 1000,
-            margin: '0 auto 4rem auto',
-          }}
-        >
-          <div style={{ background: 'rgba(18, 18, 20, 0.7)', border: '1px solid #1f1f23', borderRadius: '12px', padding: '1.25rem', backdropFilter: 'blur(8px)' }}>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#faae33' }}>12 Agentes</div>
-            <div style={{ fontSize: '0.78rem', color: '#a1a1aa', marginTop: 4 }}>Oficina completa coordinada por Dora</div>
-          </div>
-          <div style={{ background: 'rgba(18, 18, 20, 0.7)', border: '1px solid #1f1f23', borderRadius: '12px', padding: '1.25rem', backdropFilter: 'blur(8px)' }}>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#34d399' }}>3.5x a 5.5x</div>
-            <div style={{ fontSize: '0.78rem', color: '#a1a1aa', marginTop: 4 }}>Margen de rentabilidad bruto por producto</div>
-          </div>
-          <div style={{ background: 'rgba(18, 18, 20, 0.7)', border: '1px solid #1f1f23', borderRadius: '12px', padding: '1.25rem', backdropFilter: 'blur(8px)' }}>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#38bdf8' }}>0 Segundos</div>
-            <div style={{ fontSize: '0.78rem', color: '#a1a1aa', marginTop: 4 }}>Sin redactar copys a mano ni adivinar creativos</div>
-          </div>
-          <div style={{ background: 'rgba(18, 18, 20, 0.7)', border: '1px solid #1f1f23', borderRadius: '12px', padding: '1.25rem', backdropFilter: 'blur(8px)' }}>
-            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#c084fc' }}>100% Autónomo</div>
-            <div style={{ fontSize: '0.78rem', color: '#a1a1aa', marginTop: 4 }}>Estructuras ABO/CBO y stop-loss activo</div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── INTERACTIVE DOPAMINE FEATURE: CALCULADORA DE BENEFICIO LIMPIO ── */}
-      <section
-        style={{
-          maxWidth: 1040,
-          margin: '0 auto 5rem auto',
-          padding: '0 1.5rem',
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #131018, #0e0c12)',
-            border: '1px solid #332448',
-            borderRadius: '20px',
-            padding: '2.5rem',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(168, 85, 247, 0.1)',
-          }}
-        >
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <span
-              style={{
-                fontSize: '0.72rem',
-                color: '#c084fc',
-                background: 'rgba(192, 132, 252, 0.15)',
-                border: '1px solid rgba(192, 132, 252, 0.3)',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                fontWeight: 800,
-              }}
-            >
-              SIMULADOR DE RENTABILIDAD EN VIVO
-            </span>
-            <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', margin: '0.6rem 0 0.3rem 0' }}>
-              Calcula tu Beneficio Limpio con Nexus AI
-            </h2>
-            <p style={{ fontSize: '0.88rem', color: '#a1a1aa', margin: 0 }}>
-              Mueve los controles para proyectar tus ganancias netas reales descontando coste de producto y anuncios.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem', alignItems: 'center' }}>
-            {/* Sliders Column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#e4e4e7' }}>
-                    📦 Pedidos al Día:
-                  </label>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#faae33' }}>
-                    {dailyOrders} pedidos/día ({dailyOrders * 30} al mes)
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="5"
-                  max="150"
-                  step="5"
-                  value={dailyOrders}
-                  onChange={(e) => setDailyOrders(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: '#faae33', cursor: 'pointer' }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#71717a', marginTop: 4 }}>
-                  <span>5 pedidos (Testing)</span>
-                  <span>50 pedidos (Escalando)</span>
-                  <span>150 pedidos (Marca Líder)</span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#e4e4e7' }}>
-                    💳 Ticket Medio de Venta (PVP):
-                  </label>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#38bdf8' }}>
-                    {formatMoney(averageTicket)} por pedido
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="15"
-                  max="100"
-                  step="1"
-                  value={averageTicket}
-                  onChange={(e) => setAverageTicket(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
-                />
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#71717a', marginTop: 4 }}>
-                  <span>{formatMoney(15)} (Low Ticket)</span>
-                  <span>{formatMoney(45)} (Ideal Dropshipping)</span>
-                  <span>{formatMoney(100)} (High Ticket)</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Live Profit Output Box */}
-            <div
-              style={{
-                background: '#09080c',
-                border: '1px solid #2e2638',
-                borderRadius: '16px',
-                padding: '1.75rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-                boxShadow: '0 0 25px rgba(52, 211, 153, 0.1)',
-              }}
-            >
-              <div>
-                <div style={{ fontSize: '0.75rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 700 }}>
-                  Facturación Bruta Mensual
-                </div>
-                <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff' }}>
-                  {formatMoney(monthlyRevenue)} <span style={{ fontSize: '0.85rem', color: '#71717a' }}>/ mes</span>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', borderTop: '1px solid #1a1720', paddingTop: '0.75rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.7rem', color: '#71717a' }}>Coste CJ Dropshipping</div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ef4444' }}>
-                    -{formatMoney(cogsCost)}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.7rem', color: '#71717a' }}>Anuncios Meta (ROAS 3.4x)</div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ef4444' }}>
-                    -{formatMoney(adsSpend)}
-                  </div>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.05))',
-                  border: '1px solid rgba(52, 211, 153, 0.4)',
-                  borderRadius: '10px',
-                  padding: '1rem',
-                  textAlign: 'center',
-                }}
-              >
-                <div style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  💰 Beneficio Limpio en tu Bolsillo
-                </div>
-                <div style={{ fontSize: '2rem', fontWeight: 900, color: '#34d399', margin: '0.2rem 0' }}>
-                  +{formatMoney(estimatedNetProfit)} <span style={{ fontSize: '0.9rem', color: '#a7f3d0' }}>/ mes</span>
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#d1fae5' }}>
-                  Margen Neto Real: <strong>{netMarginPct}%</strong> después de todo
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── BENTO GRID: LOS 12 AGENTES EN ACCIÓN ─────────────────────── */}
-      <section
-        style={{
-          maxWidth: 1180,
-          margin: '0 auto 6rem auto',
-          padding: '0 1.5rem',
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <span
-            style={{
-              fontSize: '0.72rem',
-              color: '#faae33',
-              background: 'rgba(250, 174, 51, 0.12)',
-              border: '1px solid rgba(250, 174, 51, 0.3)',
-              padding: '3px 10px',
-              borderRadius: '999px',
-              fontWeight: 800,
-            }}
-          >
-            SISTEMA MULTI-AGENTE AUTÓNOMO
-          </span>
-          <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#ffffff', margin: '0.75rem 0 0.4rem 0' }}>
-            Una Oficina Completa de Especialistas Trabajando para Ti
-          </h2>
-          <p style={{ fontSize: '0.9rem', color: '#a1a1aa', margin: 0, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
-            Cada agente domina una fase crítica del dropshipping. Selecciona un especialista para ver su entregable en tiempo real.
-          </p>
-        </div>
-
-        {/* Agent Selector Tabs */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.5rem',
-            overflowX: 'auto',
-            paddingBottom: '0.75rem',
-            marginBottom: '1.5rem',
-            scrollbarWidth: 'none',
-          }}
-        >
-          {agents.map((agent, idx) => (
-            <button
-              key={agent.id}
-              onClick={() => setActiveAgentIndex(idx)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.6rem 1rem',
-                background: activeAgentIndex === idx ? '#1a1622' : '#0e0d11',
-                border: `1px solid ${activeAgentIndex === idx ? agent.badgeColor : '#221f28'}`,
-                borderRadius: '8px',
-                color: activeAgentIndex === idx ? '#ffffff' : '#a1a1aa',
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s',
-              }}
-            >
-              <span>{agent.avatar}</span>
-              <span>{agent.name}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Active Agent Spotlight Card */}
-        {agents[activeAgentIndex] && (
-          <div
-            style={{
-              background: '#100e15',
-              border: `1px solid ${agents[activeAgentIndex].badgeColor}40`,
-              borderRadius: '16px',
-              padding: '2rem',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '2rem',
-              alignItems: 'center',
-              boxShadow: `0 10px 40px ${agents[activeAgentIndex].badgeColor}15`,
-            }}
-          >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '2.5rem' }}>{agents[activeAgentIndex].avatar}</span>
-                <div>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', margin: 0 }}>
-                    {agents[activeAgentIndex].name}
-                  </h3>
-                  <span style={{ fontSize: '0.82rem', color: agents[activeAgentIndex].badgeColor, fontWeight: 700 }}>
-                    {agents[activeAgentIndex].role}
-                  </span>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  fontSize: '0.75rem',
-                  color: '#34d399',
-                  background: 'rgba(52, 211, 153, 0.1)',
-                  padding: '3px 8px',
-                  borderRadius: '6px',
-                  fontWeight: 700,
-                  marginBottom: '1rem',
-                }}
-              >
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34d399' }} />
-                {agents[activeAgentIndex].status}
-              </div>
-
-              <p style={{ fontSize: '0.9rem', color: '#d4d4d8', lineHeight: 1.6, margin: 0 }}>
-                {agents[activeAgentIndex].description}
-              </p>
-            </div>
-
-            <div
-              style={{
-                background: '#09080c',
-                border: '1px solid #221f28',
-                borderRadius: '12px',
-                padding: '1.25rem',
-              }}
-            >
-              <div style={{ fontSize: '0.72rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 800, marginBottom: '0.4rem' }}>
-                Entregable Automático en el Espacio
-              </div>
-              <div style={{ fontSize: '0.88rem', color: '#ffffff', fontWeight: 600, lineHeight: 1.5 }}>
-                {agents[activeAgentIndex].deliverable}
-              </div>
-              <div style={{ marginTop: '1rem' }}>
-                <Link
-                  href="/dashboard"
-                  style={{
-                    fontSize: '0.78rem',
-                    color: agents[activeAgentIndex].badgeColor,
-                    fontWeight: 700,
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.3rem',
-                  }}
-                >
-                  <span>Ver a {agents[activeAgentIndex].name} en el Centro de Mando</span>
-                  <span>&rarr;</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
-
-      {/* ── LIVE WINNING PRODUCT RADAR ──────────────────────────────── */}
-      <section
-        style={{
-          maxWidth: 1180,
-          margin: '0 auto 6rem auto',
-          padding: '0 1.5rem',
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
-          <div>
-            <span
-              style={{
-                fontSize: '0.72rem',
-                color: '#34d399',
-                background: 'rgba(52, 211, 153, 0.12)',
-                border: '1px solid rgba(52, 211, 153, 0.3)',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                fontWeight: 800,
-              }}
-            >
-              RADAR DE PRODUCTOS GANADORES
-            </span>
-            <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', margin: '0.6rem 0 0 0' }}>
-              Productos Validados con Fábrica &amp; Anuncios Activos
-            </h2>
-          </div>
-
-          <Link
-            href="/dashboard/catalog"
-            style={{
-              color: '#faae33',
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-            }}
-          >
-            <span>Abrir Catálogo Completo (CJ + Meta)</span>
-            <span>&rarr;</span>
-          </Link>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          {trendingProducts.map((prod, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: '#100e14',
-                border: '1px solid #241f2d',
-                borderRadius: '14px',
-                overflow: 'hidden',
-                boxShadow: '0 8px 25px rgba(0,0,0,0.4)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div style={{ position: 'relative', width: '100%', height: 180, background: '#0a090d' }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={prod.image}
-                  alt={prod.name}
-                  loading="lazy"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: 10,
-                    left: 10,
-                    background: 'rgba(0,0,0,0.8)',
-                    color: prod.tagColor,
-                    fontSize: '0.68rem',
-                    fontWeight: 800,
-                    padding: '3px 8px',
-                    borderRadius: '4px',
-                    border: `1px solid ${prod.tagColor}40`,
-                  }}
-                >
-                  {prod.tag} ({prod.daysActive}d activo)
-                </span>
-              </div>
-
-              <div style={{ padding: '1.25rem' }}>
-                <span style={{ fontSize: '0.72rem', color: '#71717a', fontWeight: 700, textTransform: 'uppercase' }}>
-                  {prod.niche}
-                </span>
-                <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff', margin: '0.3rem 0 0.85rem 0' }}>
-                  {prod.name}
-                </h4>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    background: '#09080c',
-                    padding: '0.6rem 0.75rem',
-                    borderRadius: '8px',
-                    border: '1px solid #1a1720',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  <div>
-                    <span style={{ fontSize: '0.68rem', color: '#71717a', display: 'block' }}>Coste Fábrica:</span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#e4e4e7' }}>
-                      {formatMoney(prod.factoryCost)}
-                    </span>
-                  </div>
-                  <div>
-                    <span style={{ fontSize: '0.68rem', color: '#71717a', display: 'block' }}>PVP Recomendado:</span>
-                    <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#34d399' }}>
-                      {formatMoney(prod.sellPrice)}
-                    </span>
-                  </div>
-                  <div>
-                    <span style={{ fontSize: '0.68rem', color: '#71717a', display: 'block' }}>Multiplicador:</span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#faae33' }}>
-                      {prod.multiple}
-                    </span>
-                  </div>
-                </div>
-
-                <Link
-                  href="/dashboard/catalog"
-                  style={{
-                    width: '100%',
-                    background: 'linear-gradient(135deg, #1d4ed8, #2563eb)',
-                    color: '#ffffff',
-                    padding: '0.55rem',
-                    borderRadius: '6px',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.35rem',
-                  }}
-                >
-                  <span>🎬</span>
-                  <span>Ver Video &amp; Métricas en Catálogo</span>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── FOOTER CTA ─────────────────────────────────────────────── */}
-      <footer
-        style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundColor: '#050507',
-          padding: '3.5rem 1.5rem',
-          textAlign: 'center',
-        }}
-      >
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', margin: '0 0 0.8rem 0' }}>
-            Empieza a Operar con tu Oficina de Agentes IA Hoy
-          </h3>
-          <p style={{ fontSize: '0.88rem', color: '#a1a1aa', marginBottom: '1.75rem', lineHeight: 1.6 }}>
-            Acceso instantáneo a la plataforma. Diseñado para emprendedores y marcas que buscan rentabilidad real.
-          </p>
-          <Link
-            href="/dashboard"
-            style={{
-              padding: '0.85rem 2rem',
-              background: 'linear-gradient(135deg, #faae33, #d98216)',
-              color: '#090807',
-              borderRadius: '8px',
-              fontSize: '0.95rem',
-              fontWeight: 800,
-              textDecoration: 'none',
-              boxShadow: '0 8px 25px rgba(250, 174, 51, 0.3)',
+              boxShadow: '0 8px 30px rgba(250, 174, 51, 0.35)',
               display: 'inline-block',
             }}
           >
             Abrir Mi Centro de Control &rarr;
           </Link>
           <div style={{ fontSize: '0.72rem', color: '#52525b', marginTop: '2.5rem' }}>
-            © {new Date().getFullYear()} Nexus AI Dropshipping OS. Todos los derechos reservados.
+            © {new Date().getFullYear()} Nexus AI. La forma más fácil de vender por internet.
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* ── VIDEO MODAL FLUIDO & LIGERO ──────────────────────────────── */}
+      {previewVideoUrl && (
+        <div
+          onClick={() => setPreviewVideoUrl(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 99999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: '#121115',
+              border: '1px solid #332845',
+              borderRadius: '16px',
+              width: '100%',
+              maxWidth: 580,
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
+            }}
+          >
+            <div style={{ padding: '0.85rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #231c2d' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
+                Video Demostración de {selectedProduct.name}
+              </span>
+              <button
+                onClick={() => setPreviewVideoUrl(null)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#a1a1aa',
+                  fontSize: '1.2rem',
+                  cursor: 'pointer',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <div style={{ width: '100%', background: '#000000', minHeight: 280 }}>
+              <video
+                src={previewVideoUrl}
+                controls
+                autoPlay
+                playsInline
+                style={{ width: '100%', maxHeight: '65vh', display: 'block' }}
+              />
+            </div>
+            <div style={{ padding: '0.85rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
+                ✓ Producto listo para vender en tu tienda
+              </span>
+              <Link
+                href="/dashboard/catalog"
+                style={{
+                  background: '#faae33',
+                  color: '#090807',
+                  padding: '0.45rem 0.9rem',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  textDecoration: 'none',
+                }}
+              >
+                Ir al Catálogo &rarr;
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

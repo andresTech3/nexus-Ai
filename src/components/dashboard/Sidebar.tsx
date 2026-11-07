@@ -131,8 +131,6 @@ const sidebarSections: NavSection[] = [
   {
     section: 'Tráfico & Ventas',
     links: [
-      { id: 'dash-facebook-ads', icon: <MetaAdsIcon />, label: 'Meta Ads (Facebook)', href: '/dashboard/facebook-ads' },
-      { id: 'dash-instagram', icon: <InstagramNavIcon />, label: 'Instagram Growth', href: '/dashboard/instagram' },
       { id: 'dash-shopify', icon: <ShopifyNavIcon />, label: 'Shopify Studio', href: '/dashboard/shopify' },
     ],
   },
