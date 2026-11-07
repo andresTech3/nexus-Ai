@@ -1,10 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useOfficeStore } from '@/lib/office/store'
-import { MetaConnectBanner } from '@/components/meta/MetaConnectBanner'
-import { InstagramProfileAnalyzer } from '@/components/meta/InstagramProfileAnalyzer'
-import { useMetaConnection } from '@/hooks/useMetaConnection'
 
 interface ContentPost {
   id: string
@@ -18,18 +15,128 @@ interface ContentPost {
   slides?: string[]
 }
 
+function generateDynamicInstagramPosts(productName: string, brandName: string): ContentPost[] {
+  const pName = productName?.trim() || 'Producto Ganador'
+  const pLower = pName.toLowerCase()
+  const bName = brandName?.trim() || 'Mi Marca'
+
+  if (pLower.includes('luna') || pLower.includes('lamp') || pLower.includes('lámpara') || pLower.includes('luz')) {
+    return [
+      {
+        id: 'ig_1',
+        title: 'Cómo transformar una habitación ordinaria en un templo de paz en 3 segundos',
+        type: 'REEL',
+        hook3s: 'Visual: Habitación a oscuras + se acerca la mano y la luna comienza a levitar en el aire emitiendo luz cálida suave.',
+        caption: `¿Sabías que la luz tenue a 2700K reduce los niveles de cortisol antes de dormir?\n\nDiseñamos ${bName} para crear un ambiente hipnótico sin cables ni ruidos.\n\nComenta "LUNA" y te enviamos por privado un 20% de descuento para tu primer pedido.`,
+        hashtags: ['#decoracioninteriores', '#lamparaluna', '#diseñonordico', '#dormitoriopremium', '#bienestarencasa'],
+        scheduledDay: 'Lunes — 19:30h',
+        status: 'APPROVED',
+      },
+      {
+        id: 'ig_2',
+        title: 'Carrusel: 5 Razones por las que tu habitación necesita luz indirecta',
+        type: 'CAROUSEL',
+        hook3s: 'Portada: Habitación moderna nórdica con texto: "5 razones científicas por las que la luz de tu techo te está arruinando el descanso."',
+        caption: `Desliza para descubrir cómo la iluminación correcta mejora tu calidad de sueño y tu estado de ánimo.\n\nGuarda este post para tu próxima remodelación.`,
+        hashtags: ['#decohogar', '#iluminacionled', '#estilonordico', '#descansoreparador'],
+        scheduledDay: 'Miércoles — 20:30h',
+        status: 'DRAFT',
+        slides: [
+          'Slide 1: 5 razones por las que la luz de techo tradicional arruina tu descanso.',
+          'Slide 2: Razón 1 — Inhibe la producción natural de melatonina 2 horas antes de dormir.',
+          'Slide 3: Razón 2 — Sombras duras que generan fatiga visual en ojos cansados.',
+          'Slide 4: Razón 3 — La luz focalizada cálida crea un santuario de relajación mental.',
+          'Slide 5: Levitación magnética: arte en movimiento que hipnotiza y relaja.',
+          'Slide 6 (CTA): Descubre la colección completa en el enlace de nuestra biografía.',
+        ],
+      },
+    ]
+  }
+
+  if (pLower.includes('mascota') || pLower.includes('perro') || pLower.includes('gato') || pLower.includes('pet') || pLower.includes('pelo')) {
+    return [
+      {
+        id: 'ig_1',
+        title: 'El truco para eliminar el pelo muerto de tu mascota sin tirones ni peleas',
+        type: 'REEL',
+        hook3s: 'Visual: Gato ronroneando feliz mientras una sola pasada del cepillo retira una manta entera de pelo suelto.',
+        caption: `El 80% de los pelos que terminan en tu sofá se pueden evitar en solo 3 minutos al día.\n\nEl sistema de vapor suave de ${bName} relaja los folículos y recoge el pelo sin asustar a tu peludo.\n\nComenta "PELOS" para recibir la guía completa de cepillado sin estrés.`,
+        hashtags: ['#mascotasfelices', '#gatosdeinstagram', '#perrosdeinstagram', '#cuidadodemascotas', '#petlovers'],
+        scheduledDay: 'Lunes — 18:30h',
+        status: 'APPROVED',
+      },
+      {
+        id: 'ig_2',
+        title: 'Carrusel: 4 Señales de que tu mascota tiene exceso de pelo muerto',
+        type: 'CAROUSEL',
+        hook3s: 'Portada: Primer plano tierno de mascota con texto: "4 señales silenciosas de que tu perro o gato necesita un cepillado profundo."',
+        caption: `Desliza para ver si tu peludo presenta alguna de estas señales.\n\nLa número 3 suele confundirse con alergia pero es solo acumulación de pelo bajo el manto.`,
+        hashtags: ['#amorporlasmascotas', '#perrosfelices', '#gatosfelices', '#veterinaria'],
+        scheduledDay: 'Jueves — 19:00h',
+        status: 'DRAFT',
+        slides: [
+          'Slide 1: 4 señales de que tu perro o gato tiene exceso de subpelo acumulado.',
+          'Slide 2: Señal 1 — Bolas de pelo frecuentes en gatos o caspa en perros.',
+          'Slide 3: Señal 2 — Rascado constante sin tener pulgas.',
+          'Slide 4: Señal 3 — Pelos pegados en ropa y tapicerías incluso tras pasar la aspiradora.',
+          'Slide 5: Cómo el vapor templado atrapa los alérgenos y deja el pelaje brillante.',
+          'Slide 6 (CTA): Aprovecha nuestro 2x1 especial en el enlace del perfil.',
+        ],
+      },
+    ]
+  }
+
+  return [
+    {
+      id: 'ig_1',
+      title: `Por qué todo el mundo está hablando de ${pName} este mes`,
+      type: 'REEL',
+      hook3s: `Visual: Demostración inmediata del problema cotidiano resuelto en 3 segundos con ${pName}.`,
+      caption: `Si estás buscando la solución definitiva para tu día a día, mira esto.\n\nEn ${bName} diseñamos productos pensados para durar y resolver problemas reales.\n\nComenta "OFERTA" y te enviamos el cupón con 25% de descuento directo a tu bandeja de entrada.`,
+      hashtags: ['#tendencias2026', '#dropshippingespana', '#comprasonline', '#gadgetsvirales', '#calidadgarantizada'],
+      scheduledDay: 'Lunes — 19:00h',
+      status: 'APPROVED',
+    },
+    {
+      id: 'ig_2',
+      title: `Carrusel: 5 Razones para elegir ${pName} sobre cualquier imitación barata`,
+      type: 'CAROUSEL',
+      hook3s: `Portada: Fotografía macro de alta definición: "5 detalles que marcan la diferencia en ${pName}."`,
+      caption: `No todas las opciones del mercado son iguales. Desliza para ver la comparativa real de materiales, garantía y acabados.\n\nGuarda este post para tu próxima compra.`,
+      hashtags: ['#comparativareal', '#calidadpremium', '#garantiatotal', '#tiendaonline'],
+      scheduledDay: 'Miércoles — 20:00h',
+      status: 'DRAFT',
+      slides: [
+        `Slide 1: 5 razones para elegir ${pName} oficial sobre imitaciones genéricas.`,
+        'Slide 2: Calidad de materiales: durabilidad testada para uso intensivo.',
+        'Slide 3: Soporte técnico y atención personalizada 24/7 en español.',
+        'Slide 4: Garantía europea de devolución sin preguntas durante 30 días.',
+        'Slide 5: Envío exprés con seguimiento en tiempo real directo a tu puerta.',
+        `Slide 6 (CTA): Haz tu pedido hoy con descuento exclusivo en el enlace de la bio.`,
+      ],
+    },
+  ]
+}
+
 export default function InstagramGrowthPage() {
   const store = useOfficeStore()
   const activeOffice = store.offices[store.activeOfficeId]
-  // productName: currently not used in this dashboard
+  const productName = activeOffice?.product?.name || ''
   const brandName = activeOffice?.brand?.name || 'AuraWell'
-
-  // Real Meta / Instagram connection state
-  const { connected: igConnected } = useMetaConnection('instagram')
 
   const [activeTab, setActiveTab] = useState<'reels' | 'carousels' | 'bio' | 'calendar'>('reels')
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  const [posts, setPosts] = useState<ContentPost[]>(() =>
+    generateDynamicInstagramPosts(productName, brandName)
+  )
+
+  useEffect(() => {
+    if (productName) {
+      setPosts(generateDynamicInstagramPosts(productName, brandName))
+    }
+  }, [productName, brandName])
 
   const showToast = (msg: string) => {
     setToastMessage(msg)
@@ -42,49 +149,6 @@ export default function InstagramGrowthPage() {
     showToast('Copiado al portapapeles')
     setTimeout(() => setCopiedId(null), 2000)
   }
-
-  // Pre-configured real Instagram posts based on instagram-skills framework
-  const [posts, setPosts] = useState<ContentPost[]>([
-    {
-      id: 'ig_1',
-      title: 'El error postural que destruye tu cuello al teletrabajar',
-      type: 'REEL',
-      hook3s: 'Visual: Primer plano de alguien estirándose el cuello con gesto de dolor agudo frente al portátil + Texto: "Si sientes esto a las 4 PM, no es estrés."',
-      caption: `La mayoría piensa que el dolor de cuello viene de "estar cansado".\n\nEn realidad, inclinar la cabeza 30 grados añade casi 18 kg de presión sobre tus vértebras cervicales.\n\nPor eso creamos ${brandName}: diseñado no para obligarte a estar rígido, sino para recordarle a tu cuerpo su posición natural sin esfuerzo.\n\nComenta "POSTURA" y te enviamos por mensaje directo la guía de 3 estiramientos que puedes hacer desde tu silla.`,
-      hashtags: ['#teletrabajo', '#dolordeespalda', '#ergonomia', '#saludpostural', '#habitosaludable'],
-      scheduledDay: 'Lunes — 18:30h',
-      status: 'APPROVED',
-    },
-    {
-      id: 'ig_2',
-      title: 'Carrusel: 5 Señales de que tu columna te está pidiendo auxilio',
-      type: 'CAROUSEL',
-      hook3s: 'Portada: Imagen limpia minimalista con texto contundente: "5 señales silenciosas de que tu postura está arruinando tu energía diaria (y cómo arreglarlo hoy)."',
-      caption: `Desliza para ver si cumples al menos 2 de estas 5 señales.\n\nLa última es la que casi todo el mundo ignora hasta que el dolor ya no le deja dormir bien.\n\nGuarda este post para revisarlo cada semana cuando estés en la oficina.`,
-      hashtags: ['#ergonomia', '#bienestar', '#dolorlumbar', '#saludybienestar', '#vidafit'],
-      scheduledDay: 'Miércoles — 20:00h',
-      status: 'DRAFT',
-      slides: [
-        'Slide 1 (Gancho): 5 señales de que tu postura está arruinando tu energía diaria.',
-        'Slide 2: Señal 1 — Dolores de cabeza tensionales a mitad de la tarde.',
-        'Slide 3: Señal 2 — Hombros caídos hacia adelante incluso al caminar.',
-        'Slide 4: Señal 3 — Tensión lumbar persistente al levantarte de la silla.',
-        'Slide 5: La solución no es "forzarte a estar derecho" (tus músculos se fatigan en 10 minutos).',
-        'Slide 6: Necesitas bio-feedback pasivo: soporte ergonómico transpirable.',
-        'Slide 7 (CTA): Toca el enlace de nuestro perfil para conseguir el tuyo con 20% de descuento.',
-      ],
-    },
-    {
-      id: 'ig_3',
-      title: 'Transformación real en 14 días sin ir al fisio cada semana',
-      type: 'REEL',
-      hook3s: 'Visual: Comparación lateral de postura en pantalla dividida (Día 1 vs. Día 14 usando el producto 20 min al día).',
-      caption: `15 minutos al día es todo lo que necesitas para reeducar la memoria muscular de tu espalda.\n\nSin cremas mágicas ni promesas exageradas: biomecánica pura.\n\nDisponible en nuestro perfil con garantía de 30 días o te devolvemos el dinero sin preguntas.`,
-      hashtags: ['#columnavertebral', '#vidasana', '#fisioterapiaencasa', '#posturaperfecta'],
-      scheduledDay: 'Viernes — 19:15h',
-      status: 'DRAFT',
-    },
-  ])
 
   return (
     <div id="instagram-growth-workspace" style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3rem' }}>
@@ -164,14 +228,6 @@ export default function InstagramGrowthPage() {
           </p>
         </div>
       </div>
-
-      {/* ── Instagram OAuth Connection Banner ───────────────────────────────── */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <MetaConnectBanner mode="instagram" />
-      </div>
-
-      {/* ── Real Profile Analyzer (visible only when connected) ─────────────── */}
-      {igConnected && <InstagramProfileAnalyzer />}
 
       {/* Tabs */}
       <div

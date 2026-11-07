@@ -150,28 +150,54 @@ export default function ProductHuntingCatalogPage() {
   }
 
   const handlePreviewProductAd = (product: CJProduct) => {
-    const days = Math.min(45, Math.max(12, Math.floor(product.stockQuantity / 250) + 14))
+    const pName = product.name.trim()
+    const pLower = pName.toLowerCase()
+    const days = Math.min(52, Math.max(8, Math.floor((product.stockQuantity || 1200) / 280) + 12))
+
+    const sampleVideos = [
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+    ]
+    const hash = Math.abs(pName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0))
+    const selectedVideo = sampleVideos[hash % sampleVideos.length]
+
+    let hookText = 'Demostración de problema cotidiano resuelto en los primeros 3 segundos.'
+    if (pLower.includes('luna') || pLower.includes('lamp') || pLower.includes('luz')) {
+      hookText = 'Levitación magnética girando en el aire sin cables con luces apagadas.'
+    } else if (pLower.includes('mascota') || pLower.includes('perro') || pLower.includes('gato') || pLower.includes('pet')) {
+      hookText = 'Una sola pasada retirando el 95% del pelo muerto con vapor relajante.'
+    } else if (pLower.includes('reloj') || pLower.includes('smart') || pLower.includes('watch')) {
+      hookText = 'Prueba de resistencia extrema al agua y pantalla AMOLED de alta gama.'
+    } else if (pLower.includes('postur') || pLower.includes('espalda')) {
+      hookText = 'Dolor lumbar frente a la pantalla corregido al instante con soporte anatómico.'
+    }
+
+    const estimatedSpendMin = Math.round(days * (product.supplierPriceEur * 5.2) + 120)
+    const estimatedSpendMax = Math.round(days * (product.supplierPriceEur * 8.5) + 380)
+
     const adPreview: CompetitorAd = {
       id: `ad-preview-${product.id}`,
-      pageName: `${product.name.split(' ').slice(0, 3).join(' ')} Official`,
-      headline: `Oferta Especial: ${product.name}`,
-      bodyText: `Envío urgente 24-48h con seguimiento garantizado. Stock real de fábrica con margen comercial de ${product.marginMultiple}x.`,
+      pageName: `${pName.split(' ').slice(0, 3).join(' ')} Oficial`,
+      headline: `¿Buscando el mejor ${pName.split(' ').slice(0, 4).join(' ')}? Descubre la solución viral.`,
+      bodyText: `Envío exprés 24-48h con garantía de devolución de 30 días. Stock real de fábrica con margen comercial de ${product.marginMultiple}x (${formatMoney(product.grossProfitEur)} de margen por unidad).`,
       daysActive: days,
       deliveryStartDate: new Date(Date.now() - days * 86400000).toISOString(),
-      profitabilityScore: product.marginMultiple >= 3.5 ? 'SUPER_GANADOR' : 'ESCALANDO',
-      snapshotUrl: `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${selectedGeo || 'ES'}&q=${encodeURIComponent(product.name)}&search_type=keyword_unordered`,
+      profitabilityScore: product.marginMultiple >= 3.6 ? 'SUPER_GANADOR' : 'ESCALANDO',
+      snapshotUrl: `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${selectedGeo || 'ES'}&q=${encodeURIComponent(pName)}&search_type=keyword_unordered`,
       platforms: ['facebook', 'instagram', 'tiktok'],
       mediaType: 'VIDEO',
       thumbnailUrl: product.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80',
-      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      videoDuration: '0:28s (Gancho 3s demostrable)',
-      visualHookType: 'Demostración de beneficio en los primeros 3 segundos',
+      videoUrl: selectedVideo,
+      videoDuration: `0:${24 + (hash % 16)}s (Gancho 3s)`,
+      visualHookType: hookText,
       metrics: {
-        estimatedReach: `${(days * 14000).toLocaleString('es-ES')} personas`,
-        estimatedSpend: `${formatMoney(Math.round(days * 45 + 150))} - ${formatMoney(Math.round(days * 75 + 400))}`,
-        engagementRate: '5.2% (Muy Alta)',
-        audienceDemographic: '22-50 años · Alta intención de compra',
-        trendScore: Math.min(99, 75 + Math.floor(product.marginMultiple * 5)),
+        estimatedReach: `${(days * (12000 + (hash % 6000))).toLocaleString('es-ES')} personas`,
+        estimatedSpend: `${formatMoney(estimatedSpendMin)} - ${formatMoney(estimatedSpendMax)}`,
+        engagementRate: `${(4.2 + (hash % 25) * 0.1).toFixed(1)}% (Alta)`,
+        audienceDemographic: '20-55 años · Alta intención de compra',
+        trendScore: Math.min(99, 74 + Math.floor(product.marginMultiple * 5)),
       },
     }
     setSelectedAdForModal(adPreview)
