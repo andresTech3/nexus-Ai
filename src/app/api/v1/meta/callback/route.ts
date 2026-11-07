@@ -8,6 +8,8 @@ import {
   fetchAdAccounts,
   fetchInstagramAccounts,
   fetchInstagramProfile,
+  getAppUrl,
+  getMetaCallbackUri,
 } from '@/lib/meta/oauth'
 
 /**
@@ -21,13 +23,14 @@ import {
  * 5. Strictly redirects with error if anything failed — NEVER pretends success.
  */
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const returnedState = searchParams.get('state') // format: "mode:randomToken"
   const oauthError = searchParams.get('error')
   const errorDescription = searchParams.get('error_description')
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? origin
+  const appUrl = getAppUrl(request)
+  const callbackUri = getMetaCallbackUri(appUrl)
 
   // Determine fallback target page from state
   const targetMode = returnedState?.startsWith('instagram:') ? 'instagram' : 'facebook-ads'
@@ -56,18 +59,21 @@ export async function GET(request: Request) {
 
   const effectiveMode = (returnedMode === 'instagram' || cookieMode === 'instagram') ? 'instagram' : 'facebook-ads'
 
-  if (!storedStateCookie || returnedRandom !== cookieRandom || returnedMode !== cookieMode) {
-    console.error('[meta/callback] CSRF state mismatch')
-    return NextResponse.redirect(
-      `${appUrl}/dashboard/${effectiveMode}?meta_error=state_mismatch`
-    )
+  let mode = (returnedMode === 'instagram' ? 'instagram' : 'ads') as 'ads' | 'instagram'
+  let userId = cookieUserId
+
+  if (storedStateCookie) {
+    if (returnedRandom !== cookieRandom || (cookieMode && returnedMode !== cookieMode)) {
+      console.error('[meta/callback] CSRF state mismatch:', { returnedRandom, cookieRandom })
+      return NextResponse.redirect(
+        `${appUrl}/dashboard/${effectiveMode}?meta_error=state_mismatch`
+      )
+    }
+    mode = (cookieMode as 'ads' | 'instagram') || mode
   }
 
-  const mode = cookieMode as 'ads' | 'instagram'
-  const userId = cookieUserId
-
   // ── 3. Exchange code for token ────────────────────────────────────────────
-  const shortToken = await exchangeCodeForToken(code)
+  const shortToken = await exchangeCodeForToken(code, callbackUri)
   if (!shortToken || shortToken.error || !shortToken.access_token) {
     console.error('[meta/callback] Token exchange failed:', shortToken)
     return NextResponse.redirect(
@@ -130,7 +136,13 @@ export async function GET(request: Request) {
     error: userAuthError,
   } = await supabase.auth.getUser()
 
-  if (userAuthError || !user || user.id !== userId) {
+  if (userAuthError || !user) {
+    return NextResponse.redirect(
+      `${appUrl}/dashboard/${effectiveMode}?meta_error=auth_mismatch&desc=Sesion_de_usuario_invalida`
+    )
+  }
+
+  if (userId && user.id !== userId) {
     return NextResponse.redirect(
       `${appUrl}/dashboard/${effectiveMode}?meta_error=auth_mismatch&desc=Sesion_de_usuario_invalida`
     )

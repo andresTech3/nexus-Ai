@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { buildMetaAuthUrl, META_APP_ID } from '@/lib/meta/oauth'
+import { buildMetaAuthUrl, getAppUrl, getMetaCallbackUri, META_APP_ID } from '@/lib/meta/oauth'
 import crypto from 'crypto'
 
 /**
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   if (!META_APP_ID || META_APP_ID.includes('REEMPLAZA') || META_APP_ID.trim() === '') {
     return NextResponse.json(
       {
-        error: 'Credenciales de Meta no configuradas. Agrega tu META_APP_ID y META_APP_SECRET en el archivo .env.local de la aplicación antes de conectar.',
+        error: 'Credenciales de Meta no configuradas. Agrega tu META_APP_ID y META_APP_SECRET en las Variables de Entorno de Vercel (o en .env.local) antes de conectar.',
         notConfigured: true,
       },
       { status: 400 }
@@ -36,14 +36,20 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const mode = searchParams.get('mode') === 'instagram' ? 'instagram' : 'ads'
 
+  // Dynamic host & callback URL resolution
+  const appUrl = getAppUrl(request)
+  const callbackUri = getMetaCallbackUri(appUrl)
+
   // Generate a CSRF state token
   const random = crypto.randomBytes(16).toString('hex')
   const state = `${random}`
 
   const response = NextResponse.json({
-    url: buildMetaAuthUrl(state, mode),
+    url: buildMetaAuthUrl(state, mode, callbackUri),
     state,
     mode,
+    appUrl,
+    callbackUri,
   })
 
   // Store state in a secure httpOnly cookie so the callback can validate CSRF
