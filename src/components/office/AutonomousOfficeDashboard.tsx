@@ -77,11 +77,11 @@ export function AutonomousOfficeDashboard() {
       {/* ============================================================ */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #241812, #18120e)',
-          border: '1px solid #3d2a1d',
-          borderRadius: '12px',
-          padding: '1.1rem 1.4rem',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.45)',
+          background: 'linear-gradient(135deg, #16121c, #0e0c14)',
+          border: '1px solid #2e263c',
+          borderRadius: '16px',
+          padding: '1.25rem 1.5rem',
+          boxShadow: '0 10px 35px rgba(0,0,0,0.5)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
@@ -92,42 +92,42 @@ export function AutonomousOfficeDashboard() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
             <div
               style={{
-                width: 38,
-                height: 38,
-                borderRadius: '8px',
-                background: '#faae33',
+                width: 42,
+                height: 42,
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #faae33, #d98216)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#090807',
+                fontSize: '1.25rem',
+                boxShadow: '0 4px 15px rgba(250, 174, 51, 0.35)',
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#090807" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              🏢
             </div>
             <div>
-              <div style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 700, letterSpacing: '0.04em' }}>
-                SISTEMA OPERATIVO DROPSHIPPING · 11 ESPECIALISTAS
+              <div style={{ fontSize: '0.74rem', color: '#faae33', fontWeight: 800, letterSpacing: '0.04em' }}>
+                OFICINA VIRTUAL IA &bull; 11 ASISTENTES EN 3D
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '2px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '3px', flexWrap: 'wrap' }}>
                 <select
                   value={activeOffice.id}
                   onChange={(e) => store.setActiveOffice(e.target.value)}
                   style={{
-                    backgroundColor: '#1b1410',
-                    border: '1px solid #3d2a1d',
+                    backgroundColor: '#1b1724',
+                    border: '1px solid #3d344e',
                     color: '#fff',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     fontSize: '0.95rem',
-                    borderRadius: '6px',
-                    padding: '0.2rem 0.5rem',
+                    borderRadius: '8px',
+                    padding: '0.3rem 0.6rem',
                     cursor: 'pointer',
                   }}
                 >
                   {Object.values(store.offices).map((off) => (
                     <option key={off.id} value={off.id}>
-                      {off.name} ({off.status === 'ON' ? 'ACTIVA' : 'INACTIVA'})
+                      {off.name}
                     </option>
                   ))}
                 </select>
@@ -137,28 +137,13 @@ export function AutonomousOfficeDashboard() {
                     backgroundColor: activeOffice.status === 'ON' ? 'rgba(52, 211, 153, 0.15)' : 'rgba(239, 68, 68, 0.15)',
                     color: activeOffice.status === 'ON' ? '#34d399' : '#f87171',
                     border: `1px solid ${activeOffice.status === 'ON' ? 'rgba(52,211,153,0.3)' : 'rgba(239,68,68,0.3)'}`,
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
+                    padding: '3px 10px',
+                    borderRadius: '6px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
                   }}
                 >
-                  {activeOffice.status === 'ON' ? 'OPERATIVA' : 'APAGADA'}
-                </span>
-
-                {/* Real Data vs Simulated Badge */}
-                <span
-                  style={{
-                    backgroundColor: activeOffice.product.source === 'USER_PROVIDED' ? 'rgba(52, 211, 153, 0.12)' : 'rgba(250, 174, 51, 0.12)',
-                    color: activeOffice.product.source === 'USER_PROVIDED' ? '#34d399' : '#faae33',
-                    border: `1px solid ${activeOffice.product.source === 'USER_PROVIDED' ? 'rgba(52,211,153,0.3)' : 'rgba(250,174,51,0.3)'}`,
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                  }}
-                >
-                  {activeOffice.product.source === 'USER_PROVIDED' ? 'DATOS DE MERCADO' : 'MODO EVALUACIÓN'}
+                  {activeOffice.status === 'ON' ? '🟢 Asistentes Listos' : '⚪ En Pausa'}
                 </span>
 
                 {/* Probar Nuevo Producto Golden Button */}
@@ -166,16 +151,17 @@ export function AutonomousOfficeDashboard() {
                   onClick={() => setIsLaunchModalOpen(true)}
                   style={{
                     background: '#faae33',
-                    color: '#181008',
+                    color: '#100c06',
                     border: 'none',
                     borderRadius: '6px',
                     padding: '4px 10px',
                     fontSize: '0.74rem',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
+                    boxShadow: '0 2px 8px rgba(250, 174, 51, 0.3)',
                   }}
                   title="Configurar producto"
                 >
@@ -186,42 +172,29 @@ export function AutonomousOfficeDashboard() {
             </div>
           </div>
 
-          {/* Executive Connectors Button */}
+          {/* Connectors & Settings Button */}
           <button
             onClick={() => setActiveMainTab('connections')}
             style={{
-              backgroundColor: activeMainTab === 'connections' ? '#241a14' : '#141416',
-              border: '1px solid #27272e',
-              borderRadius: '6px',
-              padding: '0.45rem 0.85rem',
+              backgroundColor: activeMainTab === 'connections' ? '#271f33' : '#14121a',
+              border: '1px solid #332a42',
+              borderRadius: '8px',
+              padding: '0.5rem 0.95rem',
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem',
-              fontSize: '0.78rem',
-              fontWeight: 600,
+              fontSize: '0.8rem',
+              fontWeight: 700,
               color: '#faae33',
               cursor: 'pointer',
-              transition: 'all 0.12s ease',
             }}
           >
-            <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#34d399' }} />
-            <span>Conectores</span>
-            <span
-              style={{
-                fontSize: '0.68rem',
-                backgroundColor: '#1f1f24',
-                color: '#e5e7eb',
-                padding: '2px 6px',
-                borderRadius: '4px',
-                fontWeight: 600,
-              }}
-            >
-              Ajustes
-            </span>
+            <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#34d399' }} />
+            <span>Conexiones &amp; Ajustes</span>
           </button>
         </div>
 
-        {/* Second Row: Workflow, Traffic Mode, Speed & Play Button */}
+        {/* Second Row: Mode, Speed & Big Action Button */}
         <div
           style={{
             display: 'flex',
@@ -229,197 +202,163 @@ export function AutonomousOfficeDashboard() {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '0.75rem',
-            borderTop: '1px solid #2e2017',
-            paddingTop: '0.85rem',
+            borderTop: '1px solid #231c2d',
+            paddingTop: '0.9rem',
           }}
         >
           {/* Left Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
-            {/* Workflow Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <span style={{ fontSize: '0.72rem', color: '#9ca3af' }}>Flujo:</span>
-              <select
-                value={activeOffice.workflow}
-                onChange={(e) => store.setWorkflow(activeOffice.id, e.target.value as WorkflowType)}
-                style={{
-                  backgroundColor: '#1b1410',
-                  border: '1px solid #4a3424',
-                  color: '#faae33',
-                  fontSize: '0.76rem',
-                  fontWeight: 700,
-                  borderRadius: '4px',
-                  padding: '0.35rem 0.55rem',
-                }}
-              >
-                <option value="LAUNCH">[A] Lanzamiento Completo (4 Checkpoints)</option>
-                <option value="MORNING">[B] Auditoría Rápida (Revisión Diaria)</option>
-              </select>
-            </div>
-
-            {/* Traffic Mode Selector */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <span style={{ fontSize: '0.72rem', color: '#9ca3af' }}>Tráfico:</span>
-              <div style={{ display: 'flex', backgroundColor: '#140f0c', borderRadius: '4px', padding: '2px' }}>
-                {(['ADS', 'ORGANIC', 'HYBRID'] as TrafficMode[]).map((mode) => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            {/* Simple Strategy Mode Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.75rem', color: '#a1a1aa', fontWeight: 600 }}>Estrategia:</span>
+              <div style={{ display: 'flex', backgroundColor: '#131019', borderRadius: '6px', padding: '2px', border: '1px solid #282136' }}>
+                {(['HYBRID', 'ADS', 'ORGANIC'] as TrafficMode[]).map((mode) => (
                   <button
                     key={mode}
                     onClick={() => store.setTrafficMode(activeOffice.id, mode)}
                     style={{
                       background: activeOffice.trafficMode === mode ? '#faae33' : 'transparent',
-                      color: activeOffice.trafficMode === mode ? '#181008' : '#9ca3af',
+                      color: activeOffice.trafficMode === mode ? '#100c06' : '#a1a1aa',
                       border: 'none',
-                      borderRadius: '3px',
-                      padding: '3px 8px',
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
+                      borderRadius: '4px',
+                      padding: '4px 10px',
+                      fontSize: '0.74rem',
+                      fontWeight: 800,
                       cursor: 'pointer',
+                      transition: 'all 0.15s',
                     }}
                   >
-                    {mode === 'ADS' ? 'PAUTA' : mode === 'ORGANIC' ? 'ORGÁNICO' : 'HÍBRIDO'}
+                    {mode === 'HYBRID' ? '🚀 Automático' : mode === 'ADS' ? '⚡ Publicidad' : '📱 Vídeos Virales'}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Speed Selector with 0.5x Reading Mode */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              <span style={{ fontSize: '0.72rem', color: '#9ca3af' }}>Velocidad:</span>
-              <div style={{ display: 'flex', backgroundColor: '#140f0c', borderRadius: '4px', padding: '2px' }}>
+            {/* Speed Selector */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.75rem', color: '#a1a1aa', fontWeight: 600 }}>Velocidad:</span>
+              <div style={{ display: 'flex', backgroundColor: '#131019', borderRadius: '6px', padding: '2px', border: '1px solid #282136' }}>
                 {([0.5, 1, 2, 5] as const).map((s) => (
                   <button
                     key={s}
                     onClick={() => store.setSpeed(s)}
                     style={{
                       background: speed === s ? '#faae33' : 'transparent',
-                      color: speed === s ? '#181008' : '#9ca3af',
+                      color: speed === s ? '#100c06' : '#a1a1aa',
                       border: 'none',
-                      borderRadius: '3px',
-                      padding: '3px 8px',
-                      fontSize: '0.7rem',
-                      fontWeight: 700,
+                      borderRadius: '4px',
+                      padding: '4px 9px',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
                       cursor: 'pointer',
+                      transition: 'all 0.15s',
                     }}
-                    title={s === 0.5 ? 'Modo Lectura (Pausado para inspeccionar)' : `${s}x`}
                   >
-                    {s === 0.5 ? '0.5x Lectura' : `${s}x`}
+                    {s === 0.5 ? 'Modo Pausado' : `${s}x`}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right Action: Play / Pause */}
+          {/* Right Action: Big Play / Pause */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <button
-              onClick={() => store.toggleOfficePower(activeOffice.id)}
-              style={{
-                background: activeOffice.status === 'ON' ? '#18181c' : '#14532d',
-                border: `1px solid ${activeOffice.status === 'ON' ? '#27272e' : '#22c55e'}`,
-                color: activeOffice.status === 'ON' ? '#9ca3af' : '#4ade80',
-                padding: '0.45rem 0.85rem',
-                borderRadius: '6px',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              {activeOffice.status === 'ON' ? 'Pausar Sistema' : 'Reanudar Sistema'}
-            </button>
-
             <button
               onClick={handleStartOrPause}
               disabled={activeOffice.status === 'OFF'}
               style={{
-                background: isRunning ? '#dc2626' : '#faae33',
+                background: isRunning ? '#ef4444' : 'linear-gradient(135deg, #faae33, #d98216)',
                 color: isRunning ? '#ffffff' : '#090807',
                 border: 'none',
-                padding: '0.45rem 1.15rem',
-                borderRadius: '6px',
-                fontSize: '0.8rem',
-                fontWeight: 700,
+                padding: '0.6rem 1.4rem',
+                borderRadius: '8px',
+                fontSize: '0.86rem',
+                fontWeight: 900,
                 cursor: activeOffice.status === 'OFF' ? 'not-allowed' : 'pointer',
                 opacity: activeOffice.status === 'OFF' ? 0.5 : 1,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.45rem',
+                gap: '0.5rem',
+                boxShadow: isRunning ? '0 0 20px rgba(239, 68, 68, 0.4)' : '0 4px 20px rgba(250, 174, 51, 0.4)',
+                transition: 'transform 0.15s ease',
               }}
             >
-              <span>{isRunning ? 'Pausar Pipeline' : 'Ejecutar Pipeline'}</span>
+              <span>{isRunning ? '⏸ Pausar Trabajo' : '▶ Iniciar Trabajo de los Asistentes'}</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* ============================================================ */}
-      {/* 4-STEP EXECUTIVE WORKFLOW STEPPER                            */}
+      {/* 4-STEP VISUAL WORKFLOW: SIMPLE & DIRECT                      */}
       {/* ============================================================ */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-          gap: '0.75rem',
-          backgroundColor: '#19120e',
-          border: '1px solid #3d2a1d',
-          borderRadius: '10px',
-          padding: '0.85rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '0.85rem',
+          backgroundColor: '#120f17',
+          border: '1px solid #272133',
+          borderRadius: '14px',
+          padding: '1rem',
         }}
       >
         {/* Step 1: Producto */}
         <div
           style={{
-            backgroundColor: '#140f0c',
-            border: '1px solid #332418',
-            borderRadius: '8px',
-            padding: '0.75rem',
+            backgroundColor: '#17141f',
+            border: '1px solid #2f273e',
+            borderRadius: '10px',
+            padding: '0.85rem',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.7rem', color: '#faae33', fontWeight: 800 }}>PASO 1: PRODUCTO &amp; MARCA</span>
-              <span style={{ fontSize: '0.65rem', color: '#34d399', fontWeight: 700 }}>● Activo</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 800 }}>📦 PASO 1: TU PRODUCTO</span>
+              <span style={{ fontSize: '0.68rem', color: '#34d399', fontWeight: 700 }}>● Asignado</span>
             </div>
             {activeOffice.product.name ? (
               <>
-                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {activeOffice.product.name}
                 </div>
-                <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{activeOffice.brand.name || 'Sin marca'}</div>
+                <div style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Listo para vender en tienda</div>
               </>
             ) : (
-              <div style={{ fontSize: '0.8rem', color: '#faae33', fontWeight: 600, marginTop: '4px' }}>
-                Sin producto asignado
+              <div style={{ fontSize: '0.82rem', color: '#faae33', fontWeight: 700 }}>
+                Elige qué producto quieres vender
               </div>
             )}
           </div>
           <button
             onClick={() => setIsLaunchModalOpen(true)}
             style={{
-              marginTop: '0.5rem',
-              background: activeOffice.product.name ? '#1c1c22' : '#faae33',
-              border: `1px solid ${activeOffice.product.name ? '#2d2d34' : '#faae33'}`,
-              color: activeOffice.product.name ? '#faae33' : '#181008',
-              borderRadius: '4px',
-              padding: '0.4rem',
-              fontSize: '0.72rem',
-              fontWeight: 700,
+              marginTop: '0.65rem',
+              background: activeOffice.product.name ? '#221e2d' : '#faae33',
+              border: `1px solid ${activeOffice.product.name ? '#3c324e' : '#faae33'}`,
+              color: activeOffice.product.name ? '#faae33' : '#100c06',
+              borderRadius: '6px',
+              padding: '0.45rem',
+              fontSize: '0.75rem',
+              fontWeight: 800,
               cursor: 'pointer',
             }}
           >
-            {activeOffice.product.name ? '+ Probar Otro Producto' : 'Configurar Producto'}
+            {activeOffice.product.name ? 'Cambiar Producto' : 'Configurar Producto'}
           </button>
         </div>
 
-        {/* Step 2: Averiguacion Real */}
+        {/* Step 2: Precios y Fabricante */}
         <div
           onClick={() => setActiveMainTab('market_research')}
           style={{
-            backgroundColor: activeMainTab === 'market_research' ? '#221610' : '#140f0c',
-            border: `1px solid ${activeMainTab === 'market_research' ? '#34d399' : '#332418'}`,
-            borderRadius: '8px',
-            padding: '0.75rem',
+            backgroundColor: activeMainTab === 'market_research' ? '#1f1a2a' : '#17141f',
+            border: `1px solid ${activeMainTab === 'market_research' ? '#34d399' : '#2f273e'}`,
+            borderRadius: '10px',
+            padding: '0.85rem',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
@@ -427,28 +366,28 @@ export function AutonomousOfficeDashboard() {
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 800 }}>PASO 2: AVERIGUACIÓN REAL</span>
-              <span style={{ fontSize: '0.65rem', color: '#34d399' }}>FreeLLMAPI</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '0.72rem', color: '#34d399', fontWeight: 800 }}>🔍 PASO 2: PRECIOS &amp; FÁBRICA</span>
+              <span style={{ fontSize: '0.68rem', color: '#34d399' }}>Investigación</span>
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', marginTop: '2px' }}>
-              Competidores &amp; Costes Fábrica
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#fff' }}>
+              Costes de Fábrica y Competencia
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Precios reales en España y quejas</div>
+            <div style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Precios de compra y margen de beneficio</div>
           </div>
-          <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: '#34d399', fontWeight: 700 }}>
-            Ver Inteligencia Real &rarr;
+          <div style={{ marginTop: '0.65rem', fontSize: '0.75rem', color: '#34d399', fontWeight: 800 }}>
+            Ver Precios Reales &rarr;
           </div>
         </div>
 
-        {/* Step 3: Creativos Leo */}
+        {/* Step 3: Vídeos y Anuncios */}
         <div
           onClick={() => setActiveMainTab('creatives')}
           style={{
-            backgroundColor: activeMainTab === 'creatives' ? '#221610' : '#140f0c',
-            border: `1px solid ${activeMainTab === 'creatives' ? '#faae33' : '#332418'}`,
-            borderRadius: '8px',
-            padding: '0.75rem',
+            backgroundColor: activeMainTab === 'creatives' ? '#1f1a2a' : '#17141f',
+            border: `1px solid ${activeMainTab === 'creatives' ? '#faae33' : '#2f273e'}`,
+            borderRadius: '10px',
+            padding: '0.85rem',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
@@ -456,28 +395,28 @@ export function AutonomousOfficeDashboard() {
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.7rem', color: '#faae33', fontWeight: 800 }}>PASO 3: CREATIVOS VISUALES</span>
-              <span style={{ fontSize: '0.65rem', color: '#faae33' }}>6 Formatos</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 800 }}>🎨 PASO 3: VÍDEOS &amp; ANUNCIOS</span>
+              <span style={{ fontSize: '0.68rem', color: '#faae33' }}>Visual</span>
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', marginTop: '2px' }}>
-              Estudio de Anuncios HD (Leo)
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#fff' }}>
+              Vídeos y Fotos Atractivas
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Packshots, UGC 9:16 y Feed 1:1</div>
+            <div style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Guiones y creativos listos para redes sociales</div>
           </div>
-          <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: '#faae33', fontWeight: 700 }}>
-            Ver &amp; Descargar Creativos &rarr;
+          <div style={{ marginTop: '0.65rem', fontSize: '0.75rem', color: '#faae33', fontWeight: 800 }}>
+            Ver Vídeos y Fotos &rarr;
           </div>
         </div>
 
-        {/* Step 4: Tienda & Pipeline */}
+        {/* Step 4: Tienda Lista */}
         <div
           onClick={() => setActiveMainTab('deliverables')}
           style={{
-            backgroundColor: activeMainTab === 'deliverables' ? '#221610' : '#140f0c',
-            border: `1px solid ${activeMainTab === 'deliverables' ? '#38bdf8' : '#332418'}`,
-            borderRadius: '8px',
-            padding: '0.75rem',
+            backgroundColor: activeMainTab === 'deliverables' ? '#1f1a2a' : '#17141f',
+            border: `1px solid ${activeMainTab === 'deliverables' ? '#38bdf8' : '#2f273e'}`,
+            borderRadius: '10px',
+            padding: '0.85rem',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
@@ -485,17 +424,17 @@ export function AutonomousOfficeDashboard() {
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 800 }}>PASO 4: TIENDA &amp; CAMPAÑA</span>
-              <span style={{ fontSize: '0.65rem', color: '#38bdf8' }}>Shopify Liquid</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+              <span style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 800 }}>🛒 PASO 4: TU TIENDA ONLINE</span>
+              <span style={{ fontSize: '0.68rem', color: '#38bdf8' }}>Tienda</span>
             </div>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fff', marginTop: '2px' }}>
-              Checkout Móvil &amp; Unit Economics
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#fff' }}>
+              Página Web Lista para Cobrar
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Bundles 30/60/90d y CBO Tomás</div>
+            <div style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Botón de pago y pedidos directos a tu banco</div>
           </div>
-          <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: '#38bdf8', fontWeight: 700 }}>
-            Ver Tienda &amp; Entregables &rarr;
+          <div style={{ marginTop: '0.65rem', fontSize: '0.75rem', color: '#38bdf8', fontWeight: 800 }}>
+            Ver Mi Tienda y Archivos &rarr;
           </div>
         </div>
       </div>
@@ -507,7 +446,7 @@ export function AutonomousOfficeDashboard() {
         style={{
           display: 'flex',
           gap: '0.5rem',
-          borderBottom: '1px solid #332418',
+          borderBottom: '1px solid #2d243a',
           paddingBottom: '0.25rem',
           overflowX: 'auto',
         }}
@@ -515,14 +454,14 @@ export function AutonomousOfficeDashboard() {
         <button
           onClick={() => setActiveMainTab('command_center')}
           style={{
-            background: activeMainTab === 'command_center' ? '#241812' : 'transparent',
+            background: activeMainTab === 'command_center' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'command_center' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'command_center' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'command_center' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'command_center' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -530,16 +469,16 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Centro de Mando</span>
+          <span>🏢 Oficina 3D &amp; Control</span>
           {isRunning && (
             <span
               style={{
-                width: 7,
-                height: 7,
+                width: 8,
+                height: 8,
                 borderRadius: '50%',
                 backgroundColor: '#34d399',
                 display: 'inline-block',
-                boxShadow: '0 0 8px #34d399',
+                boxShadow: '0 0 10px #34d399',
               }}
             />
           )}
@@ -548,14 +487,14 @@ export function AutonomousOfficeDashboard() {
         <button
           onClick={() => setActiveMainTab('creatives')}
           style={{
-            background: activeMainTab === 'creatives' ? '#241812' : 'transparent',
+            background: activeMainTab === 'creatives' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'creatives' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'creatives' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'creatives' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'creatives' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -563,20 +502,20 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Creativos &amp; Prompts</span>
+          <span>🎨 Vídeos &amp; Anuncios</span>
         </button>
 
         <button
           onClick={() => setActiveMainTab('market_research')}
           style={{
-            background: activeMainTab === 'market_research' ? '#241812' : 'transparent',
+            background: activeMainTab === 'market_research' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'market_research' ? '#34d399' : 'transparent'}`,
             borderBottom: activeMainTab === 'market_research' ? '2px solid #34d399' : 'none',
-            color: activeMainTab === 'market_research' ? '#34d399' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'market_research' ? '#34d399' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -584,20 +523,20 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Inteligencia de Mercado</span>
+          <span>🔍 Precios &amp; Competidores</span>
         </button>
 
         <button
           onClick={() => setActiveMainTab('deliverables')}
           style={{
-            background: activeMainTab === 'deliverables' ? '#241812' : 'transparent',
+            background: activeMainTab === 'deliverables' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'deliverables' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'deliverables' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'deliverables' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'deliverables' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -605,20 +544,20 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Tienda &amp; Entregables ({Object.keys(activeOffice.deliverables || {}).length})</span>
+          <span>🛒 Mi Tienda &amp; Archivos</span>
         </button>
 
         <button
           onClick={() => setActiveMainTab('dora_audit')}
           style={{
-            background: activeMainTab === 'dora_audit' ? '#241812' : 'transparent',
+            background: activeMainTab === 'dora_audit' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'dora_audit' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'dora_audit' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'dora_audit' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'dora_audit' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -626,20 +565,20 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Auditoría Técnica</span>
+          <span>🛡️ Control de Calidad</span>
         </button>
 
         <button
           onClick={() => setActiveMainTab('connections')}
           style={{
-            background: activeMainTab === 'connections' ? '#241812' : 'transparent',
+            background: activeMainTab === 'connections' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'connections' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'connections' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'connections' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'connections' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -647,20 +586,20 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Conectores API</span>
+          <span>⚙️ Conexiones</span>
         </button>
 
         <button
           onClick={() => setActiveMainTab('offices')}
           style={{
-            background: activeMainTab === 'offices' ? '#241812' : 'transparent',
+            background: activeMainTab === 'offices' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'offices' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'offices' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'offices' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'offices' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -668,20 +607,20 @@ export function AutonomousOfficeDashboard() {
             whiteSpace: 'nowrap',
           }}
         >
-          <span>Espacios de Trabajo ({Object.keys(store.offices).length})</span>
+          <span>📁 Mis Proyectos ({Object.keys(store.offices).length})</span>
         </button>
 
         <button
           onClick={() => setActiveMainTab('history')}
           style={{
-            background: activeMainTab === 'history' ? '#241812' : 'transparent',
+            background: activeMainTab === 'history' ? '#1c1726' : 'transparent',
             border: `1px solid ${activeMainTab === 'history' ? '#faae33' : 'transparent'}`,
             borderBottom: activeMainTab === 'history' ? '2px solid #faae33' : 'none',
-            color: activeMainTab === 'history' ? '#faae33' : '#9ca3af',
-            borderRadius: '6px 6px 0 0',
+            color: activeMainTab === 'history' ? '#faae33' : '#a1a1aa',
+            borderRadius: '8px 8px 0 0',
             padding: '0.65rem 1.15rem',
-            fontSize: '0.82rem',
-            fontWeight: 700,
+            fontSize: '0.84rem',
+            fontWeight: 800,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -694,10 +633,18 @@ export function AutonomousOfficeDashboard() {
       </div>
 
       {/* ============================================================ */}
-      {/* TAB CONTENT 1: EXECUTIVE COMMAND CENTER                      */}
+      {/* TAB CONTENT 1: OFICINA 3D EN VIVO & CENTRO DE MANDO          */}
       {/* ============================================================ */}
       {activeMainTab === 'command_center' && (
-        <ExecutiveCommandCenter />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%' }}>
+          {/* OFICINA VIRTUAL 3D CON AGENTES LOW-POLY */}
+          <div style={{ position: 'relative', width: '100%' }}>
+            <Office3D />
+          </div>
+
+          {/* PANEL EJECUTIVO Y ESTADO DE AGENTES */}
+          <ExecutiveCommandCenter onOpenResearch={() => setActiveMainTab('market_research')} />
+        </div>
       )}
 
 

@@ -108,13 +108,13 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
-      {/* ── TOP WORKSPACE CONTROLS BAR ────────────────────────────────────── */}
+      {/* ── WORKSPACE ACTION CONTROLS ────────────────────────────────────── */}
       <div
         style={{
-          background: '#121214',
-          border: '1px solid #1f1f23',
+          background: '#121019',
+          border: '1px solid #282136',
           borderRadius: '10px',
-          padding: '0.9rem 1.25rem',
+          padding: '0.75rem 1.25rem',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -122,40 +122,26 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
           gap: '0.75rem',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: '#71717a', fontWeight: 600 }}>
-            Espacio de trabajo activo:
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.8rem', color: '#a1a1aa', fontWeight: 600 }}>
+            Proyecto activo:
           </span>
-          <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#ffffff' }}>
+          <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff' }}>
             {activeOffice?.name || 'Mi Espacio'}
           </span>
-          {hasProduct ? (
+          {hasProduct && (
             <span
               style={{
                 fontSize: '0.75rem',
                 color: '#34d399',
-                background: 'rgba(52, 211, 153, 0.1)',
-                border: '1px solid rgba(52, 211, 153, 0.25)',
+                background: 'rgba(52, 211, 153, 0.12)',
+                border: '1px solid rgba(52, 211, 153, 0.3)',
                 padding: '2px 8px',
                 borderRadius: '6px',
                 fontWeight: 700,
               }}
             >
-              📦 {productName} ({niche || 'Nicho General'})
-            </span>
-          ) : (
-            <span
-              style={{
-                fontSize: '0.75rem',
-                color: '#faae33',
-                background: 'rgba(250, 174, 51, 0.1)',
-                border: '1px solid rgba(250, 174, 51, 0.25)',
-                padding: '2px 8px',
-                borderRadius: '6px',
-                fontWeight: 700,
-              }}
-            >
-              ⚪ Espacio Limpio (Sin producto asignado)
+              📦 {productName}
             </span>
           )}
         </div>
@@ -166,13 +152,13 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
             <button
               onClick={handleClearCurrentProduct}
               style={{
-                background: '#18181b',
-                border: '1px solid #27272a',
+                background: '#181522',
+                border: '1px solid #332845',
                 color: '#f87171',
-                padding: '0.45rem 0.85rem',
+                padding: '0.4rem 0.8rem',
                 borderRadius: '6px',
-                fontSize: '0.78rem',
-                fontWeight: 600,
+                fontSize: '0.76rem',
+                fontWeight: 700,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -180,36 +166,27 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
               }}
               title="Borra el producto actual y deja el espacio limpio"
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-              <span>Eliminar Producto</span>
+              <span>🗑️ Quitar Producto</span>
             </button>
           )}
 
           <button
             onClick={handleDeleteCurrentWorkspace}
             style={{
-              background: '#18181b',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
+              background: '#181522',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
               color: '#ef4444',
-              padding: '0.45rem 0.85rem',
+              padding: '0.4rem 0.8rem',
               borderRadius: '6px',
-              fontSize: '0.78rem',
-              fontWeight: 600,
+              fontSize: '0.76rem',
+              fontWeight: 700,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '0.35rem',
             }}
-            title="Elimina este espacio de trabajo por completo"
+            title="Elimina este espacio de trabajo"
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="15" y1="9" x2="9" y2="15"></line>
-              <line x1="9" y1="9" x2="15" y2="15"></line>
-            </svg>
             <span>Eliminar Espacio</span>
           </button>
         </div>
