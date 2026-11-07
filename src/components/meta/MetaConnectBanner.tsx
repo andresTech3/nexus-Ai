@@ -476,14 +476,6 @@ export function MetaConnectBanner({ mode, onConnected }: MetaConnectBannerProps)
         >
           Ver documentación Meta →
         </a>
-        <a
-          href="/api/v1/meta/test-credentials"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ fontSize: '0.78rem', color: '#38bdf8', textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-        >
-          🔍 Probar estado de credenciales →
-        </a>
       </div>
     </div>
   )

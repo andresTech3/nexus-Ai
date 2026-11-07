@@ -7,6 +7,7 @@ import { calculateUnitEconomics } from '@/lib/office/finance/calculator'
 import { MetaConnectBanner } from '@/components/meta/MetaConnectBanner'
 import { useMetaConnection } from '@/hooks/useMetaConnection'
 import { MetaAdLibrarySpy } from '@/components/meta/MetaAdLibrarySpy'
+import { useCurrency } from '@/hooks/useCurrency'
 
 interface MetaCampaign {
   id: string
@@ -24,6 +25,7 @@ interface MetaCampaign {
 
 export default function FacebookAdsPage() {
   const store = useOfficeStore()
+  const { formatMoney } = useCurrency()
   const activeOffice = store.offices[store.activeOfficeId]
   const hasProduct = Boolean(activeOffice?.product?.name?.trim())
   const productName = activeOffice?.product?.name?.trim() || ''
@@ -171,7 +173,7 @@ export default function FacebookAdsPage() {
             </span>
           </div>
           <p style={{ margin: 0, fontSize: '0.85rem', color: '#a1a1aa' }}>
-            Estructuras de campaña de alta conversión, reglas de stop-loss vinculadas al CPA de Eva ({unitEco.cpa_maximo_rentable.toFixed(2)} €) y copys de respuesta directa.
+            Estructuras de campaña de alta conversión, reglas de stop-loss vinculadas al CPA de Eva ({formatMoney(unitEco.cpa_maximo_rentable)}) y copys de respuesta directa.
           </p>
         </div>
 
@@ -270,7 +272,7 @@ export default function FacebookAdsPage() {
             CPA Techo Recomendado
           </div>
           <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#34d399' }}>
-            {unitEco.cpa_maximo_rentable.toFixed(2)} €
+            {formatMoney(unitEco.cpa_maximo_rentable)}
           </div>
           <div style={{ fontSize: '0.75rem', color: '#a1a1aa', marginTop: '0.25rem' }}>
             Límite de coste por compra para no perder dinero
@@ -308,10 +310,10 @@ export default function FacebookAdsPage() {
             Presupuesto Testing (ABO)
           </div>
           <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#faae33' }}>
-            20 € / día
+            {formatMoney(20)} / día
           </div>
           <div style={{ fontSize: '0.75rem', color: '#a1a1aa', marginTop: '0.25rem' }}>
-            3-4 adsets a 5€ cada uno durante 72 horas
+            3-4 adsets a {formatMoney(5)} cada uno durante 72 horas
           </div>
         </div>
 
@@ -327,7 +329,7 @@ export default function FacebookAdsPage() {
             Regla de Apagado (Stop-Loss)
           </div>
           <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#f87171' }}>
-            15.00 € sin ATC
+            {formatMoney(15)} sin ATC
           </div>
           <div style={{ fontSize: '0.75rem', color: '#a1a1aa', marginTop: '0.25rem' }}>
             Apagar anuncio si no añade al carrito
@@ -448,7 +450,7 @@ export default function FacebookAdsPage() {
                         color: camp.budgetType === 'ABO' ? '#38bdf8' : '#c084fc',
                       }}
                     >
-                      {camp.budgetType} • {camp.dailyBudget} € / día
+                      {camp.budgetType} • {formatMoney(camp.dailyBudget)} / día
                     </span>
                     <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 600, color: '#ffffff' }}>
                       {camp.name}
@@ -700,7 +702,7 @@ export default function FacebookAdsPage() {
                     Regla 1: Stop-Loss por Falta de Intención de Compra
                   </div>
                   <div style={{ fontSize: '0.775rem', color: '#71717a', marginTop: '0.2rem' }}>
-                    Si un conjunto de anuncios gasta más de <strong style={{ color: '#f87171' }}>15.00 €</strong> y tiene <strong style={{ color: '#f87171' }}>0 Añadir al Carrito (ATC)</strong>.
+                    Si un conjunto de anuncios gasta más de <strong style={{ color: '#f87171' }}>{formatMoney(15)}</strong> y tiene <strong style={{ color: '#f87171' }}>0 Añadir al Carrito (ATC)</strong>.
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -726,7 +728,7 @@ export default function FacebookAdsPage() {
                     Regla 2: Límite por CPA Techo Sobrepasado
                   </div>
                   <div style={{ fontSize: '0.775rem', color: '#71717a', marginTop: '0.2rem' }}>
-                    Si el coste por compra supera <strong style={{ color: '#f87171' }}>{unitEco.cpa_maximo_rentable.toFixed(2)} €</strong> en una ventana de 3 días con al menos 2 ventas.
+                    Si el coste por compra supera <strong style={{ color: '#f87171' }}>{formatMoney(unitEco.cpa_maximo_rentable)}</strong> en una ventana de 3 días con al menos 2 ventas.
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

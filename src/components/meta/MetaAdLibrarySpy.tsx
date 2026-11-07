@@ -468,7 +468,7 @@ export function MetaAdLibrarySpy({ initialQuery = 'lampara luna', initialCountry
                   <div>
                     <div style={{ fontSize: '0.68rem', color: '#71717a' }}>Inversión Estimada</div>
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#34d399' }}>
-                      {metrics.estimatedSpend}
+                      {formatMoney(Math.round(ad.daysActive * 45 + 150))} - {formatMoney(Math.round(ad.daysActive * 75 + 400))}
                     </div>
                   </div>
 
