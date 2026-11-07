@@ -6,6 +6,7 @@ import { useOfficeStore } from '@/lib/office/store'
 import { calculateUnitEconomics } from '@/lib/office/finance/calculator'
 import { MetaConnectBanner } from '@/components/meta/MetaConnectBanner'
 import { useMetaConnection } from '@/hooks/useMetaConnection'
+import { MetaAdLibrarySpy } from '@/components/meta/MetaAdLibrarySpy'
 
 interface MetaCampaign {
   id: string
@@ -47,7 +48,7 @@ export default function FacebookAdsPage() {
   // Legacy manual pixel state kept for backward compat (used if OAuth not connected)
   const [adAccountId, setAdAccountId] = useState('')
   const [pixelId, setPixelId] = useState('')
-  const [activeTab, setActiveTab] = useState<'campaigns' | 'generator' | 'rules' | 'mcp'>('campaigns')
+  const [activeTab, setActiveTab] = useState<'campaigns' | 'generator' | 'rules' | 'mcp' | 'ad_library'>('campaigns')
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   // Campaign Generator Form
@@ -389,6 +390,26 @@ export default function FacebookAdsPage() {
           }}
         >
           Reglas Automáticas de Seguridad
+        </button>
+
+        <button
+          onClick={() => setActiveTab('ad_library')}
+          style={{
+            padding: '0.65rem 1rem',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            background: 'none',
+            border: 'none',
+            borderBottom: activeTab === 'ad_library' ? '2px solid #1877f2' : '2px solid transparent',
+            color: activeTab === 'ad_library' ? '#ffffff' : '#71717a',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+          }}
+        >
+          <span>🕵️</span>
+          <span>Espía de Biblioteca de Anuncios</span>
         </button>
       </div>
 
@@ -741,6 +762,11 @@ export default function FacebookAdsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Tab: Meta Ad Library Spy */}
+      {activeTab === 'ad_library' && (
+        <MetaAdLibrarySpy initialQuery={productName || 'lampara luna'} />
       )}
 
     </div>

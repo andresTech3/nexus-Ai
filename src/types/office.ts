@@ -162,7 +162,7 @@ export interface Office {
   checkpointHistory: CheckpointRecord[]
   settings: {
     market: 'ES' | 'US' | 'MX' | 'CO'
-    currency: 'EUR' | 'USD'
+    currency: 'EUR' | 'USD' | 'COP' | 'MXN'
     speed: number
     priority: 'NORMAL' | 'HIGH' | 'LOW'
     maxQuotaPct?: number

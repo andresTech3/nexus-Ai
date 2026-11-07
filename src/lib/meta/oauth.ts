@@ -14,20 +14,15 @@ export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000
 /** Redirect URI registered in the Meta App Dashboard */
 export const META_CALLBACK_URI = `${APP_URL}/api/v1/meta/callback`
 
-/** Scopes needed for Facebook Ads Management + Instagram profile reading */
+/** Scopes needed strictly for Facebook Ads Management */
 export const META_ADS_SCOPES = [
   'ads_read',
   'ads_management',
-  'business_management',
   'pages_read_engagement',
-  'instagram_basic',
-  'instagram_content_publish',
 ].join(',')
 
-/** Scopes for Instagram Basic Display (personal account read) */
+/** Scopes for Instagram Connection via Linked Facebook Page */
 export const INSTAGRAM_SCOPES = [
-  'instagram_basic',
-  'instagram_content_publish',
   'pages_show_list',
   'pages_read_engagement',
 ].join(',')

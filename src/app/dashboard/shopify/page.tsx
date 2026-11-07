@@ -4,17 +4,57 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useOfficeStore } from '@/lib/office/store'
 import { calculateUnitEconomics } from '@/lib/office/finance/calculator'
+import { useCurrency } from '@/hooks/useCurrency'
 
 export default function ShopifyStudioPage() {
   const store = useOfficeStore()
+  const { formatMoney, currencyConfig } = useCurrency()
   const activeOffice = store.offices[store.activeOfficeId]
   const hasProduct = Boolean(activeOffice?.product?.name?.trim())
   const productName = activeOffice?.product?.name?.trim() || ''
   const brandName = activeOffice?.brand?.name?.trim() || 'Mi Marca'
 
-  const [activeTab, setActiveTab] = useState<'liquid' | 'bundles' | 'analytics' | 'comparison'>('liquid')
+  const [activeTab, setActiveTab] = useState<'liquid' | 'bundles' | 'analytics' | 'comparison' | 'csv_export'>('liquid')
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
+
+  const handleDownloadShopifyCSV = () => {
+    if (!productName) return
+    const handle = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    const vendor = brandName || 'Mi Marca'
+    const basePvp = unitEco.pvp_con_iva || 34.99
+    const price1 = basePvp.toFixed(2)
+    const price2 = (basePvp * 2 * 0.8).toFixed(2)
+    const price3 = (basePvp * 3 * 0.7).toFixed(2)
+    const comp1 = (basePvp * 1.3).toFixed(2)
+    const comp2 = (basePvp * 2).toFixed(2)
+    const comp3 = (basePvp * 3).toFixed(2)
+
+    const headers = [
+      'Handle', 'Title', 'Body (HTML)', 'Vendor', 'Standard Product Type', 'Tags',
+      'Published', 'Option1 Name', 'Option1 Value', 'Variant SKU', 'Variant Price',
+      'Variant Compare At Price', 'Variant Requires Shipping', 'Variant Taxable', 'Status'
+    ]
+
+    const bodyHtml = `<p><strong>${productName}</strong> de ${vendor}. Diseñado para ofrecer máxima calidad y resultados visibles en los primeros días de uso.</p><h3>¿Por qué elegir ${productName}?</h3><ul><li>Demostración de beneficio en menos de 3 segundos</li><li>Envío seguro con número de seguimiento</li><li>Garantía de satisfacción de 30 días</li></ul>`
+
+    const rows = [
+      [handle, `"${productName}"`, `"${bodyHtml}"`, `"${vendor}"`, '"E-commerce"', '"dropshipping, ganador, trending"', 'TRUE', 'Pack', '1x Unidad', `${handle}-1`, price1, comp1, 'TRUE', 'TRUE', 'active'],
+      [handle, '', '', '', '', '', '', 'Pack', '2x Unidades (Ahorra 20% - Más Vendido)', `${handle}-2`, price2, comp2, 'TRUE', 'TRUE', 'active'],
+      [handle, '', '', '', '', '', '', 'Pack', '3x Unidades (Pack Familiar - Máximo Ahorro)', `${handle}-3`, price3, comp3, 'TRUE', 'TRUE', 'active'],
+    ]
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.setAttribute('href', url)
+    link.setAttribute('download', `shopify-product-${handle}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    showToast('Archivo CSV de Shopify descargado con éxito.')
+  }
 
   const showToast = (msg: string) => {
     setToastMessage(msg)
@@ -296,6 +336,26 @@ export default function ShopifyStudioPage() {
         >
           Tabla Comparativa & Claims
         </button>
+
+        <button
+          onClick={() => setActiveTab('csv_export')}
+          style={{
+            padding: '0.65rem 1rem',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            background: 'none',
+            border: 'none',
+            borderBottom: activeTab === 'csv_export' ? '2px solid #96bf42' : '2px solid transparent',
+            color: activeTab === 'csv_export' ? '#ffffff' : '#71717a',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+          }}
+        >
+          <span>📥</span>
+          <span>Exportar Producto a Shopify (CSV 1 Clic)</span>
+        </button>
       </div>
 
       {/* Tab: Liquid Snippet */}
@@ -374,12 +434,12 @@ export default function ShopifyStudioPage() {
             </div>
             <h3 style={{ fontSize: '1.25rem', color: '#ffffff', margin: '0 0 0.5rem 0' }}>1x Unidad</h3>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem' }}>
-              34,99 €
+              {formatMoney(34.99)}
             </div>
             <ul style={{ paddingLeft: '1.2rem', color: '#a1a1aa', fontSize: '0.825rem', lineHeight: 1.6, margin: 0 }}>
-              <li>Coste de Producto: 8,50 €</li>
+              <li>Coste de Producto: {formatMoney(8.50)}</li>
               <li>Margen Neto: 55,2%</li>
-              <li>CPA Techo Rentable: 18,20 €</li>
+              <li>CPA Techo Rentable: {formatMoney(18.20)}</li>
               <li>Perfil de comprador: Probar sin compromiso</li>
             </ul>
           </div>
@@ -413,12 +473,12 @@ export default function ShopifyStudioPage() {
             </div>
             <h3 style={{ fontSize: '1.25rem', color: '#ffffff', margin: '0 0 0.5rem 0' }}>2x Unidades</h3>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#34d399', marginBottom: '1rem' }}>
-              55,99 € <span style={{ fontSize: '0.85rem', color: '#71717a', textDecoration: 'line-through' }}>69,98 €</span>
+              {formatMoney(55.99)} <span style={{ fontSize: '0.85rem', color: '#71717a', textDecoration: 'line-through' }}>{formatMoney(69.98)}</span>
             </div>
             <ul style={{ paddingLeft: '1.2rem', color: '#a1a1aa', fontSize: '0.825rem', lineHeight: 1.6, margin: 0 }}>
               <li>Ticket Medio (+60% sobre el básico)</li>
               <li>Margen Neto: 58,4%</li>
-              <li>CPA Techo Rentable: 27,80 € (mayor holgura en Meta Ads)</li>
+              <li>CPA Techo Rentable: {formatMoney(27.80)} (mayor holgura en Meta Ads)</li>
               <li>Ángulo de venta: Uno para casa, otro para la oficina</li>
             </ul>
           </div>
@@ -436,7 +496,7 @@ export default function ShopifyStudioPage() {
             </div>
             <h3 style={{ fontSize: '1.25rem', color: '#ffffff', margin: '0 0 0.5rem 0' }}>3x Unidades (Familiar)</h3>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem' }}>
-              69,99 €
+              {formatMoney(69.99)}
             </div>
             <ul style={{ paddingLeft: '1.2rem', color: '#a1a1aa', fontSize: '0.825rem', lineHeight: 1.6, margin: 0 }}>
               <li>Envío Prioritario Express Incluido</li>
@@ -536,7 +596,7 @@ export default function ShopifyStudioPage() {
                 <thead>
                   <tr style={{ borderBottom: '1px solid #27272a', textAlign: 'left', color: '#71717a' }}>
                     <th style={{ padding: '0.75rem 0.5rem' }}>Concepto</th>
-                    <th style={{ padding: '0.75rem 0.5rem' }}>Importe (€)</th>
+                    <th style={{ padding: '0.75rem 0.5rem' }}>Importe ({currencyConfig.symbol})</th>
                     <th style={{ padding: '0.75rem 0.5rem' }}>% Sobre PVP</th>
                     <th style={{ padding: '0.75rem 0.5rem' }}>Observaciones</th>
                   </tr>
@@ -544,31 +604,31 @@ export default function ShopifyStudioPage() {
                 <tbody style={{ color: '#d4d4d8' }}>
                   <tr style={{ borderBottom: '1px solid #18181b' }}>
                     <td style={{ padding: '0.65rem 0.5rem', fontWeight: 600 }}>PVP Venta al Público (con IVA)</td>
-                    <td style={{ padding: '0.65rem 0.5rem', fontWeight: 700, color: '#ffffff' }}>34,99 €</td>
+                    <td style={{ padding: '0.65rem 0.5rem', fontWeight: 700, color: '#ffffff' }}>{formatMoney(34.99)}</td>
                     <td style={{ padding: '0.65rem 0.5rem' }}>100%</td>
                     <td style={{ padding: '0.65rem 0.5rem', color: '#71717a' }}>Precio en ficha de producto</td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid #18181b' }}>
                     <td style={{ padding: '0.65rem 0.5rem' }}>Coste de Producto (Fábrica / Proveedor)</td>
-                    <td style={{ padding: '0.65rem 0.5rem', color: '#f87171' }}>- 8,50 €</td>
+                    <td style={{ padding: '0.65rem 0.5rem', color: '#f87171' }}>- {formatMoney(8.50)}</td>
                     <td style={{ padding: '0.65rem 0.5rem' }}>24,3%</td>
                     <td style={{ padding: '0.65rem 0.5rem', color: '#71717a' }}>Multiplicador 4.1x (&ge; 3.5x reglamentario)</td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid #18181b' }}>
                     <td style={{ padding: '0.65rem 0.5rem' }}>Envío & Logística D2C</td>
-                    <td style={{ padding: '0.65rem 0.5rem', color: '#f87171' }}>- 3,50 €</td>
+                    <td style={{ padding: '0.65rem 0.5rem', color: '#f87171' }}>- {formatMoney(3.50)}</td>
                     <td style={{ padding: '0.65rem 0.5rem' }}>10,0%</td>
                     <td style={{ padding: '0.65rem 0.5rem', color: '#71717a' }}>Línea directa YunExpress / CJPacket</td>
                   </tr>
                   <tr style={{ borderBottom: '1px solid #18181b' }}>
                     <td style={{ padding: '0.65rem 0.5rem' }}>Comisiones Pasarela + Devoluciones (5%)</td>
-                    <td style={{ padding: '0.65rem 0.5rem', color: '#f87171' }}>- 3,05 €</td>
+                    <td style={{ padding: '0.65rem 0.5rem', color: '#f87171' }}>- {formatMoney(3.05)}</td>
                     <td style={{ padding: '0.65rem 0.5rem' }}>8,7%</td>
                     <td style={{ padding: '0.65rem 0.5rem', color: '#71717a' }}>Stripe/Shopify Payments + Fondo de reserva</td>
                   </tr>
                   <tr style={{ backgroundColor: 'rgba(52, 211, 153, 0.08)' }}>
                     <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: '#34d399' }}>Margen Bruto para Publicidad</td>
-                    <td style={{ padding: '0.75rem 0.5rem', fontWeight: 800, color: '#34d399' }}>18,20 €</td>
+                    <td style={{ padding: '0.75rem 0.5rem', fontWeight: 800, color: '#34d399' }}>{formatMoney(18.20)}</td>
                     <td style={{ padding: '0.75rem 0.5rem', fontWeight: 700, color: '#34d399' }}>52,0%</td>
                     <td style={{ padding: '0.75rem 0.5rem', color: '#34d399' }}>CPA máximo tolerable para estar en punto de equilibrio</td>
                   </tr>
@@ -628,6 +688,124 @@ export default function ShopifyStudioPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Tab: CSV Export */}
+      {activeTab === 'csv_export' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div
+            style={{
+              backgroundColor: '#121214',
+              border: '1px solid #1f1f23',
+              borderRadius: '12px',
+              padding: '1.75rem',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#96bf42',
+                      background: 'rgba(150, 191, 66, 0.15)',
+                      border: '1px solid rgba(150, 191, 66, 0.3)',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      fontWeight: 700,
+                    }}
+                  >
+                    SHOPIFY NATIVE IMPORT
+                  </span>
+                  <span style={{ fontSize: '0.72rem', color: '#34d399', fontWeight: 600 }}>
+                    ● 100% Compatible con Shopify Admin
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                  Exportador Directo de Producto para Shopify
+                </h3>
+                <p style={{ fontSize: '0.825rem', color: '#a1a1aa', margin: '0.35rem 0 0 0', maxWidth: 640 }}>
+                  Descarga un archivo CSV oficial de Shopify con la ficha completa, descripción persuasiva y los 3 paquetes de variantes (1x, 2x y 3x) configurados con sus precios de venta y precios tachados.
+                </p>
+              </div>
+
+              <button
+                onClick={handleDownloadShopifyCSV}
+                disabled={!hasProduct}
+                style={{
+                  background: hasProduct ? 'linear-gradient(135deg, #96bf42, #72962e)' : '#27272a',
+                  color: hasProduct ? '#ffffff' : '#71717a',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.75rem 1.4rem',
+                  fontSize: '0.85rem',
+                  fontWeight: 800,
+                  cursor: hasProduct ? 'pointer' : 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  boxShadow: hasProduct ? '0 4px 14px rgba(150, 191, 66, 0.3)' : 'none',
+                }}
+              >
+                <span>📥</span>
+                <span>Descargar CSV para Shopify</span>
+              </button>
+            </div>
+
+            {/* How to import guide */}
+            <div
+              style={{
+                background: '#09090b',
+                border: '1px solid #1f1f23',
+                borderRadius: '8px',
+                padding: '1.25rem',
+                marginBottom: '1.25rem',
+              }}
+            >
+              <div style={{ fontSize: '0.78rem', color: '#96bf42', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                Cómo importar este producto a tu tienda en 3 pasos:
+              </div>
+              <ol style={{ margin: 0, paddingLeft: '1.25rem', color: '#d4d4d8', fontSize: '0.825rem', lineHeight: 1.8 }}>
+                <li>Haz clic en el botón superior <strong>&quot;Descargar CSV para Shopify&quot;</strong>.</li>
+                <li>Entra a tu panel de control de <strong>Shopify Admin &rarr; Productos</strong> y pulsa el botón <strong>&quot;Importar&quot;</strong> (arriba a la derecha).</li>
+                <li>Sube el archivo CSV descargado y pulsa <strong>&quot;Cargar y continuar&quot;</strong>. ¡Tu producto con las 3 variantes y precios con descuento estará publicado al instante!</li>
+              </ol>
+            </div>
+
+            {/* Product Snapshot Preview */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '0.75rem',
+              }}
+            >
+              <div style={{ background: '#18181b', padding: '0.75rem', borderRadius: '6px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#71717a' }}>Variante 1 (Prueba)</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', marginTop: 2 }}>
+                  1x Unidad: {formatMoney(unitEco.pvp_con_iva || 34.99)}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#71717a' }}>Comparar en: {formatMoney((unitEco.pvp_con_iva || 34.99) * 1.3)}</div>
+              </div>
+
+              <div style={{ background: '#18181b', padding: '0.75rem', borderRadius: '6px', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
+                <div style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 700 }}>Variante 2 (Más Vendido • -20%)</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#34d399', marginTop: 2 }}>
+                  2x Unidades: {formatMoney((unitEco.pvp_con_iva || 34.99) * 2 * 0.8)}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#71717a' }}>Comparar en: {formatMoney((unitEco.pvp_con_iva || 34.99) * 2)}</div>
+              </div>
+
+              <div style={{ background: '#18181b', padding: '0.75rem', borderRadius: '6px' }}>
+                <div style={{ fontSize: '0.7rem', color: '#fbbf24', fontWeight: 700 }}>Variante 3 (Familiar • -30%)</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fbbf24', marginTop: 2 }}>
+                  3x Unidades: {formatMoney((unitEco.pvp_con_iva || 34.99) * 3 * 0.7)}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#71717a' }}>Comparar en: {formatMoney((unitEco.pvp_con_iva || 34.99) * 3)}</div>
+              </div>
+            </div>
           </div>
         </div>
       )}

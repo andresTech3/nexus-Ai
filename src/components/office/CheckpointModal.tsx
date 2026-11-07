@@ -199,7 +199,7 @@ export function CheckpointModal() {
                   <div style={{ background: '#18120e', border: '1px solid #332418', borderRadius: '6px', padding: '0.75rem' }}>
                     <div style={{ fontSize: '0.75rem', color: '#a78bfa', fontWeight: 700 }}>Leo (Arte &amp; Fotografía)</div>
                     <div style={{ fontSize: '0.82rem', color: '#fff', fontWeight: 600 }}>06_prompts_fotografia_leo.json</div>
-                    <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>Renders Pollinations 1:1 y 9:16</div>
+                    <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>Prompts Calibrados Midjourney / FLUX (1:1 y 9:16)</div>
                   </div>
                   <div style={{ background: '#18120e', border: '1px solid #332418', borderRadius: '6px', padding: '0.75rem' }}>
                     <div style={{ fontSize: '0.75rem', color: '#e879f9', fontWeight: 700 }}>Marco (UGC &amp; Vídeo)</div>

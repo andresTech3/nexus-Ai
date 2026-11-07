@@ -51,6 +51,7 @@ interface OfficeStoreState {
   resolveCheckpoint: (checkpointId: string, action: 'APPROVED' | 'APPROVED_WITH_CHANGES' | 'REJECTED', feedback?: string) => void
   saveDeliverable: (officeId: string, key: string, data: any) => void
   setSpeed: (speed: 0.5 | 1 | 2 | 5) => void
+  setCurrency: (currency: 'EUR' | 'USD' | 'COP' | 'MXN') => void
   togglePlayPause: () => void
   setCameraZone: (zone: 'all' | 'dora' | 'producto' | 'marketing' | 'ecommerce' | 'operaciones') => void
   toggleAutoFocus: () => void
@@ -690,6 +691,25 @@ export const useOfficeStore = create<OfficeStoreState>()(
       },
 
       setSpeed: (speed) => set({ speed }),
+
+      setCurrency: (currency) => {
+        const activeId = get().activeOfficeId
+        const office = get().offices[activeId]
+        if (!office) return
+        set((state) => ({
+          offices: {
+            ...state.offices,
+            [activeId]: {
+              ...office,
+              settings: {
+                ...office.settings,
+                currency,
+              },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        }))
+      },
 
       togglePlayPause: () => set((state) => ({ isRunning: !state.isRunning })),
 

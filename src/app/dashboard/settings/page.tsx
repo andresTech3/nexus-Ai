@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ConnectionsManager } from '@/components/office/ConnectionsManager'
+import { useCurrency } from '@/hooks/useCurrency'
 
 export default function SettingsPage() {
+  const { currency, setCurrency, availableCurrencies } = useCurrency()
   const [activeTab, setActiveTab] = useState<'connectors' | 'organization'>('connectors')
   const [orgName, setOrgName] = useState('')
   const [slug, setSlug] = useState('')
@@ -254,24 +256,27 @@ export default function SettingsPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', marginBottom: '0.4rem' }}>
-                    Moneda Predeterminada
+                    Moneda Predeterminada (Se actualiza en todo el sistema)
                   </label>
                   <select
-                    defaultValue="EUR"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value as any)}
                     style={{
                       width: '100%',
                       padding: '0.65rem 0.85rem',
                       background: '#12121c',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      border: '1px solid #3b2d4a',
                       borderRadius: '0.5rem',
                       color: 'white',
                       outline: 'none',
+                      cursor: 'pointer',
                     }}
                   >
-                    <option value="EUR">EUR (€) — Euro</option>
-                    <option value="USD">USD ($) — Dólar Estadounidense</option>
-                    <option value="COP">COP ($) — Peso Colombiano</option>
-                    <option value="MXN">MXN ($) — Peso Mexicano</option>
+                    {availableCurrencies.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.flag} {c.code} ({c.symbol}) — {c.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

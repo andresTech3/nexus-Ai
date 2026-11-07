@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useMetaConnection } from '@/hooks/useMetaConnection'
+import { MIGRATION_SQL } from '@/lib/meta/migration'
 
 interface MetaConnectBannerProps {
   mode: 'ads' | 'instagram'
@@ -43,6 +44,14 @@ export function MetaConnectBanner({ mode, onConnected }: MetaConnectBannerProps)
   const cfg = CONFIG[mode]
 
   const [urlNotice, setUrlNotice] = React.useState<{ type: 'error' | 'success'; message: string } | null>(null)
+  const [copiedSql, setCopiedSql] = React.useState(false)
+  const [showSqlDetails, setShowSqlDetails] = React.useState(false)
+
+  const handleCopySql = () => {
+    navigator.clipboard.writeText(MIGRATION_SQL.trim())
+    setCopiedSql(true)
+    setTimeout(() => setCopiedSql(false), 2500)
+  }
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return
@@ -278,6 +287,101 @@ export function MetaConnectBanner({ mode, onConnected }: MetaConnectBannerProps)
               >
                 ✕
               </button>
+            </div>
+          )}
+
+          {/* Special Helper for Missing Supabase Table */}
+          {urlNotice?.message.toLowerCase().includes('social_connections') && (
+            <div
+              style={{
+                background: 'rgba(56, 189, 248, 0.08)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: '10px',
+                padding: '1rem',
+                marginBottom: '1rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '1rem' }}>🛠️</span>
+                <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#38bdf8' }}>
+                  Solución rápida: Crear tabla en Supabase (Solo 10 segundos)
+                </span>
+              </div>
+              <p style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.5, margin: '0 0 0.75rem 0' }}>
+                Tu proyecto de Supabase necesita la tabla <code>social_connections</code> para guardar de forma cifrada el token de conexión. Sigue estos 2 sencillos pasos:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', color: '#94a3b8' }}>
+                  <span style={{ background: '#0284c7', color: '#fff', borderRadius: '50%', width: 18, height: 18, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700 }}>1</span>
+                  <span>Copia el script SQL con un clic:</span>
+                  <button
+                    onClick={handleCopySql}
+                    style={{
+                      background: copiedSql ? '#16a34a' : '#2563eb',
+                      border: 'none',
+                      borderRadius: '6px',
+                      color: '#fff',
+                      padding: '3px 8px',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {copiedSql ? '✓ Copiado' : 'Copiar SQL'}
+                  </button>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', color: '#94a3b8' }}>
+                  <span style={{ background: '#0284c7', color: '#fff', borderRadius: '50%', width: 18, height: 18, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700 }}>2</span>
+                  <span>Abre el SQL Editor de tu Supabase, pégalo y haz clic en <strong>RUN</strong>:</span>
+                  <a
+                    href="https://supabase.com/dashboard/project/sleisgocuwawjguoxkxy/sql/new"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      color: '#38bdf8',
+                      textDecoration: 'underline',
+                      fontWeight: 600,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '2px',
+                    }}
+                  >
+                    Abrir SQL Editor en Supabase ↗
+                  </a>
+                </div>
+              </div>
+              <div style={{ marginTop: '0.5rem' }}>
+                <button
+                  onClick={() => setShowSqlDetails(!showSqlDetails)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#64748b',
+                    fontSize: '0.72rem',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    padding: 0,
+                  }}
+                >
+                  {showSqlDetails ? 'Ocultar código SQL' : 'Ver código SQL a ejecutar'}
+                </button>
+                {showSqlDetails && (
+                  <pre
+                    style={{
+                      marginTop: '0.5rem',
+                      background: '#090d16',
+                      padding: '0.6rem',
+                      borderRadius: '6px',
+                      fontSize: '0.7rem',
+                      color: '#94a3b8',
+                      overflowX: 'auto',
+                      maxHeight: '150px',
+                    }}
+                  >
+                    {MIGRATION_SQL.trim()}
+                  </pre>
+                )}
+              </div>
             </div>
           )}
 

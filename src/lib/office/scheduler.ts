@@ -406,7 +406,7 @@ class OfficeScheduler {
       this.executeAgentStep(
         officeId,
         'leo',
-        'Generando dirección de arte y renders fotográficos con IA (Pollinations)',
+        'Diseñando dirección de arte y prompts fotográficos profesionales (Midjourney / FLUX)',
         2600,
         `Galería de producto y prompts fotográficos generados para "${office.product.name}".`,
         '06_prompts_fotografia_leo.json'

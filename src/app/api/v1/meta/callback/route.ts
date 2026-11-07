@@ -146,8 +146,8 @@ export async function GET(request: Request) {
       access_token: accessToken,
       token_expires_at: expiresAt,
       scopes: mode === 'ads'
-        ? ['ads_read', 'ads_management', 'instagram_basic']
-        : ['instagram_basic', 'instagram_content_publish'],
+        ? ['ads_read', 'ads_management', 'pages_read_engagement']
+        : ['pages_show_list', 'pages_read_engagement'],
       raw_profile: rawProfile,
       connected_at: new Date().toISOString(),
     },
