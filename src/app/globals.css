@@ -141,6 +141,9 @@ body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   -webkit-tap-highlight-color: transparent;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
 }
 
 button, [role="button"] {
@@ -151,10 +154,6 @@ button, [role="button"] {
 
 button:active, [role="button"]:active {
   transform: scale(0.98);
-}
-  min-height: 100vh;
-  overflow-x: hidden;
-  line-height: 1.6;
 }
 
 img {
