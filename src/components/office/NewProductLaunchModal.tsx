@@ -370,7 +370,7 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
                     cursor: 'pointer',
                   }}
                 >
-                  {mode === 'HYBRID' ? 'Híbrido (Ads + Viral)' : mode === 'ADS' ? 'Meta Ads Directo' : 'Orgánico TikTok'}
+                  {mode === 'HYBRID' ? 'Automático (Recomendado)' : mode === 'ADS' ? 'Publicidad Digital' : 'Vídeos Virales'}
                 </button>
               ))}
             </div>

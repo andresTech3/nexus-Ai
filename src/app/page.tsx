@@ -7,99 +7,85 @@ import { useCurrency } from '@/hooks/useCurrency'
 interface DemoProduct {
   id: string
   name: string
-  category: string
   emoji: string
-  cost: number
+  badge: string
   price: number
-  profitPerUnit: number
+  cost: number
+  profit: number
   videoUrl: string
-  image: string
-  headline: string
+  tagline: string
 }
 
-const DEMO_PRODUCTS: DemoProduct[] = [
+const PRODUCTS: DemoProduct[] = [
   {
     id: 'luna',
     name: 'Lámpara Lunar Flotante',
-    category: 'Hogar & Regalos',
     emoji: '🌕',
-    cost: 12,
+    badge: 'MÁS VENDIDO',
     price: 49,
-    profitPerUnit: 37,
+    cost: 12,
+    profit: 37,
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    image: 'https://images.unsplash.com/photo-1532767153582-b1a0e5145009?w=600&auto=format&fit=crop&q=80',
-    headline: 'Levita y gira en el aire con luz cálida mágica.',
+    tagline: 'Levita y gira mágicamente en el aire.',
   },
   {
     id: 'pet',
-    name: 'Cepillo de Vapor Mascotas',
-    category: 'Mascotas',
+    name: 'Cepillo Quita-Pelo Mascotas',
     emoji: '🐶',
-    cost: 5,
+    badge: 'VIRAL EN TIKTOK',
     price: 25,
-    profitPerUnit: 20,
+    cost: 5,
+    profit: 20,
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600&auto=format&fit=crop&q=80',
-    headline: 'Quita el 95% del pelo suelto con vapor suave sin tirones.',
+    tagline: 'Limpia con vapor suave sin tirones.',
   },
   {
     id: 'galaxy',
     name: 'Proyector Galaxia 360°',
-    category: 'Dormitorio & Relax',
     emoji: '✨',
-    cost: 9,
+    badge: 'TENDENCIA HOY',
     price: 39,
-    profitPerUnit: 30,
+    cost: 9,
+    profit: 30,
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
-    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop&q=80',
-    headline: 'Convierte el techo en un cielo estrellado con nebulosas.',
+    tagline: 'Llena tu habitación de estrellas.',
+  },
+  {
+    id: 'watch',
+    name: 'Reloj Fitness Deportivo',
+    emoji: '⌚',
+    badge: 'ALTA GANANCIA',
+    price: 59,
+    cost: 17,
+    profit: 42,
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+    tagline: 'Mide pasos, pulsaciones y sueño.',
   },
 ]
 
 export default function HomePage() {
   const { formatMoney } = useCurrency()
 
-  // Interactive Product Selector
-  const [selectedProduct, setSelectedProduct] = useState<DemoProduct>(DEMO_PRODUCTS[0])
+  // Interactive Product & Sales State
+  const [activeProduct, setActiveProduct] = useState<DemoProduct>(PRODUCTS[0])
   const [salesPerDay, setSalesPerDay] = useState<number>(15)
-
-  // Interactive Video Modal
-  const [previewVideoUrl, setPreviewVideoUrl] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<number>(0)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [videoModal, setVideoModal] = useState<string | null>(null)
 
   // Calculations
-  const monthlySales = salesPerDay * 30
-  const monthlyNetProfit = monthlySales * selectedProduct.profitPerUnit
-  const monthlyGrossRevenue = monthlySales * selectedProduct.price
+  const monthlyUnits = salesPerDay * 30
+  const monthlyProfit = monthlyUnits * activeProduct.profit
 
-  // Simple steps interactive tab
-  const [activeStep, setActiveStep] = useState<number>(0)
+  // Dopamine Level Indicator
+  const getDopamineStatus = () => {
+    if (monthlyProfit >= 15000) return { icon: '👑', label: '¡Nivel Imperio Digital!', color: '#f59e0b' }
+    if (monthlyProfit >= 8000) return { icon: '🔥', label: '¡Libertad Financiera Total!', color: '#ec4899' }
+    if (monthlyProfit >= 3500) return { icon: '🚀', label: '¡Más que un sueldo completo!', color: '#10b981' }
+    return { icon: '💰', label: '¡Un extra increíble cada mes!', color: '#38bdf8' }
+  }
 
-  const steps = [
-    {
-      step: 'Paso 1',
-      title: 'La IA encuentra productos que se venden solos',
-      emoji: '🎯',
-      desc: 'Escaneamos los almacenes para encontrar productos virales que la gente ya está comprando ahora mismo.',
-      action: 'Explorar Productos',
-      href: '/dashboard/catalog',
-    },
-    {
-      step: 'Paso 2',
-      title: 'Te crea tu tienda online en 1 clic',
-      emoji: '🛍️',
-      desc: 'Sin saber programar ni diseñar. Tu tienda lista para recibir pagos con tarjeta o contra reembolso.',
-      action: 'Ver Tienda',
-      href: '/dashboard',
-    },
-    {
-      step: 'Paso 3',
-      title: 'Tú cobras, el fabricante envía el paquete',
-      emoji: '💰',
-      desc: 'No necesitas comprar stock por adelantado ni guardar cajas en tu casa. El proveedor lo envía directo a tu cliente.',
-      action: 'Abrir Mi Panel',
-      href: '/dashboard',
-    },
-  ]
+  const dopamine = getDopamineStatus()
 
   return (
     <div
@@ -112,28 +98,28 @@ export default function HomePage() {
         position: 'relative',
       }}
     >
-      {/* ── TOP AMBIENT GLOW ─────────────────────────────────────────── */}
+      {/* ── AMBIENT GLOW ─────────────────────────────────────────── */}
       <div
         style={{
           position: 'fixed',
-          top: '-20%',
+          top: '-15%',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '90vw',
-          maxWidth: '900px',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(250, 174, 51, 0.16) 0%, transparent 70%)',
-          filter: 'blur(80px)',
+          maxWidth: 800,
+          height: 350,
+          background: 'radial-gradient(circle, rgba(250, 174, 51, 0.15) 0%, transparent 70%)',
+          filter: 'blur(70px)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* ── TOP HEADER / NAVBAR ──────────────────────────────────────── */}
+      {/* ── SIMPLE NAVBAR ────────────────────────────────────────── */}
       <header
         style={{
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundColor: 'rgba(7, 7, 9, 0.88)',
+          backgroundColor: 'rgba(7, 7, 9, 0.9)',
           backdropFilter: 'blur(16px)',
           position: 'sticky',
           top: 0,
@@ -142,7 +128,7 @@ export default function HomePage() {
       >
         <div
           style={{
-            maxWidth: 1140,
+            maxWidth: 1100,
             margin: '0 auto',
             padding: '0.85rem 1.25rem',
             display: 'flex',
@@ -156,69 +142,58 @@ export default function HomePage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.6rem',
+              gap: '0.5rem',
               textDecoration: 'none',
             }}
           >
             <div
               style={{
-                width: 32,
-                height: 32,
-                borderRadius: '8px',
+                width: 34,
+                height: 34,
+                borderRadius: '9px',
                 background: 'linear-gradient(135deg, #faae33, #e08b1a)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 14px rgba(250, 174, 51, 0.4)',
+                boxShadow: '0 0 14px rgba(250, 174, 51, 0.45)',
               }}
             >
-              <span style={{ fontSize: '1.1rem' }}>⚡</span>
+              <span style={{ fontSize: '1.15rem' }}>⚡</span>
             </div>
             <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em' }}>
               NEXUS<span style={{ color: '#faae33' }}>AI</span>
             </span>
           </Link>
 
-          {/* Quick Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Link
-              href="/dashboard/catalog"
-              style={{
-                fontSize: '0.85rem',
-                color: '#d4d4d8',
-                textDecoration: 'none',
-                fontWeight: 600,
-                padding: '0.45rem 0.8rem',
-              }}
-            >
-              Productos
-            </Link>
-            <Link
-              href="/dashboard"
-              style={{
-                fontSize: '0.85rem',
-                background: 'linear-gradient(135deg, #faae33, #d98216)',
-                color: '#090807',
-                padding: '0.5rem 1.2rem',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                fontWeight: 800,
-                boxShadow: '0 4px 15px rgba(250, 174, 51, 0.35)',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Entrar &rarr;
-            </Link>
-          </div>
+          {/* Quick Action Button */}
+          <Link
+            href="/dashboard"
+            style={{
+              padding: '0.5rem 1.3rem',
+              background: 'linear-gradient(135deg, #faae33, #d98216)',
+              color: '#090807',
+              borderRadius: '999px',
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              textDecoration: 'none',
+              boxShadow: '0 4px 15px rgba(250, 174, 51, 0.35)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+            }}
+          >
+            <span>Entrar</span>
+            <span>&rarr;</span>
+          </Link>
         </div>
       </header>
 
-      {/* ── HERO: DIRECTO, FÁCIL & SIN TECNICISMOS ────────────────────── */}
+      {/* ── HERO: ULTRA DIRECTO & SIN TECNICISMOS ─────────────────── */}
       <section
         style={{
-          maxWidth: 960,
+          maxWidth: 900,
           margin: '0 auto',
-          padding: '3.5rem 1.25rem 2rem 1.25rem',
+          padding: '2.5rem 1.25rem 1.5rem 1.25rem',
           textAlign: 'center',
           position: 'relative',
           zIndex: 10,
@@ -229,32 +204,32 @@ export default function HomePage() {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            padding: '6px 14px',
+            gap: '0.45rem',
+            padding: '5px 14px',
             borderRadius: '999px',
             backgroundColor: 'rgba(250, 174, 51, 0.12)',
             border: '1px solid rgba(250, 174, 51, 0.3)',
-            fontSize: '0.82rem',
+            fontSize: '0.8rem',
             fontWeight: 800,
             color: '#faae33',
-            marginBottom: '1.5rem',
+            marginBottom: '1rem',
           }}
         >
-          <span>🚀</span>
-          <span>GANA DINERO POR INTERNET SIN TENER STOCK</span>
+          <span>✨</span>
+          <span>SIN COMPRAR STOCK &bull; SIN CAJAS EN CASA</span>
         </div>
 
-        {/* Clear Headline */}
+        {/* Short Punchy Title */}
         <h1
           style={{
-            fontSize: 'clamp(2.1rem, 6vw, 3.8rem)',
+            fontSize: 'clamp(2.1rem, 5.5vw, 3.4rem)',
             fontWeight: 900,
-            lineHeight: 1.12,
+            lineHeight: 1.15,
             letterSpacing: '-0.03em',
-            margin: '0 auto 1.2rem auto',
+            margin: '0 auto 0.8rem auto',
           }}
         >
-          Crea tu Negocio Digital con{' '}
+          Gana dinero por internet{' '}
           <span
             style={{
               background: 'linear-gradient(135deg, #faae33 0%, #ffdf78 100%)',
@@ -262,70 +237,28 @@ export default function HomePage() {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Inteligencia Artificial
+            en automático
           </span>
         </h1>
 
-        {/* 1-Sentence Non-Technical Subtitle */}
         <p
           style={{
-            fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+            fontSize: 'clamp(0.95rem, 2vw, 1.15rem)',
             color: '#a1a1aa',
-            lineHeight: 1.5,
-            maxWidth: 620,
-            margin: '0 auto 2.2rem auto',
+            lineHeight: 1.4,
+            maxWidth: 540,
+            margin: '0 auto 1.5rem auto',
           }}
         >
-          La IA busca los productos más vendidos, te monta la tienda en minutos y tú ganas la diferencia en cada venta.
+          Elige un producto viral, activa tu tienda en 1 clic y quédate con la ganancia de cada venta.
         </p>
-
-        {/* Fast Action Buttons */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.85rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
-          <Link
-            href="/dashboard"
-            style={{
-              padding: '0.9rem 2rem',
-              background: 'linear-gradient(135deg, #faae33, #d98216)',
-              color: '#090807',
-              borderRadius: '10px',
-              fontSize: '1rem',
-              fontWeight: 800,
-              textDecoration: 'none',
-              boxShadow: '0 8px 25px rgba(250, 174, 51, 0.35)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-            }}
-          >
-            <span>🚀 Empezar Gratis</span>
-            <span>&rarr;</span>
-          </Link>
-          <Link
-            href="/dashboard/catalog"
-            style={{
-              padding: '0.9rem 1.6rem',
-              backgroundColor: '#16141a',
-              color: '#ffffff',
-              borderRadius: '10px',
-              fontSize: '0.95rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              border: '1px solid #2e2838',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-            }}
-          >
-            <span>👀 Ver Productos Ganadores</span>
-          </Link>
-        </div>
       </section>
 
-      {/* ── SIMULADOR INTERACTIVO: "¿CUÁNTO PUEDES GANAR?" ────────────── */}
+      {/* ── SIMULADOR DE GANANCIAS (INTERACTIVO AL 100%) ─────────── */}
       <section
         style={{
-          maxWidth: 960,
-          margin: '0 auto 4.5rem auto',
+          maxWidth: 900,
+          margin: '0 auto 3.5rem auto',
           padding: '0 1.25rem',
           position: 'relative',
           zIndex: 10,
@@ -333,305 +266,480 @@ export default function HomePage() {
       >
         <div
           style={{
-            background: 'linear-gradient(135deg, #120e17, #0c0a10)',
-            border: '1px solid #2e243d',
-            borderRadius: '20px',
-            padding: 'clamp(1.25rem, 4vw, 2.25rem)',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(250, 174, 51, 0.1)',
+            background: 'linear-gradient(145deg, #131019, #0a080e)',
+            border: '2px solid rgba(250, 174, 51, 0.25)',
+            borderRadius: '24px',
+            padding: 'clamp(1.2rem, 3.5vw, 2.2rem)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(250, 174, 51, 0.1)',
           }}
         >
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          {/* Header del Simulador */}
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <span
               style={{
                 fontSize: '0.72rem',
                 color: '#34d399',
                 background: 'rgba(52, 211, 153, 0.12)',
                 border: '1px solid rgba(52, 211, 153, 0.3)',
-                padding: '4px 10px',
+                padding: '3px 10px',
                 borderRadius: '999px',
                 fontWeight: 800,
+                letterSpacing: '0.05em',
               }}
             >
-              SIMULADOR EN VIVO
+              SIMULADOR EN TIEMPO REAL
             </span>
-            <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 1.85rem)', fontWeight: 900, color: '#ffffff', margin: '0.6rem 0 0.3rem 0' }}>
-              ¿Cuánto dinero quieres ganar al mes?
+            <h2 style={{ fontSize: 'clamp(1.3rem, 3.5vw, 1.8rem)', fontWeight: 900, color: '#ffffff', margin: '0.5rem 0 0.2rem 0' }}>
+              Toca un producto y calcula tu ganancia:
             </h2>
-            <p style={{ fontSize: '0.88rem', color: '#a1a1aa', margin: 0 }}>
-              Elige un producto y mueve la barra para calcular tus ganancias limpias.
-            </p>
           </div>
 
-          {/* 1. Selector de Producto Interactivo */}
-          <div style={{ marginBottom: '1.75rem' }}>
-            <div style={{ fontSize: '0.78rem', color: '#a1a1aa', fontWeight: 700, marginBottom: '0.6rem', textAlign: 'center' }}>
-              Paso 1: Elige el producto que quieres vender:
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                gap: '0.65rem',
-              }}
-            >
-              {DEMO_PRODUCTS.map((prod) => {
-                const isSelected = selectedProduct.id === prod.id
-                return (
-                  <button
-                    key={prod.id}
-                    onClick={() => setSelectedProduct(prod)}
+          {/* 1. Selector de Productos Táctil */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+              gap: '0.65rem',
+              marginBottom: '1.5rem',
+            }}
+          >
+            {PRODUCTS.map((prod) => {
+              const isSelected = activeProduct.id === prod.id
+              return (
+                <button
+                  key={prod.id}
+                  onClick={() => setActiveProduct(prod)}
+                  style={{
+                    background: isSelected ? 'rgba(250, 174, 51, 0.18)' : '#100e16',
+                    border: `2px solid ${isSelected ? '#faae33' : '#231d2c'}`,
+                    borderRadius: '14px',
+                    padding: '0.85rem 0.5rem',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: isSelected ? 'scale(1.03)' : 'scale(1)',
+                    boxShadow: isSelected ? '0 0 16px rgba(250, 174, 51, 0.3)' : 'none',
+                  }}
+                >
+                  <span style={{ fontSize: '1.9rem' }}>{prod.emoji}</span>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 800, textAlign: 'center', lineHeight: 1.2 }}>
+                    {prod.name}
+                  </span>
+                  <span
                     style={{
-                      background: isSelected ? 'rgba(250, 174, 51, 0.15)' : '#0e0c12',
-                      border: `2px solid ${isSelected ? '#faae33' : '#231d2c'}`,
-                      borderRadius: '12px',
-                      padding: '0.75rem 0.5rem',
-                      color: '#ffffff',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '0.3rem',
-                      transition: 'all 0.2s',
+                      fontSize: '0.72rem',
+                      color: isSelected ? '#34d399' : '#a1a1aa',
+                      fontWeight: 800,
                     }}
                   >
-                    <span style={{ fontSize: '1.8rem' }}>{prod.emoji}</span>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 800, textAlign: 'center', lineHeight: 1.2 }}>
-                      {prod.name}
-                    </span>
-                    <span style={{ fontSize: '0.7rem', color: isSelected ? '#faae33' : '#a1a1aa', fontWeight: 700 }}>
-                      +{formatMoney(prod.profitPerUnit)} limpios/venta
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
+                    +{formatMoney(prod.profit)} ganancia
+                  </span>
+                </button>
+              )
+            })}
           </div>
 
-          {/* 2. Slider Interactivo de Ventas */}
+          {/* 2. Slider Interactivo y Botones Rápidos */}
           <div
             style={{
               background: '#09080d',
               border: '1px solid #1f1a28',
-              borderRadius: '14px',
+              borderRadius: '16px',
               padding: '1.25rem',
-              marginBottom: '1.75rem',
+              marginBottom: '1.5rem',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#e4e4e7' }}>
-                Paso 2: ¿Cuántas ventas haces al día?
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '0.5rem',
+                marginBottom: '0.85rem',
+              }}
+            >
+              <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#e4e4e7' }}>
+                ¿Cuántas personas te compran al día?
               </span>
               <span
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 900,
                   color: '#faae33',
-                  background: 'rgba(250, 174, 51, 0.1)',
-                  padding: '3px 10px',
-                  borderRadius: '6px',
+                  background: 'rgba(250, 174, 51, 0.12)',
+                  padding: '3px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(250, 174, 51, 0.25)',
                 }}
               >
-                {salesPerDay} ventas al día
+                {salesPerDay} al día ({monthlyUnits}/mes)
               </span>
             </div>
 
+            {/* Slider */}
             <input
               type="range"
-              min="3"
-              max="60"
+              min="1"
+              max="50"
               step="1"
               value={salesPerDay}
               onChange={(e) => setSalesPerDay(Number(e.target.value))}
               style={{
                 width: '100%',
-                height: '8px',
+                height: '10px',
                 accentColor: '#faae33',
                 cursor: 'pointer',
+                borderRadius: '5px',
+                marginBottom: '0.85rem',
               }}
             />
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#71717a', marginTop: 6 }}>
-              <span>3 al día (Principiante)</span>
-              <span>15 al día (Negocio Sólido)</span>
-              <span>60 al día (Escala Máxima)</span>
+            {/* Quick Preset Buttons */}
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+              {[3, 10, 20, 35, 50].map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => setSalesPerDay(preset)}
+                  style={{
+                    flex: '1 1 50px',
+                    padding: '0.4rem 0.6rem',
+                    background: salesPerDay === preset ? '#faae33' : '#16131d',
+                    color: salesPerDay === preset ? '#090807' : '#d4d4d8',
+                    border: `1px solid ${salesPerDay === preset ? '#faae33' : '#272033'}`,
+                    borderRadius: '8px',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {preset} al día
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* 3. Resultado de Ganancia Gigante y Claro */}
+          {/* 3. Pantalla de Ganancias Limpias (Dopamina Visual) */}
           <div
             style={{
-              background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(16, 185, 129, 0.05))',
+              background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.16), rgba(16, 185, 129, 0.04))',
               border: '2px solid #34d399',
-              borderRadius: '16px',
-              padding: '1.5rem',
+              borderRadius: '18px',
+              padding: '1.4rem 1rem',
               textAlign: 'center',
+              boxShadow: '0 0 25px rgba(52, 211, 153, 0.15)',
             }}
           >
-            <div style={{ fontSize: '0.8rem', color: '#34d399', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              🎉 TU GANANCIA LIMPIA ESTIMADA
-            </div>
-
-            <div style={{ fontSize: 'clamp(2.2rem, 7vw, 3.5rem)', fontWeight: 900, color: '#34d399', margin: '0.2rem 0' }}>
-              +{formatMoney(monthlyNetProfit)} <span style={{ fontSize: '1rem', color: '#a7f3d0' }}>/ mes</span>
-            </div>
-
-            <p style={{ fontSize: '0.82rem', color: '#d1fae5', margin: '0 0 1rem 0' }}>
-              Vendiendo {monthlySales} unidades de {selectedProduct.name} al mes. Tú no compras nada hasta que el cliente te paga.
-            </p>
-
-            {/* Video preview button */}
-            <button
-              onClick={() => setPreviewVideoUrl(selectedProduct.videoUrl)}
+            {/* Dopamine Badge */}
+            <div
               style={{
-                background: '#121216',
-                border: '1px solid #34d399',
-                color: '#34d399',
-                padding: '0.55rem 1.25rem',
-                borderRadius: '8px',
-                fontSize: '0.85rem',
-                fontWeight: 800,
-                cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
+                fontSize: '0.78rem',
+                color: dopamine.color,
+                fontWeight: 800,
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                padding: '4px 12px',
+                borderRadius: '999px',
+                marginBottom: '0.5rem',
               }}
             >
-              <span>▶</span>
-              <span>Ver Video de {selectedProduct.name}</span>
-            </button>
+              <span>{dopamine.icon}</span>
+              <span>{dopamine.label}</span>
+            </div>
+
+            <div style={{ fontSize: '0.78rem', color: '#6ee7b7', fontWeight: 800, letterSpacing: '0.04em' }}>
+              TU DINERO LIMPIO ESTIMADO
+            </div>
+
+            <div
+              style={{
+                fontSize: 'clamp(2.4rem, 7vw, 3.8rem)',
+                fontWeight: 900,
+                color: '#34d399',
+                lineHeight: 1.1,
+                margin: '0.2rem 0',
+                textShadow: '0 0 20px rgba(52, 211, 153, 0.4)',
+              }}
+            >
+              +{formatMoney(monthlyProfit)}{' '}
+              <span style={{ fontSize: '1rem', color: '#a7f3d0', fontWeight: 700 }}>/ mes</span>
+            </div>
+
+            <p style={{ fontSize: '0.82rem', color: '#d1fae5', margin: '0 0 1rem 0' }}>
+              Sin comprar mercancía por adelantado. Cobras y el fabricante hace el envío.
+            </p>
+
+            {/* Interactive Video Preview Button */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setVideoModal(activeProduct.videoUrl)}
+                style={{
+                  background: '#121216',
+                  border: '1px solid #34d399',
+                  color: '#34d399',
+                  padding: '0.55rem 1.2rem',
+                  borderRadius: '10px',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  transition: 'transform 0.15s',
+                }}
+              >
+                <span>▶ Ver Video de Demostración</span>
+              </button>
+
+              <Link
+                href="/dashboard"
+                style={{
+                  background: 'linear-gradient(135deg, #faae33, #d98216)',
+                  color: '#090807',
+                  padding: '0.55rem 1.4rem',
+                  borderRadius: '10px',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  boxShadow: '0 4px 15px rgba(250, 174, 51, 0.3)',
+                }}
+              >
+                <span>🚀 Activar Este Producto</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── CÓMO FUNCIONA EN 3 PASOS INTERACTIVOS ─────────────────────── */}
+      {/* ── CÓMO FUNCIONA: 3 PASOS EN TABS INTERACTIVAS (SIN ROLLOS DE TEXTO) ─ */}
       <section
         style={{
-          maxWidth: 960,
-          margin: '0 auto 5rem auto',
+          maxWidth: 900,
+          margin: '0 auto 4rem auto',
           padding: '0 1.25rem',
           position: 'relative',
           zIndex: 10,
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 800, textTransform: 'uppercase' }}>
-            SENCILLO Y SIN COMPLICACIONES
-          </span>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', margin: '0.4rem 0 0 0' }}>
-            ¿Cómo funciona para ti?
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.85rem)', fontWeight: 900, color: '#ffffff', margin: 0 }}>
+            ¿Cómo funciona? (Solo 3 pasos)
           </h2>
         </div>
 
-        {/* Step Cards Grid */}
+        {/* 3 Clickable Steps Tabs */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '1rem',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '0.5rem',
+            marginBottom: '1rem',
           }}
         >
-          {steps.map((s, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: '#0e0c12',
-                border: '1px solid #201a28',
-                borderRadius: '16px',
-                padding: '1.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxShadow: '0 8px 25px rgba(0,0,0,0.3)',
-              }}
-            >
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '2rem' }}>{s.emoji}</span>
-                  <span
-                    style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      color: '#faae33',
-                      background: 'rgba(250, 174, 51, 0.1)',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                    }}
-                  >
-                    {s.step}
-                  </span>
-                </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0', lineHeight: 1.3 }}>
-                  {s.title}
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#a1a1aa', lineHeight: 1.5, margin: 0 }}>
-                  {s.desc}
-                </p>
-              </div>
+          {[
+            { step: '1', title: 'La IA Busca', emoji: '🔍' },
+            { step: '2', title: 'Tienda en 1 Clic', emoji: '⚡' },
+            { step: '3', title: 'Cobras Tú', emoji: '💸' },
+          ].map((tab, idx) => {
+            const isActive = activeTab === idx
+            return (
+              <button
+                key={idx}
+                onClick={() => setActiveTab(idx)}
+                style={{
+                  background: isActive ? 'rgba(250, 174, 51, 0.15)' : '#0e0c12',
+                  border: `2px solid ${isActive ? '#faae33' : '#1f1a28'}`,
+                  borderRadius: '12px',
+                  padding: '0.75rem 0.4rem',
+                  color: isActive ? '#faae33' : '#d4d4d8',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.2rem',
+                  fontWeight: 800,
+                  transition: 'all 0.15s',
+                }}
+              >
+                <span style={{ fontSize: '1.4rem' }}>{tab.emoji}</span>
+                <span style={{ fontSize: '0.8rem' }}>{tab.title}</span>
+              </button>
+            )
+          })}
+        </div>
 
-              <div style={{ marginTop: '1.5rem' }}>
-                <Link
-                  href={s.href}
-                  style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    color: '#faae33',
-                    textDecoration: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.3rem',
-                  }}
-                >
-                  <span>{s.action}</span>
-                  <span>&rarr;</span>
-                </Link>
-              </div>
+        {/* Interactive Step Preview Panel */}
+        <div
+          style={{
+            background: '#0d0b12',
+            border: '1px solid #231c2d',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            minHeight: '160px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+          }}
+        >
+          {activeTab === 0 && (
+            <div>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.4rem' }}>🔍</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem 0' }}>
+                1. Detectamos lo que se vende hoy
+              </h3>
+              <p style={{ fontSize: '0.85rem', color: '#a1a1aa', maxWidth: 460, margin: '0 auto' }}>
+                El sistema rastrea millones de compras por internet para mostrarte sólo los productos que la gente ya está deseando comprar.
+              </p>
             </div>
-          ))}
+          )}
+
+          {activeTab === 1 && (
+            <div>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.4rem' }}>⚡</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem 0' }}>
+                2. Tu tienda lista al instante
+              </h3>
+              <p style={{ fontSize: '0.85rem', color: '#a1a1aa', maxWidth: 460, margin: '0 auto' }}>
+                Sin programar y sin diseñar. Con fotos, textos persuasivos y botón de compra para recibir pagos por tarjeta.
+              </p>
+            </div>
+          )}
+
+          {activeTab === 2 && (
+            <div>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.4rem' }}>💸</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.4rem 0' }}>
+                3. Cobras y el fabricante envía
+              </h3>
+              <p style={{ fontSize: '0.85rem', color: '#a1a1aa', maxWidth: 460, margin: '0 auto' }}>
+                Tú te quedas con el beneficio limpio. El proveedor empaqueta y envía el pedido directamente a la puerta de tu cliente.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ── BOTÓN FINAL PARA EMPEZAR ─────────────────────────────────── */}
+      {/* ── PREGUNTAS FRECUENTES INTERACTIVAS (TOCAR PARA ABRIR) ──── */}
+      <section
+        style={{
+          maxWidth: 700,
+          margin: '0 auto 4rem auto',
+          padding: '0 1.25rem',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+        <h2 style={{ fontSize: '1.3rem', fontWeight: 900, textAlign: 'center', marginBottom: '1.2rem' }}>
+          Dudas rápidas
+        </h2>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          {[
+            {
+              q: '¿Tengo que comprar cajas o guardar productos en mi casa?',
+              a: 'No. Jamás tocas un producto físico. Cuando alguien te compra, el fabricante se lo envía directamente.',
+            },
+            {
+              q: '¿Necesito saber de diseño o informática?',
+              a: 'Nada en absoluto. El sistema genera todo de forma automática con un solo clic.',
+            },
+            {
+              q: '¿Cuándo y cómo recibo mi dinero?',
+              a: 'Cada venta se procesa al instante y el dinero va directo a tu cuenta de banco.',
+            },
+          ].map((item, idx) => {
+            const isOpen = openFaq === idx
+            return (
+              <div
+                key={idx}
+                onClick={() => setOpenFaq(isOpen ? null : idx)}
+                style={{
+                  background: '#0e0c12',
+                  border: '1px solid #1f1a28',
+                  borderRadius: '12px',
+                  padding: '0.85rem 1.1rem',
+                  cursor: 'pointer',
+                  transition: 'border 0.2s',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
+                    {item.q}
+                  </span>
+                  <span style={{ fontSize: '1rem', color: '#faae33', fontWeight: 900 }}>
+                    {isOpen ? '−' : '+'}
+                  </span>
+                </div>
+                {isOpen && (
+                  <div style={{ fontSize: '0.8rem', color: '#a1a1aa', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                    {item.a}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* ── BOTÓN FINAL DIRECTO ──────────────────────────────────── */}
       <section
         style={{
           borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           backgroundColor: '#050507',
-          padding: '3.5rem 1.25rem',
+          padding: '3rem 1.25rem 2.5rem 1.25rem',
           textAlign: 'center',
         }}
       >
-        <div style={{ maxWidth: 650, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', fontWeight: 900, color: '#ffffff', margin: '0 0 0.8rem 0' }}>
-            Empieza a Ganar Dinero con tu Tienda Digital
+        <div style={{ maxWidth: 500, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', fontWeight: 900, color: '#ffffff', margin: '0 0 0.5rem 0' }}>
+            Empieza hoy mismo
           </h2>
-          <p style={{ fontSize: '0.9rem', color: '#a1a1aa', marginBottom: '1.75rem', lineHeight: 1.6 }}>
-            Accede al catálogo de productos ganadores y deja que la IA haga el trabajo pesado por ti.
+          <p style={{ fontSize: '0.85rem', color: '#a1a1aa', marginBottom: '1.5rem' }}>
+            Accede gratis al panel y descubre los productos listos para vender.
           </p>
+
           <Link
             href="/dashboard"
             style={{
-              padding: '0.9rem 2.2rem',
+              padding: '0.85rem 2.2rem',
               background: 'linear-gradient(135deg, #faae33, #d98216)',
               color: '#090807',
-              borderRadius: '10px',
-              fontSize: '1rem',
+              borderRadius: '999px',
+              fontSize: '0.95rem',
               fontWeight: 800,
               textDecoration: 'none',
-              boxShadow: '0 8px 30px rgba(250, 174, 51, 0.35)',
-              display: 'inline-block',
+              boxShadow: '0 6px 25px rgba(250, 174, 51, 0.4)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
             }}
           >
-            Abrir Mi Centro de Control &rarr;
+            <span>🚀 Entrar a Mi Panel</span>
+            <span>&rarr;</span>
           </Link>
-          <div style={{ fontSize: '0.72rem', color: '#52525b', marginTop: '2.5rem' }}>
-            © {new Date().getFullYear()} Nexus AI. La forma más fácil de vender por internet.
+
+          <div style={{ fontSize: '0.72rem', color: '#52525b', marginTop: '2rem' }}>
+            © {new Date().getFullYear()} Nexus AI &bull; Venta directa por internet
           </div>
         </div>
       </section>
 
-      {/* ── VIDEO MODAL FLUIDO & LIGERO ──────────────────────────────── */}
-      {previewVideoUrl && (
+      {/* ── MODAL DE VIDEO RÁPIDO ─────────────────────────────────── */}
+      {videoModal && (
         <div
-          onClick={() => setPreviewVideoUrl(null)}
+          onClick={() => setVideoModal(null)}
           style={{
             position: 'fixed',
             inset: 0,
@@ -651,17 +759,25 @@ export default function HomePage() {
               border: '1px solid #332845',
               borderRadius: '16px',
               width: '100%',
-              maxWidth: 580,
+              maxWidth: 540,
               overflow: 'hidden',
               boxShadow: '0 25px 50px rgba(0,0,0,0.8)',
             }}
           >
-            <div style={{ padding: '0.85rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #231c2d' }}>
+            <div
+              style={{
+                padding: '0.75rem 1rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: '1px solid #231c2d',
+              }}
+            >
               <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
-                Video Demostración de {selectedProduct.name}
+                Video de {activeProduct.name}
               </span>
               <button
-                onClick={() => setPreviewVideoUrl(null)}
+                onClick={() => setVideoModal(null)}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -673,32 +789,32 @@ export default function HomePage() {
                 ✕
               </button>
             </div>
-            <div style={{ width: '100%', background: '#000000', minHeight: 280 }}>
+            <div style={{ width: '100%', background: '#000000', minHeight: 260 }}>
               <video
-                src={previewVideoUrl}
+                src={videoModal}
                 controls
                 autoPlay
                 playsInline
-                style={{ width: '100%', maxHeight: '65vh', display: 'block' }}
+                style={{ width: '100%', maxHeight: '60vh', display: 'block' }}
               />
             </div>
-            <div style={{ padding: '0.85rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
-                ✓ Producto listo para vender en tu tienda
+                ✓ Listo para vender
               </span>
               <Link
-                href="/dashboard/catalog"
+                href="/dashboard"
                 style={{
                   background: '#faae33',
                   color: '#090807',
-                  padding: '0.45rem 0.9rem',
+                  padding: '0.4rem 0.9rem',
                   borderRadius: '6px',
                   fontSize: '0.78rem',
                   fontWeight: 800,
                   textDecoration: 'none',
                 }}
               >
-                Ir al Catálogo &rarr;
+                Comenzar &rarr;
               </Link>
             </div>
           </div>

@@ -155,18 +155,7 @@ export function ConnectionsManager() {
       placeholderKey: 'xi-api-key-...',
       isConfigured: Boolean(quotas.elevenlabs?.apiKey),
     },
-    {
-      id: 'meta_ads',
-      name: 'Facebook & Instagram Ads (Meta MCP)',
-      badge: 'CANAL DE TRÁFICO',
-      description: 'Conecta tu cuenta publicitaria de Meta para exportar campañas CBO/ABO y reglas de stop-loss directamente a tu Administrador de Anuncios.',
-      defaultModel: 'meta-marketing-api-v20',
-      models: [
-        { id: 'meta-marketing-api-v20', name: 'Meta Marketing API (v20.0)' },
-      ],
-      placeholderKey: 'act_1234567890 o Access Token',
-      isConfigured: Boolean(quotas.meta_ads?.apiKey),
-    },
+    // Meta / Facebook & Instagram hidden per user preference
     {
       id: 'shopify',
       name: 'Shopify Store (Admin API)',

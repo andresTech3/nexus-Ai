@@ -1175,10 +1175,10 @@ export default function ProductHuntingCatalogPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                  🔥 Anuncios Ganadores en Meta ({liveCompetitors.length})
+                  🔥 Anuncios y Vídeos Ganadores ({liveCompetitors.length})
                 </h2>
                 <div style={{ fontSize: '0.75rem', color: '#71717a' }}>
-                  Anuncios activos espiados en Facebook e Instagram con métricas reales de escala.
+                  Campañas activas en redes sociales con alta interacción y ventas reales.
                 </div>
               </div>
 
