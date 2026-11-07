@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { buildMetaAuthUrl, getAppUrl, getMetaCallbackUri, META_APP_ID } from '@/lib/meta/oauth'
+import { buildMetaAuthUrl, getAppUrl, getMetaCallbackUri, META_APP_ID, META_APP_SECRET } from '@/lib/meta/oauth'
 import crypto from 'crypto'
 
 /**
@@ -26,7 +26,18 @@ export async function GET(request: Request) {
   if (!META_APP_ID || META_APP_ID.includes('REEMPLAZA') || META_APP_ID.trim() === '') {
     return NextResponse.json(
       {
-        error: 'Credenciales de Meta no configuradas. Agrega tu META_APP_ID y META_APP_SECRET en las Variables de Entorno de Vercel (o en .env.local) antes de conectar.',
+        error: 'Credenciales de Meta no configuradas. Agrega tu META_APP_ID y META_APP_SECRET en las Variables de Entorno de Vercel.',
+        notConfigured: true,
+      },
+      { status: 400 }
+    )
+  }
+
+  // Check if META_APP_SECRET is properly configured in environment
+  if (!META_APP_SECRET || META_APP_SECRET.includes('REEMPLAZA') || META_APP_SECRET.trim() === '') {
+    return NextResponse.json(
+      {
+        error: 'Falta configurar META_APP_SECRET en Vercel. Ve a vercel.com > Tu Proyecto (nexus-ai) > Settings > Environment Variables, agrega META_APP_SECRET y luego haz Redeploy.',
         notConfigured: true,
       },
       { status: 400 }

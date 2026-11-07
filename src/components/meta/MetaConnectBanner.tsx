@@ -63,6 +63,7 @@ export function MetaConnectBanner({ mode, onConnected }: MetaConnectBannerProps)
     if (err) {
       let msg = 'La conexión no pudo completarse.'
       if (err === 'cancelled') msg = 'Cancelaste la autorización en Meta o no concediste los permisos requeridos.'
+      else if (err === 'missing_secret') msg = desc ? decodeURIComponent(desc) : 'Falta configurar META_APP_SECRET en las Variables de Entorno de Vercel (vercel.com -> Settings -> Environment Variables).'
       else if (err === 'db_error') msg = `Error al guardar en Supabase: ${desc ? decodeURIComponent(desc) : 'Verifica que la tabla social_connections exista.'}`
       else if (err === 'token_exchange' || err === 'token_extension') {
         const decodedDesc = desc ? decodeURIComponent(desc) : ''
@@ -474,6 +475,14 @@ export function MetaConnectBanner({ mode, onConnected }: MetaConnectBannerProps)
           style={{ fontSize: '0.78rem', color: '#71717a', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
         >
           Ver documentación Meta →
+        </a>
+        <a
+          href="/api/v1/meta/test-credentials"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontSize: '0.78rem', color: '#38bdf8', textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+        >
+          🔍 Probar estado de credenciales →
         </a>
       </div>
     </div>

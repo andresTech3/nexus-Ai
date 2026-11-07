@@ -10,6 +10,7 @@ import {
   fetchInstagramProfile,
   getAppUrl,
   getMetaCallbackUri,
+  META_APP_SECRET,
 } from '@/lib/meta/oauth'
 
 /**
@@ -77,6 +78,13 @@ export async function GET(request: Request) {
   const effectiveCallbackUri = savedCallbackUri || callbackUri
 
   // ── 3. Exchange code for token ────────────────────────────────────────────
+  if (!META_APP_SECRET || META_APP_SECRET.trim() === '') {
+    console.error('[meta/callback] META_APP_SECRET is missing in environment')
+    return NextResponse.redirect(
+      `${appUrl}/dashboard/${effectiveMode}?meta_error=missing_secret&desc=${encodeURIComponent('La variable META_APP_SECRET no está configurada en Vercel. Ve a Vercel > Settings > Environment Variables, agrégala y haz Redeploy.')}`
+    )
+  }
+
   const shortToken = await exchangeCodeForToken(code, effectiveCallbackUri)
   if (!shortToken || (shortToken as any).error || !shortToken.access_token) {
     const rawErr = (shortToken as any)?.error
