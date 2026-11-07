@@ -52,8 +52,8 @@ export async function GET(request: Request) {
     callbackUri,
   })
 
-  // Store state in a secure httpOnly cookie so the callback can validate CSRF
-  response.cookies.set('meta_oauth_state', `${mode}:${state}:${user.id}`, {
+  // Store state and exact callbackUri in a secure httpOnly cookie so the callback can validate CSRF & match URI exactly
+  response.cookies.set('meta_oauth_state', `${mode}:${state}:${user.id}:${encodeURIComponent(callbackUri)}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

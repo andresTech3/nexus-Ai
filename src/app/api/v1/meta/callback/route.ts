@@ -52,8 +52,8 @@ export async function GET(request: Request) {
   // ── 2. Validate CSRF state ────────────────────────────────────────────────
   const cookieStore = await cookies()
   const storedStateCookie = cookieStore.get('meta_oauth_state')?.value
-  // Cookie format: "mode:randomToken:userId"
-  const [cookieMode, cookieRandom, cookieUserId] = (storedStateCookie ?? '').split(':')
+  // Cookie format: "mode:randomToken:userId:callbackUri"
+  const [cookieMode, cookieRandom, cookieUserId, cookieCallbackUri] = (storedStateCookie ?? '').split(':')
   // State returned by Meta format: "mode:randomToken"
   const [returnedMode, returnedRandom] = returnedState.split(':')
 
@@ -72,21 +72,41 @@ export async function GET(request: Request) {
     mode = (cookieMode as 'ads' | 'instagram') || mode
   }
 
+  // Use the exact redirect URI stored during the /connect initiation if available
+  const savedCallbackUri = cookieCallbackUri ? decodeURIComponent(cookieCallbackUri) : null
+  const effectiveCallbackUri = savedCallbackUri || callbackUri
+
   // ── 3. Exchange code for token ────────────────────────────────────────────
-  const shortToken = await exchangeCodeForToken(code, callbackUri)
-  if (!shortToken || shortToken.error || !shortToken.access_token) {
+  const shortToken = await exchangeCodeForToken(code, effectiveCallbackUri)
+  if (!shortToken || (shortToken as any).error || !shortToken.access_token) {
+    const rawErr = (shortToken as any)?.error
+    const errorMsg =
+      rawErr?.message ||
+      rawErr?.error_user_msg ||
+      (typeof rawErr === 'string'
+        ? rawErr
+        : (shortToken as any)?.error_description || (rawErr ? JSON.stringify(rawErr) : 'No se pudo canjear el token con Meta'))
+
     console.error('[meta/callback] Token exchange failed:', shortToken)
     return NextResponse.redirect(
-      `${appUrl}/dashboard/${effectiveMode}?meta_error=token_exchange&desc=${encodeURIComponent(shortToken?.error || 'No se pudo canjear el token con Meta')}`
+      `${appUrl}/dashboard/${effectiveMode}?meta_error=token_exchange&desc=${encodeURIComponent(errorMsg)}`
     )
   }
 
   // ── 4. Extend to long-lived token (60 days) ───────────────────────────────
   const longToken = await extendToken(shortToken.access_token)
-  if (!longToken || longToken.error || !longToken.access_token) {
+  if (!longToken || (longToken as any).error || !longToken.access_token) {
+    const rawErr = (longToken as any)?.error
+    const errorMsg =
+      rawErr?.message ||
+      rawErr?.error_user_msg ||
+      (typeof rawErr === 'string'
+        ? rawErr
+        : (longToken as any)?.error_description || (rawErr ? JSON.stringify(rawErr) : 'Fallo al extender vigencia del token'))
+
     console.error('[meta/callback] Token extension failed:', longToken)
     return NextResponse.redirect(
-      `${appUrl}/dashboard/${effectiveMode}?meta_error=token_extension&desc=${encodeURIComponent(longToken?.error || 'Fallo al extender vigencia del token')}`
+      `${appUrl}/dashboard/${effectiveMode}?meta_error=token_extension&desc=${encodeURIComponent(errorMsg)}`
     )
   }
 

@@ -64,7 +64,10 @@ export function MetaConnectBanner({ mode, onConnected }: MetaConnectBannerProps)
       let msg = 'La conexión no pudo completarse.'
       if (err === 'cancelled') msg = 'Cancelaste la autorización en Meta o no concediste los permisos requeridos.'
       else if (err === 'db_error') msg = `Error al guardar en Supabase: ${desc ? decodeURIComponent(desc) : 'Verifica que la tabla social_connections exista.'}`
-      else if (err === 'token_exchange' || err === 'token_extension') msg = `Fallo de token con Meta: ${desc ? decodeURIComponent(desc) : 'Credenciales inválidas.'}`
+      else if (err === 'token_exchange' || err === 'token_extension') {
+        const decodedDesc = desc ? decodeURIComponent(desc) : ''
+        msg = `Fallo de token con Meta: ${decodedDesc && decodedDesc !== '[object Object]' ? decodedDesc : 'Verifica que la URL de redirección en Meta coincida y vuelve a intentar.'}`
+      }
       else if (err === 'user_fetch_failed') msg = `Meta rechazó la lectura del perfil: ${desc ? decodeURIComponent(desc) : 'Permisos insuficientes.'}`
       else if (desc) msg = decodeURIComponent(desc)
 

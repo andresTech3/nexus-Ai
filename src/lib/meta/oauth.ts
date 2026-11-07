@@ -7,46 +7,46 @@
  * - Instagram Basic Display: https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
  */
 
-export const META_APP_ID = process.env.META_APP_ID ?? ''
-export const META_APP_SECRET = process.env.META_APP_SECRET ?? ''
+export const META_APP_ID = (process.env.META_APP_ID ?? '1811184963497287').trim().replace(/['"]/g, '')
+export const META_APP_SECRET = (process.env.META_APP_SECRET ?? '').trim().replace(/['"]/g, '')
 
 /**
  * Resolves the application public URL dynamically based on environment or request headers.
  * Works seamlessly in localhost, Vercel preview, and Vercel production domains.
  */
 export function getAppUrl(request?: Request): string {
-  // 1. Explicit production URL if set
-  if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
-  }
-
-  // 2. Vercel environment system variables (injected automatically by Vercel)
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`
-  }
-
-  // 3. Fallback dynamically to incoming request headers
+  // 1. If incoming request has headers, that is the exact domain the browser visited
   if (request) {
     const forwardedHost = request.headers.get('x-forwarded-host')
     const forwardedProto = request.headers.get('x-forwarded-proto') || 'https'
     if (forwardedHost) {
-      return `${forwardedProto}://${forwardedHost}`
+      return `${forwardedProto}://${forwardedHost}`.replace(/\/$/, '')
     }
     const host = request.headers.get('host')
     if (host) {
       const proto = host.includes('localhost') ? 'http' : 'https'
-      return `${proto}://${host}`
+      return `${proto}://${host}`.replace(/\/$/, '')
     }
     try {
       const { origin } = new URL(request.url)
-      if (origin && !origin.includes('undefined')) return origin
+      if (origin && !origin.includes('undefined')) return origin.replace(/\/$/, '')
     } catch {}
   }
 
-  return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  // 2. Explicit production URL if set
+  if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')
+  }
+
+  // 3. Vercel project production URL
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`.replace(/\/$/, '')
+  }
+
+  // 4. Default fallback
+  return process.env.NODE_ENV === 'production'
+    ? 'https://nexus-ai-six-azure.vercel.app'
+    : 'http://localhost:3000'
 }
 
 /**
@@ -104,14 +104,14 @@ export async function exchangeCodeForToken(
   access_token: string
   token_type: string
   expires_in?: number
-  error?: string
+  error?: any
 }> {
   const redirectUri = customRedirectUri || getMetaCallbackUri()
   const params = new URLSearchParams({
-    client_id: META_APP_ID,
-    client_secret: META_APP_SECRET,
+    client_id: META_APP_ID.trim(),
+    client_secret: META_APP_SECRET.trim(),
     redirect_uri: redirectUri,
-    code,
+    code: code.trim(),
   })
 
   const res = await fetch(
@@ -125,13 +125,13 @@ export async function extendToken(shortToken: string): Promise<{
   access_token: string
   token_type: string
   expires_in: number
-  error?: string
+  error?: any
 }> {
   const params = new URLSearchParams({
     grant_type: 'fb_exchange_token',
-    client_id: META_APP_ID,
-    client_secret: META_APP_SECRET,
-    fb_exchange_token: shortToken,
+    client_id: META_APP_ID.trim(),
+    client_secret: META_APP_SECRET.trim(),
+    fb_exchange_token: shortToken.trim(),
   })
 
   const res = await fetch(
