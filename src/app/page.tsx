@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useCurrency } from '@/hooks/useCurrency'
+import { AgentOrbitCarousel } from '@/components/ui/agent-orbit-carousel'
 
 interface DemoProduct {
   id: string
@@ -622,6 +623,64 @@ export default function HomePage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── AGENT ORBIT CAROUSEL: 11 ESPECIALISTAS EN ÓRBITA ───────── */}
+      <section
+        style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: '3rem 1.5rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.07)',
+        }}
+      >
+        <div style={{ maxWidth: 700, marginBottom: '2rem' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'rgba(250, 174, 51, 0.1)',
+              border: '1px solid rgba(250, 174, 51, 0.3)',
+              borderRadius: '99px',
+              padding: '0.35rem 0.85rem',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              color: '#faae33',
+              marginBottom: '0.75rem',
+            }}
+          >
+            <span>🪐</span>
+            <span>OFICINA VIRTUAL EN ACCIÓN</span>
+          </div>
+          <h2
+            style={{
+              fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+              fontWeight: 800,
+              letterSpacing: '-0.025em',
+              color: '#ffffff',
+              margin: '0 0 0.65rem 0',
+            }}
+          >
+            Tus 11 Especialistas trabajando en órbita
+          </h2>
+          <p style={{ fontSize: '1rem', color: '#a1a1aa', margin: 0, lineHeight: 1.5 }}>
+            Gira la rueda o usa las flechas para conocer al equipo que investiga productos virales, calcula márgenes, diseña vídeos y monta tu tienda.
+          </p>
+        </div>
+
+        <div
+          style={{
+            width: '100%',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            border: '1px solid #292338',
+            background: '#0c0a12',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+          }}
+        >
+          <AgentOrbitCarousel />
         </div>
       </section>
 

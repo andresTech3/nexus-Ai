@@ -14,7 +14,7 @@ export function DeliverablesView() {
   const deliverables = activeOffice?.deliverables || {}
 
   const [activeSubTab, setActiveSubTab] = useState<
-    'market_research' | 'gallery' | 'calculator' | 'mobile_store' | 'ugc_timeline' | 'meta_ads' | 'all_files'
+    'gallery' | 'scripts_and_copy' | 'store_and_finance' | 'all_files'
   >('gallery')
 
   // Financial Calculator Interactive Inputs
@@ -152,192 +152,154 @@ export function DeliverablesView() {
           backgroundColor: '#140f0c',
           borderBottom: '1px solid #332418',
           overflowX: 'auto',
+          gap: '0.25rem',
+          padding: '0.25rem 0.75rem 0 0.75rem',
         }}
       >
         <button
           onClick={() => setActiveSubTab('gallery')}
           style={{
-            padding: '0.65rem 1rem',
+            padding: '0.65rem 1.1rem',
             background: activeSubTab === 'gallery' ? '#241812' : 'transparent',
             border: 'none',
             borderBottom: activeSubTab === 'gallery' ? '2px solid #faae33' : '2px solid transparent',
             color: activeSubTab === 'gallery' ? '#faae33' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
+            fontSize: '0.82rem',
+            fontWeight: 800,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            borderRadius: '6px 6px 0 0',
           }}
         >
-          Creativos y Anuncios (Leo)
-        </button>
-        <button
-          onClick={() => setActiveSubTab('market_research')}
-          style={{
-            padding: '0.65rem 1rem',
-            background: activeSubTab === 'market_research' ? '#241812' : 'transparent',
-            border: 'none',
-            borderBottom: activeSubTab === 'market_research' ? '2px solid #34d399' : '2px solid transparent',
-            color: activeSubTab === 'market_research' ? '#34d399' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Investigación de Mercado (Iván)
-        </button>
-        <button
-          onClick={() => setActiveSubTab('calculator')}
-          style={{
-            padding: '0.65rem 1rem',
-            background: activeSubTab === 'calculator' ? '#241812' : 'transparent',
-            border: 'none',
-            borderBottom: activeSubTab === 'calculator' ? '2px solid #faae33' : '2px solid transparent',
-            color: activeSubTab === 'calculator' ? '#faae33' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Calculadora Determinista (Eva)
-        </button>
-        <button
-          onClick={() => setActiveSubTab('mobile_store')}
-          style={{
-            padding: '0.65rem 1rem',
-            background: activeSubTab === 'mobile_store' ? '#241812' : 'transparent',
-            border: 'none',
-            borderBottom: activeSubTab === 'mobile_store' ? '2px solid #faae33' : '2px solid transparent',
-            color: activeSubTab === 'mobile_store' ? '#faae33' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Mockup Móvil Shopify (Diego)
+          🎨 Fotos y Creativos HD (Leo)
         </button>
 
         <button
-          onClick={() => setActiveSubTab('ugc_timeline')}
+          onClick={() => setActiveSubTab('scripts_and_copy')}
           style={{
-            padding: '0.65rem 1rem',
-            background: activeSubTab === 'ugc_timeline' ? '#241812' : 'transparent',
+            padding: '0.65rem 1.1rem',
+            background: activeSubTab === 'scripts_and_copy' ? '#241812' : 'transparent',
             border: 'none',
-            borderBottom: activeSubTab === 'ugc_timeline' ? '2px solid #faae33' : '2px solid transparent',
-            color: activeSubTab === 'ugc_timeline' ? '#faae33' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
+            borderBottom: activeSubTab === 'scripts_and_copy' ? '2px solid #faae33' : '2px solid transparent',
+            color: activeSubTab === 'scripts_and_copy' ? '#faae33' : '#9ca3af',
+            fontSize: '0.82rem',
+            fontWeight: 800,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            borderRadius: '6px 6px 0 0',
           }}
         >
-          Guion Vídeo 9:16 (Marco)
+          📝 Textos y Guiones 9:16 (Lucas)
         </button>
+
         <button
-          onClick={() => setActiveSubTab('meta_ads')}
+          onClick={() => setActiveSubTab('store_and_finance')}
           style={{
-            padding: '0.65rem 1rem',
-            background: activeSubTab === 'meta_ads' ? '#241812' : 'transparent',
+            padding: '0.65rem 1.1rem',
+            background: activeSubTab === 'store_and_finance' ? '#241812' : 'transparent',
             border: 'none',
-            borderBottom: activeSubTab === 'meta_ads' ? '2px solid #faae33' : '2px solid transparent',
-            color: activeSubTab === 'meta_ads' ? '#faae33' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
+            borderBottom: activeSubTab === 'store_and_finance' ? '2px solid #faae33' : '2px solid transparent',
+            color: activeSubTab === 'store_and_finance' ? '#faae33' : '#9ca3af',
+            fontSize: '0.82rem',
+            fontWeight: 800,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            borderRadius: '6px 6px 0 0',
           }}
         >
-          Blueprint Meta Ads (Tomás)
+          🛒 Tienda, Márgenes &amp; Tráfico (Eva &amp; Sofía)
         </button>
+
         <button
           onClick={() => setActiveSubTab('all_files')}
           style={{
-            padding: '0.65rem 1rem',
+            padding: '0.65rem 1.1rem',
             background: activeSubTab === 'all_files' ? '#241812' : 'transparent',
             border: 'none',
             borderBottom: activeSubTab === 'all_files' ? '2px solid #faae33' : '2px solid transparent',
             color: activeSubTab === 'all_files' ? '#faae33' : '#9ca3af',
-            fontSize: '0.78rem',
-            fontWeight: 700,
+            fontSize: '0.82rem',
+            fontWeight: 800,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
+            borderRadius: '6px 6px 0 0',
           }}
         >
-          Todos los Archivos ({Object.keys(deliverables).length})
+          📦 Descargar Archivos ({Object.keys(deliverables).length})
         </button>
       </div>
 
       {/* Tab Panels */}
       <div style={{ padding: '1.25rem' }}>
         {/* ========================================== */}
-        {/* SUBTAB 1: DETERMINISTIC FINANCIAL CALCULATOR */}
+        {/* SUBTAB: TIENDA, MÁRGENES & ESTRATEGIA      */}
         {/* ========================================== */}
-        {activeSubTab === 'calculator' && (
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <div>
-                <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 700, textTransform: 'uppercase' }}>
-                  Fórmulas en Código Puro (Cero Alucinaciones de LLM)
-                </span>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                  Unit Economics en Vivo — Eva (CFO)
-                </h3>
-              </div>
+        {activeSubTab === 'store_and_finance' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {/* CALCULADORA DETERMINISTA DE EVA (CFO) */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div>
+                  <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 800, textTransform: 'uppercase' }}>
+                    Fórmulas en Código Matemático Puro (Eva CFO)
+                  </span>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
+                    Calculadora de Rentabilidad &amp; Margen Limpio
+                  </h3>
+                </div>
 
-              {/* Health Score Badge */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  backgroundColor:
-                    liveEcon.health_score === 'GREEN'
-                      ? 'rgba(52, 211, 153, 0.15)'
-                      : liveEcon.health_score === 'YELLOW'
-                      ? 'rgba(250, 204, 21, 0.15)'
-                      : 'rgba(239, 68, 68, 0.15)',
-                  border: `1px solid ${
-                    liveEcon.health_score === 'GREEN'
-                      ? '#34d399'
-                      : liveEcon.health_score === 'YELLOW'
-                      ? '#facc15'
-                      : '#ef4444'
-                  }`,
-                  borderRadius: '6px',
-                  padding: '0.4rem 0.8rem',
-                }}
-              >
-                <span
+                {/* Health Score Badge */}
+                <div
                   style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
                     backgroundColor:
                       liveEcon.health_score === 'GREEN'
-                        ? '#34d399'
+                        ? 'rgba(52, 211, 153, 0.15)'
                         : liveEcon.health_score === 'YELLOW'
-                        ? '#facc15'
-                        : '#ef4444',
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: '0.82rem',
-                    fontWeight: 800,
-                    color:
+                        ? 'rgba(250, 204, 21, 0.15)'
+                        : 'rgba(239, 68, 68, 0.15)',
+                    border: `1px solid ${
                       liveEcon.health_score === 'GREEN'
                         ? '#34d399'
                         : liveEcon.health_score === 'YELLOW'
                         ? '#facc15'
-                        : '#ef4444',
+                        : '#ef4444'
+                    }`,
+                    borderRadius: '6px',
+                    padding: '0.4rem 0.8rem',
                   }}
                 >
-                  SALUD FINANCIERA: {liveEcon.health_score}
-                </span>
+                  <span
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      backgroundColor:
+                        liveEcon.health_score === 'GREEN'
+                          ? '#34d399'
+                          : liveEcon.health_score === 'YELLOW'
+                          ? '#facc15'
+                          : '#ef4444',
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      color:
+                        liveEcon.health_score === 'GREEN'
+                          ? '#34d399'
+                          : liveEcon.health_score === 'YELLOW'
+                          ? '#facc15'
+                          : '#ef4444',
+                    }}
+                  >
+                    SALUD FINANCIERA: {liveEcon.health_score === 'GREEN' ? 'Rentable (Excelente)' : liveEcon.health_score === 'YELLOW' ? 'Margen Ajustado' : 'Riesgo de Pérdida'}
+                  </span>
+                </div>
               </div>
-            </div>
 
             {/* Interactive Inputs Grid */}
             <div
@@ -604,13 +566,18 @@ export function DeliverablesView() {
               </div>
             </div>
           </div>
-        )}
 
-        {/* ========================================== */}
-        {/* SUBTAB 2: INTERACTIVE MOBILE PHONE PREVIEW */}
-        {/* ========================================== */}
-        {activeSubTab === 'mobile_store' && (
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {/* ========================================== */}
+            {/* VISTA PREVIA TIENDA MÓVIL & CÓDIGO LIQUID  */}
+            {/* ========================================== */}
+            <div style={{ marginTop: '1.5rem', borderTop: '1px solid #3d2a1d', paddingTop: '1.25rem' }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <span style={{ fontSize: '0.72rem', color: '#14b8a6', fontWeight: 800 }}>ESTRUCTURA DE TIENDA (SOFÍA)</span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
+                  Tienda Móvil Shopify &amp; Selector de Packs de Ahorro
+                </h3>
+              </div>
+              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             {/* Phone Frame */}
             <div
               style={{
@@ -796,30 +763,58 @@ export function DeliverablesView() {
               </pre>
             </div>
           </div>
+        </div>
+
+            {/* ========================================== */}
+            {/* SUBTAB: BLUEPRINT PUBLICITARIO (TOMÁS)     */}
+            {/* ========================================== */}
+            <div style={{ marginTop: '1.5rem', borderTop: '1px solid #3d2a1d', paddingTop: '1.25rem' }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <span style={{ fontSize: '0.72rem', color: '#6366f1', fontWeight: 800 }}>ESTRATEGIA DE ANUNCIOS (TOMÁS)</span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
+                  Estructura de Campaña &amp; Reglas de Seguridad Anti-Pérdidas
+                </h3>
+              </div>
+
+              <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
+                <div style={{ fontSize: '0.78rem', color: '#fff', fontWeight: 700, marginBottom: '0.4rem' }}>
+                  Configuración Recomendada de Campaña:
+                </div>
+                <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.8rem', color: '#d1d5db', flexWrap: 'wrap' }}>
+                  <div>Presupuesto Diario Inicial: <strong style={{ color: '#faae33' }}>30,00 € a 50,00 €/día</strong></div>
+                  <div>Objetivo de Campaña: <strong style={{ color: '#34d399' }}>Ventas Directas (Pixel de Compra)</strong></div>
+                  <div>Ubicación: <strong style={{ color: '#fff' }}>España (Península e Islas)</strong></div>
+                </div>
+              </div>
+
+              <div style={{ background: '#201712', border: '1px solid #ef4444', borderRadius: '8px', padding: '1rem' }}>
+                <div style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 800, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Reglas de Seguridad Automáticas (Eva &amp; Tomás):
+                </div>
+                <div style={{ fontSize: '0.76rem', color: '#d1d5db', lineHeight: 1.6 }}>
+                  <div>1. <strong>Pausa Preventiva:</strong> Si un anuncio gasta más de <strong>{(liveEcon.cpa_maximo_rentable * 1.5).toFixed(2)} €</strong> sin compras, pausarlo de inmediato.</div>
+                  <div>2. <strong>Control de Rentabilidad:</strong> Si el retorno baja de <strong>1.45x</strong> en 3 días consecutivos, reducir el presupuesto un 20%.</div>
+                  <div>3. <strong>Escalado Seguro:</strong> Si el retorno supera <strong>2.80x</strong> con más de 5 ventas verificadas, aumentar un 15% cada 48 horas.</div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* ========================================== */}
-        {/* SUBTAB 3: AI ART & PHOTOGRAPHY GALLERY */}
-        {/* ========================================== */}
-        {/* ========================================== */}
-        {/* SUBTAB: CREATIVE STUDIO (LEO) */}
+        {/* SUBTAB: CREATIVE STUDIO (LEO)              */}
         {/* ========================================== */}
         {activeSubTab === 'gallery' && <LeoCreativesStudio />}
 
         {/* ========================================== */}
-        {/* SUBTAB: REAL MARKET RESEARCH (IVAN & LUCAS) */}
+        {/* SUBTAB: GUIONES Y TEXTOS (LUCAS)           */}
         {/* ========================================== */}
-        {activeSubTab === 'market_research' && <RealMarketResearchView />}
-
-        {/* ========================================== */}
-        {/* SUBTAB 4: UGC VIDEO TIMELINE SCRIPT */}
-        {/* ========================================== */}
-        {activeSubTab === 'ugc_timeline' && (
+        {activeSubTab === 'scripts_and_copy' && (
           <div>
             <div style={{ marginBottom: '1rem' }}>
-              <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 700 }}>PRODUCCIÓN DE MARCO</span>
+              <span style={{ fontSize: '0.72rem', color: '#06b6d4', fontWeight: 800 }}>COPYWRITING &amp; GUIONES (LUCAS)</span>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                Guion UGC 9:16 de 30 Segundos &amp; Variaciones de Gancho
+                Guion de Vídeo Vertical 9:16 (TikTok &amp; Reels) con 3 Ganchos
               </h3>
             </div>
 
@@ -830,77 +825,84 @@ export function DeliverablesView() {
                   GANCHO A (DEMOSTRACIÓN VISUAL)
                 </span>
                 <p style={{ fontSize: '0.78rem', color: '#fff', margin: '8px 0 0 0', lineHeight: 1.4 }}>
-                  "La creadora despega el parche a 5 cm de cámara frente al espejo con sonido pop. <em>¿Por qué nadie me habló antes de los microcristales solubles?</em>"
+                  "Demostración directa del producto en los primeros 3 segundos con efecto sorpresa. <em>¿Por qué nadie me habló antes de esto?</em>"
                 </p>
               </div>
 
               <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '0.85rem' }}>
                 <span style={{ background: '#3d2a1d', color: '#faae33', fontSize: '0.65rem', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
-                  GANCHO B (CONTRASTE PROVOCADOR)
+                  GANCHO B (COMPARACIÓN DIRECTA)
                 </span>
                 <p style={{ fontSize: '0.78rem', color: '#fff', margin: '8px 0 0 0', lineHeight: 1.4 }}>
-                  "Tira a la papelera un tarro de crema de 80€: <em>Deja de tirar el dinero en cremas que solo se evaporan en tu almohada.</em>"
+                  "Comparación frente al producto genérico de tienda física: <em>Deja de gastar el doble por la mitad de resultados.</em>"
                 </p>
               </div>
 
               <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '0.85rem' }}>
                 <span style={{ background: '#3d2a1d', color: '#faae33', fontSize: '0.65rem', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
-                  GANCHO C (CONFESIÓN ÍNTIMA)
+                  GANCHO C (CONFESIÓN DE CLIENTE)
                 </span>
                 <p style={{ fontSize: '0.78rem', color: '#fff', margin: '8px 0 0 0', lineHeight: 1.4 }}>
-                  "<em>Dormí solo 5 horas, pero mi jefa me acaba de preguntar si vengo de un retiro de spa en los Alpes...</em>"
+                  "<em>Llevo usándolo una semana y todos mis amigos me han preguntado de dónde lo he sacado...</em>"
                 </p>
               </div>
             </div>
 
             {/* Timeline Breakdown */}
-            <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem' }}>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#faae33', marginBottom: '0.6rem' }}>
-                LÍNEA TEMPORAL EXACTA (0 A 30 SEGUNDOS)
+            <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem', marginBottom: '1.25rem' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#faae33', marginBottom: '0.6rem' }}>
+                ESTRUCTURA DEL VÍDEO (0 A 30 SEGUNDOS)
               </div>
               <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.78rem', color: '#e5e7eb', lineHeight: 1.7 }}>
-                <li><strong>00:00 - 00:03 (Gancho):</strong> Impacto visual inmediato y texto con gancho.</li>
-                <li><strong>00:03 - 00:10 (Problema):</strong> Por qué los contornos tradicionales no penetran la piel fina.</li>
-                <li><strong>00:10 - 00:20 (Mecanismo):</strong> Cómo los microconos de ácido hialurónico se disuelven de noche.</li>
-                <li><strong>00:20 - 00:30 (Prueba &amp; Oferta):</strong> Mirada descansada al despertar + Envío 48h y garantía de 30 días.</li>
+                <li><strong>00:00 - 00:03 (Gancho Visual):</strong> Movimiento rápido y texto grande que frena el scroll en la pantalla.</li>
+                <li><strong>00:03 - 00:10 (El Problema Real):</strong> Muestra la frustración cotidiana que resuelve el producto.</li>
+                <li><strong>00:10 - 00:20 (La Solución en Acción):</strong> El producto funcionando de forma impecable y satisfactoria.</li>
+                <li><strong>00:20 - 00:30 (Oferta &amp; Llamada a la Acción):</strong> Descuento por tiempo limitado + Envíos rápidos y garantía total.</li>
               </ul>
             </div>
-          </div>
-        )}
 
-        {/* ========================================== */}
-        {/* SUBTAB 5: META ADS BLUEPRINT */}
-        {/* ========================================== */}
-        {activeSubTab === 'meta_ads' && (
-          <div>
-            <div style={{ marginBottom: '1rem' }}>
-              <span style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 700 }}>MEDIA BUYING DE TOMÁS</span>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', margin: 0 }}>
-                Estructura de Campaña Meta Ads &amp; Reglas de Stop-Loss
-              </h3>
-            </div>
-
-            <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem', marginBottom: '1rem' }}>
-              <div style={{ fontSize: '0.78rem', color: '#fff', fontWeight: 700, marginBottom: '0.4rem' }}>
-                Configuración CBO (Advantage Campaign Budget):
+            {/* Textos y Copys de la Tienda */}
+            {deliverables['05_copy_landing_page_carlos.md'] && (
+              <div style={{ background: '#201712', border: '1px solid #3d2a1d', borderRadius: '8px', padding: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#06b6d4' }}>
+                    TEXTOS PERSUASIVOS DE LA PÁGINA WEB (LUCAS)
+                  </div>
+                  <button
+                    onClick={() => handleDownloadSingleFile('05_copy_landing_page_carlos.md', deliverables['05_copy_landing_page_carlos.md'])}
+                    style={{
+                      background: '#140f0c',
+                      border: '1px solid #4a3424',
+                      color: '#faae33',
+                      padding: '0.25rem 0.6rem',
+                      borderRadius: '4px',
+                      fontSize: '0.72rem',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Descargar Texto
+                  </button>
+                </div>
+                <pre
+                  style={{
+                    background: '#120d09',
+                    border: '1px solid #332418',
+                    borderRadius: '6px',
+                    padding: '0.85rem',
+                    color: '#e5e7eb',
+                    fontSize: '0.74rem',
+                    lineHeight: 1.5,
+                    maxHeight: '320px',
+                    overflowY: 'auto',
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
+                  {typeof deliverables['05_copy_landing_page_carlos.md'] === 'string'
+                    ? deliverables['05_copy_landing_page_carlos.md']
+                    : JSON.stringify(deliverables['05_copy_landing_page_carlos.md'], null, 2)}
+                </pre>
               </div>
-              <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.8rem', color: '#d1d5db', flexWrap: 'wrap' }}>
-                <div>Presupuesto Diario: <strong style={{ color: '#faae33' }}>50,00 €/día</strong></div>
-                <div>Objetivo: <strong style={{ color: '#34d399' }}>Conversiones a Compra (Pixel + CAPI)</strong></div>
-                <div>Mercado: <strong style={{ color: '#fff' }}>España (Península e Islas)</strong></div>
-              </div>
-            </div>
-
-            <div style={{ background: '#201712', border: '1px solid #ef4444', borderRadius: '8px', padding: '1rem' }}>
-              <div style={{ fontSize: '0.78rem', color: '#ef4444', fontWeight: 800, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Reglas Deterministas de Stop-Loss (Eva):
-              </div>
-              <div style={{ fontSize: '0.76rem', color: '#d1d5db', lineHeight: 1.6 }}>
-                <div>1. <strong>Parada Inmediata:</strong> Si un conjunto gasta más de <strong>{(liveEcon.cpa_maximo_rentable * 1.5).toFixed(2)} €</strong> sin registrar compras, pausar de inmediato.</div>
-                <div>2. <strong>Alerta de Margen:</strong> Si el ROAS medio de 3 días cae por debajo de <strong>1.45x</strong>, recortar presupuesto un 20%.</div>
-                <div>3. <strong>Escalado Seguro:</strong> Si el ROAS medio supera <strong>2.80x</strong> con más de 5 compras, escalar +15% cada 48h.</div>
-              </div>
-            </div>
+            )}
           </div>
         )}
 

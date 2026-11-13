@@ -5,7 +5,6 @@ import { useOfficeStore } from '@/lib/office/store'
 import { scheduler } from '@/lib/office/scheduler'
 import { AGENT_DEFINITIONS } from '@/lib/office/agents/definitions'
 import { Office3D } from './Office3D'
-import { AgentInspector } from './AgentInspector'
 import { CheckpointModal } from './CheckpointModal'
 import { DeliverablesView } from './DeliverablesView'
 import { MultiOfficeManager } from './MultiOfficeManager'
@@ -744,9 +743,6 @@ export function AutonomousOfficeDashboard() {
           )}
         </div>
       )}
-
-      {/* Floating Agent Inspector Drawer */}
-      <AgentInspector />
 
       {/* Blocking Checkpoint Modal */}
       <CheckpointModal />

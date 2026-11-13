@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="bg-clara" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#4c1d95" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#09080e" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="ring-clara" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.3"/>
+    </linearGradient>
+    <filter id="glow-clara" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <circle cx="200" cy="200" r="180" fill="url(#bg-clara)" stroke="#8b5cf6" stroke-width="4" stroke-opacity="0.6"/>
+  <circle cx="200" cy="200" r="165" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="6 6" stroke-opacity="0.4"/>
+  <g filter="url(#glow-clara)">
+    <circle cx="200" cy="175" r="82" fill="#14121d" stroke="url(#ring-clara)" stroke-width="3"/>
+    <text x="200" y="206" font-size="76" text-anchor="middle" dominant-baseline="middle">🕵️</text>
+  </g>
+  <rect x="70" y="295" width="260" height="52" rx="26" fill="#110f18" stroke="#8b5cf6" stroke-width="2" stroke-opacity="0.8"/>
+  <text x="200" y="327" font-family="system-ui, -apple-system, sans-serif" font-size="21" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">Clara</text>
+</svg>
