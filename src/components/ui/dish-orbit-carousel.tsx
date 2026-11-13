@@ -157,7 +157,7 @@ const CSS =
   ".dsh-plates{position:absolute;left:130px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
   ".dsh-orbit{position:absolute;inset:0;transform-origin:69% -217%;visibility:hidden;will-change:transform}" +
   ".dsh-orbit>img{display:block;width:245px;height:245px;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none;" +
-  "filter:drop-shadow(0 16px 22px rgba(0,0,0,.2)) drop-shadow(0 3px 5px rgba(0,0,0,.12))}" +
+  "filter:drop-shadow(0 24px 32px rgba(0,0,0,.65)) drop-shadow(0 4px 12px rgba(0,0,0,.4))}" +
   ".dsh-head{position:absolute;left:388px;top:96px;width:330px;height:150px}" +
   ".dsh-hd{position:absolute;inset:0;visibility:hidden}" +
   ".dsh-eye{font-size:12.5px;font-weight:600;letter-spacing:.01em;margin:0 0 4px 2px}" +
@@ -227,8 +227,8 @@ const SHOW = "inset(0% 0% 0% 0%)"
 const Icon = {
   search: <svg className="dsh-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>,
   menu: <svg className="dsh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h16" /></svg>,
-  play: <svg className="dsh-ico dsh-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5v17l14-8.5z" /></svg>,
-  order: <svg className="dsh-ico dsh-fill" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5 3 15h18zM3 18h18v2.5H3z" /></svg>,
+  play: <svg className="dsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
+  order: <svg className="dsh-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
   up: <svg className="dsh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v10H3.5V10zM7 10l4-7c1.6 0 2.6 1.2 2.2 2.8L12.6 9H19a2 2 0 0 1 2 2.3l-1.3 7A2 2 0 0 1 17.7 20H7" /></svg>,
   down: <svg className="dsh-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 14V4h3.5v10zM17 14l-4 7c-1.6 0-2.6-1.2-2.2-2.8l.6-3.2H5a2 2 0 0 1-2-2.3l1.3-7A2 2 0 0 1 6.3 4H17" /></svg>,
 }
@@ -469,12 +469,10 @@ export function DishOrbitCarousel({
           <path ref={arcRef} style={{ opacity: 0.34 }} />
         </svg>
 
-        <div className="dsh-top">
-          <button type="button" className="dsh-btn" aria-label="Search">{Icon.search}</button>
-          <button type="button" className="dsh-btn" aria-label="Menu">{Icon.menu}</button>
+        <div className="dsh-top" style={{ display: 'none' }}>
         </div>
 
-        <div className="dsh-pager" role="tablist" aria-label="Choose a dish">
+        <div className="dsh-pager" role="tablist" aria-label="Seleccionar especialista">
           {dishes.map((d, i) => (
             <button key={i} type="button" role="tab" className="dsh-btn dsh-dot" aria-selected={i === index}
               aria-current={i === index ? "true" : undefined} aria-label={d.title + " " + d.subtitle} onClick={() => go(i)}>
@@ -494,53 +492,57 @@ export function DishOrbitCarousel({
         <div className="dsh-head" aria-live="polite">
           {dishes.map((d, i) => (
             <div key={i} ref={(el) => { heads.current[i] = el }} className="dsh-hd" aria-hidden={i !== index}>
-              <p className="dsh-eye">{d.eyebrow ?? "#" + (i + 1) + " Most loved dish"}</p>
+              <p className="dsh-eye" style={{ color: '#faae33', fontWeight: 700, letterSpacing: '0.04em', fontSize: '11px', textTransform: 'uppercase' }}>
+                {d.eyebrow ?? "AGENTE ESPECIALISTA"}
+              </p>
               <h2 style={{ margin: 0, font: "inherit" }}>
-                <span className="dsh-t1" style={{ fontSize: fitSize(d.title.length, 56, 330, 0.56) + "px" }}>{d.title}</span>
-                <span className="dsh-t2" style={{ fontSize: fitSize(d.subtitle.length, 62, 320, 0.64) + "px" }}>{d.subtitle}</span>
+                <span className="dsh-t1" style={{ fontSize: "36px", fontWeight: 800, letterSpacing: "-0.02em", color: "#ffffff", display: "block" }}>{d.title}</span>
+                <span className="dsh-t2" style={{ fontSize: "14px", fontWeight: 700, letterSpacing: "0.03em", color: "#d4d4d8", marginTop: "4px", display: "block", textTransform: "uppercase" }}>{d.subtitle}</span>
               </h2>
             </div>
           ))}
         </div>
 
         <div className="dsh-acts">
-          <button type="button" className="dsh-btn" onClick={() => dish && onPlay?.(dish, index)}>{Icon.play}Play video</button>
-          <button type="button" className="dsh-btn" onClick={() => dish && onOrder?.(dish, index)}>{Icon.order}Order food</button>
+          <button type="button" className="dsh-btn" onClick={() => dish && onPlay?.(dish, index)}>
+            {Icon.play} Ficha Técnica
+          </button>
+          <a href="/dashboard" className="dsh-btn" style={{ textDecoration: 'none', color: '#faae33', fontWeight: 700 }}>
+            {Icon.order} Activar en Panel &rarr;
+          </a>
         </div>
 
         <div className="dsh-card">
-          <div className="dsh-tabs" role="tablist" aria-label="Dish details">
+          <div className="dsh-tabs" role="tablist" aria-label="Detalles del especialista">
             {["overview", "ingredients"].map((t) => (
               <button key={t} type="button" role="tab" className="dsh-btn dsh-tab" aria-selected={tab === t} onClick={() => setTab(t)}>
-                {t === "overview" ? "Overview" : "Ingredients"}
+                {t === "overview" ? "Especialidad" : "Habilidades"}
               </button>
             ))}
           </div>
           <div className="dsh-bodies">
             {dishes.map((d, i) => (
               <div key={i} ref={(el) => { bodies.current[i] = el }} className="dsh-body" aria-hidden={i !== index}>
-                <div className="dsh-rate">
-                  <div className="dsh-badge" style={{ background: d.accent }}>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.9 6 6.6.8-4.9 4.6 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+                <div className="dsh-rate" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <div className="dsh-badge" style={{ background: d.accent, position: 'static', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px' }}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true" style={{ position: 'static', width: 16, height: 16, fill: '#09080d' }}>
+                      <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
                   </div>
-                  <span className="dsh-num" aria-label={"Rated " + d.rating.toFixed(1) + " out of 5"}>{d.rating.toFixed(1)}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: '#34d399', letterSpacing: '0.02em' }}>100% AUTÓNOMO</span>
                 </div>
-                <p className="dsh-chef">{d.chef}</p>
-                <p className="dsh-kit">{d.kitchen ?? " "}</p>
+                <p className="dsh-chef" style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff' }}>{d.chef}</p>
+                <p className="dsh-kit" style={{ fontSize: '11px', color: '#71717a', margin: '2px 0 10px' }}>{d.kitchen ?? "Nexus Dropshipping OS"}</p>
                 {tab === "overview" || !d.ingredients?.length ? (
-                  <p className="dsh-desc">{d.description}</p>
+                  <p className="dsh-desc" style={{ fontSize: '12px', color: '#a1a1aa', lineHeight: 1.5 }}>{d.description}</p>
                 ) : (
-                  <ul className="dsh-ing">{d.ingredients.map((x) => <li key={x}>{x}</li>)}</ul>
+                  <ul className="dsh-ing">{d.ingredients.map((x) => <li key={x} style={{ fontSize: '10.5px', color: '#e4e4e7', background: 'rgba(255,255,255,0.06)' }}>{x}</li>)}</ul>
                 )}
-                <div className="dsh-react">
-                  <button type="button" className="dsh-btn dsh-like" aria-pressed={!!liked[i]} tabIndex={i === index ? 0 : -1}
-                    onClick={() => { setLiked((s) => ({ ...s, [i]: !s[i] })); setDisliked((s) => ({ ...s, [i]: false })) }}>
-                    {Icon.up}{d.likes + (liked[i] ? 1 : 0)} likes
-                  </button>
-                  <button type="button" className="dsh-btn dsh-meh" aria-pressed={!!disliked[i]} aria-label="Not for me" tabIndex={i === index ? 0 : -1}
-                    onClick={() => { setDisliked((s) => ({ ...s, [i]: !s[i] })); setLiked((s) => ({ ...s, [i]: false })) }}>
-                    {Icon.down}
-                  </button>
+                <div className="dsh-react" style={{ marginTop: '14px' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#34d399', background: 'rgba(52, 211, 153, 0.1)', padding: '4px 10px', borderRadius: '99px', fontWeight: 700 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#34d399' }} />
+                    <span>Verificado &bull; En Línea</span>
+                  </div>
                 </div>
               </div>
             ))}

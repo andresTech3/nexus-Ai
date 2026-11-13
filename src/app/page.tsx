@@ -5,106 +5,93 @@ import Link from 'next/link'
 import { useCurrency } from '@/hooks/useCurrency'
 import { AgentOrbitCarousel } from '@/components/ui/agent-orbit-carousel'
 
-interface DemoProduct {
+interface ShowcaseProduct {
   id: string
   name: string
-  emoji: string
-  badge: string
-  price: number
+  category: string
   supplierCost: number
-  profit: number
-  videoUrl: string
-  tagline: string
-  rating: string
-  ordersCount: number
+  pvp: number
+  multiple: string
+  cpaMax: number
+  marginPct: number
+  heroHook: string
+  marketGap: string
+  competitorWeakness: string
+  shopifyOffer: string
+  ugcAngle: string
 }
 
-const PRODUCTS: DemoProduct[] = [
+const SHOWCASE_PRODUCTS: ShowcaseProduct[] = [
   {
     id: 'luna',
     name: 'Lámpara Lunar Levitante',
-    emoji: '🌕',
-    badge: 'MÁS VENDIDO',
-    price: 49,
-    supplierCost: 12,
-    profit: 37,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    tagline: 'Flota y gira mágicamente en el aire con luz cálida.',
-    rating: '4.9 (1.240 opiniones)',
-    ordersCount: 3820,
+    category: 'Decoración & Regalo Prémium',
+    supplierCost: 9.80,
+    pvp: 49.90,
+    multiple: '5.1x',
+    cpaMax: 22.40,
+    marginPct: 58.2,
+    heroHook: 'Transforma cualquier espacio con la magia de la luna flotando en tu salón.',
+    marketGap: 'Modelos de diseño nórdico (Gingko/MoMA) se venden a 149€+. Las copias de AliExpress (16€) hacen ruido mecánico. La oportunidad es ofrecer base de nogal con levitación silenciosa en 49.90€ con entrega 48h.',
+    competitorWeakness: 'Precios prohibitivos en marcas de lujo o motores ruidosos sin certificación CE en réplicas baratas.',
+    shopifyOffer: 'Pack 1 Unidad: 49,90 € • Pack Pareja (2 Unidades): 79,90 € (Ahorro 20€) directo a checkout.',
+    ugcAngle: 'Gancho visual de 2 segundos acercando la mano a la luna suspendida en el aire mientras gira sin cables.',
   },
   {
     id: 'pet',
-    name: 'Cepillo Quita-Pelo Mascotas',
-    emoji: '🐶',
-    badge: 'VIRAL EN REDES',
-    price: 25,
-    supplierCost: 5,
-    profit: 20,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-    tagline: 'Quita el pelo suelto con vapor suave sin tirones.',
-    rating: '4.8 (890 opiniones)',
-    ordersCount: 4610,
+    name: 'Cepillo Quita-Pelo con Vapor Suave',
+    category: 'Cuidado de Mascotas D2C',
+    supplierCost: 3.60,
+    pvp: 24.90,
+    multiple: '6.9x',
+    cpaMax: 12.80,
+    marginPct: 62.4,
+    heroHook: 'El único cepillo con vapor suave que tu mascota adora recibir mientras retiras el 95% del pelo suelto.',
+    marketGap: 'Los cepillos metálicos tradicionales (Furminator 39€) arañan la piel y dejan el pelo flotando. Nuestro modelo humidifica el pelo con vapor tibio para recogerlo en una sola capa limpia sin dolor.',
+    competitorWeakness: 'Púas afiladas que causan rechazo en la mascota y cepillos genéricos de plástico que no retienen el pelo.',
+    shopifyOffer: 'Pack Básico + Esencia Relajante: 24,90 € • Pack Multimascota (2 cepillos + recambios): 39,90 €.',
+    ugcAngle: 'Contraste en pantalla dividida: a la izquierda pelos volando por el sofá, a la derecha el cepillo retirando un manto entero de pelo en 3 segundos.',
   },
   {
-    id: 'galaxy',
-    name: 'Proyector Galaxia 360°',
-    emoji: '✨',
-    badge: 'TENDENCIA HOY',
-    price: 39,
-    supplierCost: 9,
-    profit: 30,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
-    tagline: 'Convierte el techo en un cielo estrellado con nebulosas.',
-    rating: '4.9 (2.150 opiniones)',
-    ordersCount: 5120,
-  },
-  {
-    id: 'watch',
-    name: 'Reloj Fitness Deportivo',
-    emoji: '⌚',
-    badge: 'ALTA GANANCIA',
-    price: 59,
-    supplierCost: 17,
-    profit: 42,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-    tagline: 'Pulsómetro, pasos y notificaciones en tu muñeca.',
-    rating: '4.7 (720 opiniones)',
-    ordersCount: 2940,
+    id: 'ring',
+    name: 'Anillo Biométrico de Titanio Grado 5',
+    category: 'Wearable & Salud Silenciosa',
+    supplierCost: 18.50,
+    pvp: 89.90,
+    multiple: '4.8x',
+    cpaMax: 38.60,
+    marginPct: 54.8,
+    heroHook: 'Tu salud y tu sueño medidos con precisión médica en titanio. Sin pantallas. Sin suscripciones.',
+    marketGap: 'Oura Ring cuesta 399€ y cobra 5.99€/mes obligatorios para ver tus propios datos. Nosotros ofrecemos titanio real en pago único con app nativa gratuita en español.',
+    competitorWeakness: 'Suscripciones mensuales forzosas que enfurecen al usuario o anillos chinos de plástico con apps defectuosas.',
+    shopifyOffer: 'Titanio Negro Mate o Plata Pulida: 89,90 € con kit medidor de tallas gratuito y 3 años de garantía.',
+    ugcAngle: 'El creador se quita un smartwatch que vibra con notificaciones y se pone el anillo: "Por fin me libré de las pantallas que vibran en mi muñeca".',
   },
 ]
 
 export default function HomePage() {
   const { formatMoney } = useCurrency()
 
-  const [activeProduct, setActiveProduct] = useState<DemoProduct>(PRODUCTS[0])
-  const [salesPerDay, setSalesPerDay] = useState<number>(15)
-  const [activeCapability, setActiveCapability] = useState<number>(0)
+  const [selectedProduct, setSelectedProduct] = useState<ShowcaseProduct>(SHOWCASE_PRODUCTS[0])
+  const [activeTab, setActiveTab] = useState<'finance' | 'competition' | 'copy' | 'store'>('finance')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [videoModal, setVideoModal] = useState<string | null>(null)
-
-  // Calculations
-  const monthlyOrders = salesPerDay * 30
-  const monthlyRevenue = monthlyOrders * activeProduct.price
-  const monthlySupplier = monthlyOrders * activeProduct.supplierCost
-  const monthlyNetProfit = monthlyOrders * activeProduct.profit
 
   return (
     <div
       style={{
         minHeight: '100dvh',
-        backgroundColor: '#0a090e',
+        backgroundColor: '#09080d',
         color: '#f4f4f5',
-        fontFamily: "'Jost', 'Outfit', sans-serif",
+        fontFamily: "'Outfit', ui-sans-serif, system-ui, sans-serif",
         overflowX: 'hidden',
         WebkitFontSmoothing: 'antialiased',
       }}
     >
-      {/* ── MINIMAL TOP BAR ────────────────────────────────────────── */}
+      {/* ── TOP NAVIGATION ────────────────────────────────────────── */}
       <nav
         style={{
-          borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
-          backgroundColor: 'rgba(10, 9, 14, 0.85)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: 'rgba(9, 8, 13, 0.85)',
           backdropFilter: 'blur(20px)',
           position: 'sticky',
           top: 0,
@@ -136,23 +123,27 @@ export default function HomePage() {
                 width: 32,
                 height: 32,
                 borderRadius: '8px',
-                background: '#faae33',
+                background: 'linear-gradient(135deg, #faae33, #d98216)',
                 color: '#09080d',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 900,
-                fontSize: '1rem',
+                fontSize: '0.9rem',
               }}
             >
-              ⚡
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#09080d" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
             </div>
-            <span style={{ fontSize: '1.25rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-              NEXUS<span style={{ color: '#faae33' }}>AI</span>
+            <span style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+              NEXUS <span style={{ color: '#faae33', fontWeight: 600 }}>OS</span>
             </span>
           </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
             <Link
               href="/dashboard/catalog"
               style={{
@@ -160,23 +151,35 @@ export default function HomePage() {
                 color: '#a1a1aa',
                 textDecoration: 'none',
                 fontWeight: 600,
-                padding: '0.4rem 0.6rem',
+                transition: 'color 0.15s',
               }}
             >
-              Catálogo
+              Catálogo de Proveedores
+            </Link>
+            <Link
+              href="/dashboard/agents"
+              style={{
+                fontSize: '0.85rem',
+                color: '#a1a1aa',
+                textDecoration: 'none',
+                fontWeight: 600,
+                transition: 'color 0.15s',
+              }}
+            >
+              Directorio de Agentes
             </Link>
             <Link
               href="/dashboard"
               style={{
                 fontSize: '0.85rem',
-                background: '#faae33',
+                background: 'linear-gradient(135deg, #faae33, #d98216)',
                 color: '#09080d',
                 padding: '0.55rem 1.25rem',
                 borderRadius: '8px',
                 textDecoration: 'none',
                 fontWeight: 800,
                 letterSpacing: '0.01em',
-                transition: 'transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                boxShadow: '0 4px 14px rgba(250, 174, 51, 0.25)',
               }}
             >
               Entrar al Panel &rarr;
@@ -185,41 +188,61 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ── HERO (DIRECTION: THE PRODUCT PERFORMS) ────────────────── */}
+      {/* ── HERO: MATURE, EDITORIAL & AUTHORITATIVE ───────────────── */}
       <section
         style={{
           maxWidth: 1200,
           margin: '0 auto',
-          padding: 'clamp(2.5rem, 5vw, 4.5rem) 1.5rem 2rem 1.5rem',
+          padding: 'clamp(3rem, 6vw, 5.5rem) 1.5rem 2.5rem 1.5rem',
         }}
       >
-        <div style={{ maxWidth: 760, marginBottom: '2.5rem' }}>
-          <h1
+        <div style={{ maxWidth: 840, margin: '0 auto', textAlign: 'center', marginBottom: '3.5rem' }}>
+          <div
             style={{
-              fontSize: 'clamp(2.3rem, 5.5vw, 4.2rem)',
-              fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: '-0.035em',
-              color: '#ffffff',
-              margin: '0 0 1.25rem 0',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              backgroundColor: 'rgba(250, 174, 51, 0.08)',
+              border: '1px solid rgba(250, 174, 51, 0.2)',
+              borderRadius: '99px',
+              padding: '0.35rem 0.95rem',
+              fontSize: '0.78rem',
+              color: '#faae33',
+              fontWeight: 700,
+              letterSpacing: '0.02em',
+              marginBottom: '1.5rem',
             }}
           >
-            Vende productos virales sin comprar stock
+            <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#34d399' }} />
+            <span>SISTEMA OPERATIVO DE COMERCIO ELECTRÓNICO &bull; 12 AGENTES ESPECIALISTAS</span>
+          </div>
+
+          <h1
+            style={{
+              fontSize: 'clamp(2.4rem, 5.5vw, 4rem)',
+              fontWeight: 800,
+              lineHeight: 1.08,
+              letterSpacing: '-0.035em',
+              color: '#ffffff',
+              margin: '0 0 1.5rem 0',
+            }}
+          >
+            La oficina de agentes de IA para operar y escalar tu marca de dropshipping
           </h1>
 
           <p
             style={{
-              fontSize: 'clamp(1.05rem, 2vw, 1.3rem)',
+              fontSize: 'clamp(1.05rem, 2vw, 1.25rem)',
               color: '#a1a1aa',
-              lineHeight: 1.45,
-              margin: '0 0 1.75rem 0',
-              maxWidth: 620,
+              lineHeight: 1.55,
+              maxWidth: 720,
+              margin: '0 auto 2.25rem auto',
             }}
           >
-            Elige qué vender, la inteligencia artificial monta tu tienda y tú cobras la ganancia de cada pedido directo en tu banco.
+            Investiga productos ganadores en tiempo real, audita costes de fábrica y unit economics matemáticos, y genera automáticamente tu tienda Shopify Liquid, creativos publicitarios y estrategia de lanzamiento.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <Link
               href="/dashboard"
               style={{
@@ -227,402 +250,378 @@ export default function HomePage() {
                 alignItems: 'center',
                 gap: '0.5rem',
                 backgroundColor: '#faae33',
-                color: '#0a090e',
+                color: '#09080d',
                 fontSize: '0.95rem',
                 fontWeight: 800,
                 padding: '0.85rem 1.85rem',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                transition: 'transform 150ms ease',
+                boxShadow: '0 8px 24px rgba(250, 174, 51, 0.3)',
               }}
             >
-              <span>Empezar Gratis</span>
+              <span>Abrir Centro de Control</span>
               <span>&rarr;</span>
             </Link>
-            <span style={{ fontSize: '0.82rem', color: '#71717a' }}>
-              Sin tarjeta de crédito requerida &bull; Listo en 2 minutos
-            </span>
+
+            <Link
+              href="/dashboard/catalog"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                padding: '0.85rem 1.65rem',
+                borderRadius: '8px',
+                textDecoration: 'none',
+              }}
+            >
+              <span>Ver Catálogo de Proveedores</span>
+            </Link>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1.75rem',
+              marginTop: '2.5rem',
+              fontSize: '0.78rem',
+              color: '#71717a',
+              flexWrap: 'wrap',
+            }}
+          >
+            <span>Conexión directa con CJ Dropshipping</span>
+            <span>&bull;</span>
+            <span>Shopify Dawn Liquid nativo</span>
+            <span>&bull;</span>
+            <span>Cálculo determinista de Eva (CFO)</span>
           </div>
         </div>
 
-        {/* ── THE LIVE WORKING FRAGMENT (DATA-UI) ───────────────────── */}
+        {/* ── INTERACTIVE WORKBENCH: REAL AGENT OUTPUTS (NO FAKE SIMULATORS) ── */}
         <div
-          data-ui="interactive-workbench"
           style={{
-            background: '#110f18',
-            border: '1px solid #282336',
+            backgroundColor: '#121018',
+            border: '1px solid #272235',
             borderRadius: '16px',
-            padding: 'clamp(1rem, 3vw, 2rem)',
-            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
+            overflow: 'hidden',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.65)',
           }}
         >
-          {/* Top Workbench Bar: Live Selector */}
-          <div style={{ marginBottom: '1.5rem' }}>
-            <div
-              style={{
-                fontSize: '0.78rem',
-                color: '#a1a1aa',
-                fontWeight: 700,
-                marginBottom: '0.75rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              1. Toca un producto para probarlo en vivo:
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                gap: '0.65rem',
-              }}
-            >
-              {PRODUCTS.map((prod) => {
-                const isSelected = activeProduct.id === prod.id
-                return (
+          {/* Header Bar: Product Selector */}
+          <div
+            style={{
+              padding: '1.25rem 1.5rem',
+              backgroundColor: '#171420',
+              borderBottom: '1px solid #272235',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontSize: '0.75rem', color: '#faae33', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Producto en Análisis:
+              </span>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {SHOWCASE_PRODUCTS.map((prod) => (
                   <button
                     key={prod.id}
-                    onClick={() => setActiveProduct(prod)}
+                    onClick={() => setSelectedProduct(prod)}
                     style={{
-                      background: isSelected ? 'rgba(250, 174, 51, 0.12)' : '#161420',
-                      border: `2px solid ${isSelected ? '#faae33' : '#231f2e'}`,
-                      borderRadius: '12px',
-                      padding: '0.75rem 0.6rem',
-                      color: '#ffffff',
+                      background: selectedProduct.id === prod.id ? '#faae33' : '#1f1b2c',
+                      color: selectedProduct.id === prod.id ? '#09080d' : '#a1a1aa',
+                      border: `1px solid ${selectedProduct.id === prod.id ? '#faae33' : '#332c45'}`,
+                      borderRadius: '6px',
+                      padding: '0.4rem 0.85rem',
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
                       cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      gap: '0.25rem',
-                      textAlign: 'left',
-                      transition: 'border 150ms ease, background 150ms ease',
+                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                      <span style={{ fontSize: '1.6rem' }}>{prod.emoji}</span>
-                      <span
-                        style={{
-                          fontSize: '0.65rem',
-                          color: '#34d399',
-                          background: 'rgba(52, 211, 153, 0.12)',
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          fontWeight: 800,
-                        }}
-                      >
-                        +{formatMoney(prod.profit)}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 700, marginTop: 4 }}>
-                      {prod.name}
-                    </div>
+                    {prod.name}
                   </button>
-                )
-              })}
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#34d399' }} />
+              <span style={{ fontSize: '0.74rem', color: '#34d399', fontWeight: 700 }}>
+                Auditoría Completa Superada
+              </span>
             </div>
           </div>
 
-          {/* Center Stage: Split between Simulated Customer Store and Merchant Payout */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))',
-              gap: '1.25rem',
-            }}
-          >
-            {/* Left: What the customer sees in your store */}
+          {/* Workbench Body: Tabs of real deliverables */}
+          <div style={{ padding: '1.5rem' }}>
+            {/* Perspective Selector */}
             <div
               style={{
-                background: '#161420',
-                border: '1px solid #2a2538',
-                borderRadius: '12px',
-                padding: '1.25rem',
                 display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
+                gap: '0.5rem',
+                borderBottom: '1px solid #231e30',
+                paddingBottom: '0.85rem',
+                marginBottom: '1.5rem',
+                flexWrap: 'wrap',
               }}
             >
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                  <span
-                    style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 800,
-                      color: '#faae33',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                    }}
-                  >
-                    Tu Tienda Online (Vista del Cliente)
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 700 }}>
-                    ● En línea y lista
-                  </span>
-                </div>
-
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.25rem' }}>
-                  {activeProduct.name}
-                </div>
-                <div style={{ fontSize: '0.8rem', color: '#a1a1aa', marginBottom: '0.85rem' }}>
-                  {activeProduct.tagline}
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff' }}>
-                    {formatMoney(activeProduct.price)}
-                  </span>
-                  <span style={{ fontSize: '0.85rem', color: '#71717a', textDecoration: 'line-through' }}>
-                    {formatMoney(activeProduct.price * 1.6)}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
-                    Envío Gratis 24/48h
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    backgroundColor: '#1d1a29',
-                    borderRadius: '8px',
-                    padding: '0.65rem 0.85rem',
-                    fontSize: '0.75rem',
-                    color: '#d4d4d8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  <span>⭐ {activeProduct.rating}</span>
-                  <span style={{ color: '#52525b' }}>&bull;</span>
-                  <span>{activeProduct.ordersCount} personas ya lo han pedido</span>
-                </div>
-              </div>
-
-              <div>
+              {[
+                { id: 'finance', label: '1. Auditoría Financiera (Eva CFO)', role: 'Costes, márgenes y CPA techo' },
+                { id: 'competition', label: '2. Inteligencia de Mercado (Lucas & Clara)', role: 'Brecha y análisis de competidores' },
+                { id: 'copy', label: '3. Copywriting & UGC (Carlos & Marco)', role: 'Ganchos de 3s y texto de venta' },
+                { id: 'store', label: '4. Arquitectura Shopify (Diego)', role: 'Packs de ahorro y Liquid' },
+              ].map((tab) => (
                 <button
-                  onClick={() => setVideoModal(activeProduct.videoUrl)}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
                   style={{
-                    width: '100%',
-                    background: '#231e30',
-                    border: '1px solid #3d3550',
-                    color: '#ffffff',
-                    padding: '0.65rem',
-                    borderRadius: '8px',
+                    background: activeTab === tab.id ? 'rgba(250, 174, 51, 0.12)' : 'transparent',
+                    border: `1px solid ${activeTab === tab.id ? '#faae33' : 'transparent'}`,
+                    color: activeTab === tab.id ? '#faae33' : '#a1a1aa',
+                    borderRadius: '6px',
+                    padding: '0.5rem 1rem',
                     fontSize: '0.82rem',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.4rem',
-                    marginBottom: '0.65rem',
+                    textAlign: 'left',
                   }}
                 >
-                  <span>▶</span>
-                  <span>Ver anuncio en vídeo del producto</span>
+                  <div>{tab.label}</div>
+                  <div style={{ fontSize: '0.68rem', opacity: 0.75, fontWeight: 500, marginTop: 2 }}>{tab.role}</div>
                 </button>
-
-                <div
-                  style={{
-                    width: '100%',
-                    background: '#10b981',
-                    color: '#062817',
-                    padding: '0.75rem',
-                    borderRadius: '8px',
-                    fontSize: '0.88rem',
-                    fontWeight: 900,
-                    textAlign: 'center',
-                  }}
-                >
-                  Botón: Comprar Ahora con Tarjeta o Bizum
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Right: What you receive in your bank */}
-            <div
-              style={{
-                background: '#161420',
-                border: '1px solid #2a2538',
-                borderRadius: '12px',
-                padding: '1.25rem',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
+            {/* Tab 1: Financial Audit */}
+            {activeTab === 'finance' && (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                  <span
-                    style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 800,
-                      color: '#34d399',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.04em',
-                    }}
-                  >
-                    Tu Liquidación Mensual Estimada
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#faae33', fontWeight: 800 }}>
-                    {salesPerDay} ventas/día
-                  </span>
-                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+                  <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1rem' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 700 }}>Coste Fábrica (CJ Dropshipping)</span>
+                    <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', marginTop: '0.35rem' }}>
+                      {formatMoney(selectedProduct.supplierCost)}
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Negociado para pedidos unitarios</span>
+                  </div>
 
-                {/* Slider */}
-                <div style={{ marginBottom: '1.25rem' }}>
-                  <input
-                    type="range"
-                    min="1"
-                    max="50"
-                    step="1"
-                    value={salesPerDay}
-                    onChange={(e) => setSalesPerDay(Number(e.target.value))}
-                    style={{
-                      width: '100%',
-                      height: '8px',
-                      accentColor: '#faae33',
-                      cursor: 'pointer',
-                      borderRadius: '4px',
-                      marginBottom: '0.5rem',
-                    }}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#71717a' }}>
-                    <span>1 al día (Tranquilo)</span>
-                    <span>15 al día (Sólido)</span>
-                    <span>50 al día (Escala)</span>
+                  <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1rem' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 700 }}>PVP Recomendado</span>
+                    <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#faae33', marginTop: '0.35rem' }}>
+                      {formatMoney(selectedProduct.pvp)}
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Multiplicador markup: {selectedProduct.multiple}</span>
+                  </div>
+
+                  <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1rem' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 700 }}>Margen Neto Operativo</span>
+                    <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#34d399', marginTop: '0.35rem' }}>
+                      {selectedProduct.marginPct}%
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Tras envíos, empaque y pasarelas</span>
+                  </div>
+
+                  <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1rem' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#71717a', textTransform: 'uppercase', fontWeight: 700 }}>CPA Techo Seguro (Tomás)</span>
+                    <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#60a5fa', marginTop: '0.35rem' }}>
+                      {formatMoney(selectedProduct.cpaMax)}
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Límite máximo de adquisición</span>
                   </div>
                 </div>
 
-                {/* Accounting breakdown */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '1.25rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#a1a1aa' }}>
-                    <span>Facturado a clientes ({monthlyOrders} pedidos):</span>
-                    <span style={{ color: '#ffffff', fontWeight: 600 }}>{formatMoney(monthlyRevenue)}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#a1a1aa' }}>
-                    <span>El fabricante cobra por enviar los paquetes:</span>
-                    <span style={{ color: '#ef4444', fontWeight: 600 }}>-{formatMoney(monthlySupplier)}</span>
-                  </div>
+                <div style={{ background: '#15121e', border: '1px solid #2d263e', borderRadius: '10px', padding: '1rem 1.25rem', fontSize: '0.85rem', color: '#d4d4d8', lineHeight: 1.6 }}>
+                  <strong style={{ color: '#faae33' }}>Dictamen de Eva (CFO):</strong> El producto cumple holgadamente la regla de viabilidad de Dora (multiplicador &ge; 3.5x). Permite absorber hasta {formatMoney(selectedProduct.cpaMax)} en adquisición publicitaria antes de entrar en zona de riesgo, con un margen neto seguro de más del {selectedProduct.marginPct}%.
                 </div>
               </div>
+            )}
 
-              {/* Big Net Profit Display */}
-              <div
-                style={{
-                  background: 'rgba(52, 211, 153, 0.08)',
-                  border: '1.5px solid #34d399',
-                  borderRadius: '10px',
-                  padding: '1rem',
-                  textAlign: 'center',
-                }}
-              >
-                <div style={{ fontSize: '0.72rem', color: '#6ee7b7', fontWeight: 800, textTransform: 'uppercase' }}>
-                  Tu ganancia limpia transferida al banco
+            {/* Tab 2: Competitive Intelligence */}
+            {activeTab === 'competition' && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
+                <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1.25rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f87171', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                    Debilidades Detectadas en Competidores
+                  </div>
+                  <p style={{ fontSize: '0.88rem', color: '#d4d4d8', lineHeight: 1.6, margin: 0 }}>
+                    {selectedProduct.competitorWeakness}
+                  </p>
                 </div>
-                <div
-                  style={{
-                    fontSize: 'clamp(2rem, 5vw, 2.8rem)',
-                    fontWeight: 900,
-                    color: '#34d399',
-                    lineHeight: 1.1,
-                    margin: '0.2rem 0',
-                  }}
-                >
-                  +{formatMoney(monthlyNetProfit)}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#a7f3d0' }}>
-                  Directo a tu cuenta bancaria cada mes
+
+                <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1.25rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                    Brecha de Mercado &amp; Posicionamiento de Marca
+                  </div>
+                  <p style={{ fontSize: '0.88rem', color: '#d4d4d8', lineHeight: 1.6, margin: 0 }}>
+                    {selectedProduct.marketGap}
+                  </p>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Tab 3: Copywriting & UGC */}
+            {activeTab === 'copy' && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
+                <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1.25rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#faae33', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                    Titular Above-the-Fold de Carlos (Copywriter)
+                  </div>
+                  <blockquote style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.5, margin: 0 }}>
+                    &ldquo;{selectedProduct.heroHook}&rdquo;
+                  </blockquote>
+                  <div style={{ fontSize: '0.75rem', color: '#a1a1aa', marginTop: '0.85rem' }}>
+                    Garantía 30 días &bull; Envío Express 24/48h &bull; Cero suscripciones
+                  </div>
+                </div>
+
+                <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1.25rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#a78bfa', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                    Gancho UGC de 3 Segundos de Marco (Vídeo)
+                  </div>
+                  <p style={{ fontSize: '0.88rem', color: '#d4d4d8', lineHeight: 1.6, margin: 0 }}>
+                    {selectedProduct.ugcAngle}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Tab 4: Shopify Architecture */}
+            {activeTab === 'store' && (
+              <div style={{ background: '#181523', border: '1px solid #2a243a', borderRadius: '10px', padding: '1.25rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase' }}>
+                    Módulo Liquid Direct-to-Checkout de Diego
+                  </span>
+                  <span style={{ fontSize: '0.72rem', color: '#a1a1aa' }}>Shopify Dawn &bull; Carga 0.8s</span>
+                </div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>
+                  {selectedProduct.shopifyOffer}
+                </div>
+                <p style={{ fontSize: '0.82rem', color: '#a1a1aa', margin: 0, lineHeight: 1.5 }}>
+                  Estructurado para maximizar el valor medio de carrito (AOV) permitiendo al comprador seleccionar cantidades directamente con selector visual interactivo sin recargar la página.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ── CAPABILITIES SEQUENCE (AS YIELDED BY DRAW.MJS) ──────────── */}
+      {/* ── 3-STAGE PIPELINE ARCHITECTURE (CLEAN & SUBSTANTIAL) ───── */}
       <section
         style={{
           maxWidth: 1200,
           margin: '0 auto',
           padding: '4rem 1.5rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.07)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        <div style={{ maxWidth: 640, marginBottom: '2.5rem' }}>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)', fontWeight: 800, letterSpacing: '-0.02em', color: '#ffffff', margin: '0 0 0.5rem 0' }}>
-            Cómo funciona el sistema en 3 pasos
+        <div style={{ maxWidth: 640, marginBottom: '3rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.4rem)', fontWeight: 800, letterSpacing: '-0.025em', color: '#ffffff', margin: '0 0 0.65rem 0' }}>
+            Cómo opera la oficina autónoma
           </h2>
-          <p style={{ fontSize: '0.95rem', color: '#a1a1aa', margin: 0 }}>
-            Tú no tienes que fabricar nada, ni guardar cajas, ni aprender a programar.
+          <p style={{ fontSize: '1rem', color: '#a1a1aa', margin: 0, lineHeight: 1.5 }}>
+            Un flujo determinista en tres fases sincronizadas entre los 12 especialistas para validar y lanzar marcas sin margen de error.
           </p>
         </div>
 
-        {/* 3 Step Interactive Row */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.25rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '1.5rem',
           }}
         >
-          {[
-            {
-              icon: '🎯',
-              step: 'Paso 1',
-              title: 'La IA encuentra productos que se venden solos',
-              desc: 'Analizamos millones de compras en internet para encontrar los productos virales que la gente ya está buscando ahora mismo.',
-            },
-            {
-              icon: '⚡',
-              step: 'Paso 2',
-              title: 'Crea tu tienda online en 1 toque',
-              desc: 'Tu tienda queda lista para recibir compras con tarjeta o contra reembolso, con fotos atractivas y textos persuasivos.',
-            },
-            {
-              icon: '💰',
-              step: 'Paso 3',
-              title: 'Cobras tú y el proveedor envía el paquete',
-              desc: 'Cuando un cliente compra en tu tienda, tú te quedas con la ganancia y el fabricante envía el producto directo a su casa.',
-            },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: '#110f18',
-                border: '1px solid #231f2e',
-                borderRadius: '14px',
-                padding: '1.5rem',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontSize: '2rem' }}>{item.icon}</span>
-                  <span
-                    style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      color: '#faae33',
-                      background: 'rgba(250, 174, 51, 0.1)',
-                      padding: '3px 8px',
-                      borderRadius: '4px',
-                    }}
-                  >
-                    {item.step}
-                  </span>
-                </div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.5rem 0', lineHeight: 1.3 }}>
-                  {item.title}
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#a1a1aa', lineHeight: 1.5, margin: 0 }}>
-                  {item.desc}
-                </p>
+          {/* Phase 1 */}
+          <div
+            style={{
+              backgroundColor: '#121018',
+              border: '1px solid #251f33',
+              borderRadius: '14px',
+              padding: '1.75rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#faae33', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+                FASE 01 &bull; DETECCIÓN &amp; VIABILIDAD
               </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.75rem 0' }}>
+                Investigación de Demanda &amp; Fábrica
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#a1a1aa', lineHeight: 1.6, margin: 0 }}>
+                Iván rastrea tendencias en Google Trends y catálogos de CJ Dropshipping para identificar productos en aceleración antes de que el mercado se sature. Diego audita costes de fabricación en lotes unitarios.
+              </p>
             </div>
-          ))}
+            <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #1f1b2c', fontSize: '0.75rem', color: '#71717a' }}>
+              Responsables: Iván (Radar) &bull; Diego (Sourcing) &bull; Dora (Filtro)
+            </div>
+          </div>
+
+          {/* Phase 2 */}
+          <div
+            style={{
+              backgroundColor: '#121018',
+              border: '1px solid #251f33',
+              borderRadius: '14px',
+              padding: '1.75rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#34d399', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+                FASE 02 &bull; FINANZAS &amp; POSICIONAMIENTO
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.75rem 0' }}>
+                Unit Economics &amp; Psicología de Compra
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#a1a1aa', lineHeight: 1.6, margin: 0 }}>
+                Eva modela la rentabilidad deduciendo COGS, envíos urgentes, pasarelas de pago y provisiones de devolución para calcular el CPA máximo rentable. Valeria y Clara analizan las quejas de competidores.
+              </p>
+            </div>
+            <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #1f1b2c', fontSize: '0.75rem', color: '#71717a' }}>
+              Responsables: Eva (CFO) &bull; Valeria (Audiencias) &bull; Clara (Espía)
+            </div>
+          </div>
+
+          {/* Phase 3 */}
+          <div
+            style={{
+              backgroundColor: '#121018',
+              border: '1px solid #251f33',
+              borderRadius: '14px',
+              padding: '1.75rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#60a5fa', letterSpacing: '0.04em', marginBottom: '0.75rem' }}>
+                FASE 03 &bull; PRODUCCIÓN &amp; DESPLIEGUE
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '0 0 0.75rem 0' }}>
+                Shopify Liquid, Creativos &amp; Campañas
+              </h3>
+              <p style={{ fontSize: '0.88rem', color: '#a1a1aa', lineHeight: 1.6, margin: 0 }}>
+                Lucas redacta el copy persuasivo, Leo renderiza fotografías de estudio 3D y Diego ensambla el código Liquid para Shopify. Tomás y Mateo dejan listos los blueprints de campaña con reglas de stop-loss.
+              </p>
+            </div>
+            <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #1f1b2c', fontSize: '0.75rem', color: '#71717a' }}>
+              Responsables: Lucas (Copy) &bull; Leo (3D) &bull; Tomás (Media Buyer)
+            </div>
+          </div>
         </div>
       </section>
 
@@ -631,42 +630,41 @@ export default function HomePage() {
         style={{
           maxWidth: 1200,
           margin: '0 auto',
-          padding: '3rem 1.5rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.07)',
+          padding: '4rem 1.5rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        <div style={{ maxWidth: 700, marginBottom: '2rem' }}>
+        <div style={{ maxWidth: 720, marginBottom: '2.5rem' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
-              background: 'rgba(250, 174, 51, 0.1)',
-              border: '1px solid rgba(250, 174, 51, 0.3)',
+              backgroundColor: 'rgba(250, 174, 51, 0.08)',
+              border: '1px solid rgba(250, 174, 51, 0.2)',
               borderRadius: '99px',
               padding: '0.35rem 0.85rem',
               fontSize: '0.75rem',
               fontWeight: 800,
               color: '#faae33',
-              marginBottom: '0.75rem',
+              marginBottom: '0.85rem',
             }}
           >
-            <span>🪐</span>
             <span>OFICINA VIRTUAL EN ACCIÓN</span>
           </div>
           <h2
             style={{
-              fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+              fontSize: 'clamp(1.8rem, 4vw, 2.7rem)',
               fontWeight: 800,
               letterSpacing: '-0.025em',
               color: '#ffffff',
               margin: '0 0 0.65rem 0',
             }}
           >
-            Tus 11 Especialistas trabajando en órbita
+            Conoce a tus 11 agentes especialistas
           </h2>
           <p style={{ fontSize: '1rem', color: '#a1a1aa', margin: 0, lineHeight: 1.5 }}>
-            Gira la rueda o usa las flechas para conocer al equipo que investiga productos virales, calcula márgenes, diseña vídeos y monta tu tienda.
+            Gira el carrusel para explorar las credenciales técnicas, habilidades y entregables que cada agente ejecuta de forma autónoma.
           </p>
         </div>
 
@@ -675,44 +673,44 @@ export default function HomePage() {
             width: '100%',
             borderRadius: '20px',
             overflow: 'hidden',
-            border: '1px solid #292338',
-            background: '#0c0a12',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+            border: '1px solid #272235',
+            backgroundColor: '#0c0a12',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.55)',
           }}
         >
           <AgentOrbitCarousel />
         </div>
       </section>
 
-      {/* ── ACCORDION FAQS (NO TECHNICAL TERMS) ─────────────────────── */}
+      {/* ── FAQ ACCORDION ───────────────────────────────────────────── */}
       <section
         style={{
-          maxWidth: 800,
+          maxWidth: 840,
           margin: '0 auto',
-          padding: '2rem 1.5rem 4rem 1.5rem',
+          padding: '2rem 1.5rem 5rem 1.5rem',
         }}
       >
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, textAlign: 'center', color: '#ffffff', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, textAlign: 'center', color: '#ffffff', marginBottom: '2rem' }}>
           Preguntas Frecuentes
         </h2>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {[
             {
-              q: '¿Tengo que comprar mercancía antes de venderla?',
-              a: 'No. Jamás compras ningún producto por adelantado. Primero el cliente te paga a ti en tu tienda, y luego el fabricante envía el pedido con el dinero de la venta.',
+              q: '¿Cómo funciona la conexión con los proveedores de dropshipping?',
+              a: 'Nexus se integra directamente con la API oficial de CJ Dropshipping para consultar disponibilidad de inventario, costes de fábrica y plazos de envío urgente hacia Europa y América.',
             },
             {
-              q: '¿Tengo que almacenar paquetes o cajas en mi casa?',
-              a: 'No. Los productos salen directamente desde el almacén del proveedor hacia la puerta de tu cliente.',
+              q: '¿Qué diferencia a Nexus de plantillas o cursos convencionales?',
+              a: 'Nexus no es un curso ni una plantilla: es un sistema operativo con lógica financiera estricta. Eva y Dora impiden lanzar campañas si el producto no supera un multiplicador de margen seguro, protegiendo tu capital publicitario.',
             },
             {
-              q: '¿Necesito saber programar o diseñar páginas web?',
-              a: 'Para nada. La inteligencia artificial genera la tienda, las descripciones y las imágenes automáticamente con 1 clic.',
+              q: '¿El código para Shopify es compatible con mi tienda actual?',
+              a: 'Sí. Diego genera código Liquid puro optimizado para el tema oficial Dawn de Shopify, sin dependencias de plugins pesados que ralenticen la velocidad de carga de tu tienda.',
             },
             {
-              q: '¿Cómo y cuándo recibo mis ganancias?',
-              a: 'Cada venta procesada transfiere tu beneficio limpio directamente a tu cuenta bancaria.',
+              q: '¿Puedo personalizar los análisis para mi propio nicho?',
+              a: 'Completamente. Puedes asignar cualquier producto desde el catálogo de CJ Dropshipping o introducir tu propio producto para que los 12 agentes recalculen la investigación y los entregables a medida.',
             },
           ].map((faq, idx) => {
             const isOpen = openFaq === idx
@@ -721,23 +719,24 @@ export default function HomePage() {
                 key={idx}
                 onClick={() => setOpenFaq(isOpen ? null : idx)}
                 style={{
-                  background: '#110f18',
-                  border: '1px solid #231f2e',
+                  backgroundColor: '#121018',
+                  border: '1px solid #231e30',
                   borderRadius: '10px',
-                  padding: '1rem 1.25rem',
+                  padding: '1.15rem 1.35rem',
                   cursor: 'pointer',
+                  transition: 'border-color 0.15s ease',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff' }}>
+                  <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }}>
                     {faq.q}
                   </span>
-                  <span style={{ color: '#faae33', fontWeight: 900, fontSize: '1.1rem' }}>
+                  <span style={{ color: '#faae33', fontWeight: 900, fontSize: '1.2rem', marginLeft: '1rem' }}>
                     {isOpen ? '−' : '+'}
                   </span>
                 </div>
                 {isOpen && (
-                  <div style={{ fontSize: '0.82rem', color: '#a1a1aa', marginTop: '0.65rem', lineHeight: 1.5 }}>
+                  <div style={{ fontSize: '0.88rem', color: '#a1a1aa', marginTop: '0.75rem', lineHeight: 1.6 }}>
                     {faq.a}
                   </div>
                 )}
@@ -747,21 +746,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── ACTION TILE (CTA) ───────────────────────────────────────── */}
+      {/* ── FOOTER CTA ──────────────────────────────────────────────── */}
       <section
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.07)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           backgroundColor: '#07060a',
-          padding: '4rem 1.5rem 3rem 1.5rem',
+          padding: '4.5rem 1.5rem',
           textAlign: 'center',
         }}
       >
-        <div style={{ maxWidth: 560, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.3rem)', fontWeight: 800, color: '#ffffff', margin: '0 0 0.65rem 0' }}>
-            Empieza a ganar dinero hoy mismo
+        <div style={{ maxWidth: 640, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 800, color: '#ffffff', margin: '0 0 0.85rem 0' }}>
+            Empieza a operar con tu oficina de agentes hoy
           </h2>
-          <p style={{ fontSize: '0.9rem', color: '#a1a1aa', margin: '0 0 1.75rem 0' }}>
-            Entra al panel, elige tu primer producto viral y activa tu negocio en minutos.
+          <p style={{ fontSize: '0.95rem', color: '#a1a1aa', margin: '0 0 2rem 0', lineHeight: 1.6 }}>
+            Accede al Centro de Control de Nexus OS, investiga oportunidades verificadas y pon a trabajar a tus 12 especialistas.
           </p>
 
           <Link
@@ -771,118 +770,33 @@ export default function HomePage() {
               alignItems: 'center',
               gap: '0.5rem',
               backgroundColor: '#faae33',
-              color: '#0a090e',
+              color: '#09080d',
               fontSize: '1rem',
               fontWeight: 800,
-              padding: '0.9rem 2.2rem',
+              padding: '0.95rem 2.25rem',
               borderRadius: '8px',
               textDecoration: 'none',
-              boxShadow: '0 6px 20px rgba(250, 174, 51, 0.35)',
+              boxShadow: '0 8px 25px rgba(250, 174, 51, 0.35)',
             }}
           >
-            <span>Abrir Mi Centro de Control</span>
+            <span>Abrir Centro de Control</span>
             <span>&rarr;</span>
           </Link>
         </div>
       </section>
 
-      {/* ── A SINGLE QUIET FOOTER LINE ─────────────────────────────── */}
+      {/* ── QUIET EDITORIAL FOOTER ──────────────────────────────────── */}
       <footer
         style={{
           borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-          padding: '1.25rem 1.5rem',
+          padding: '1.5rem 1.5rem',
           textAlign: 'center',
           fontSize: '0.75rem',
           color: '#52525b',
         }}
       >
-        &copy; {new Date().getFullYear()} Nexus AI &bull; Comercio digital automatizado sin stock
+        &copy; {new Date().getFullYear()} Nexus OS &bull; Sistema Operativo Autónomo para Comercio Electrónico
       </footer>
-
-      {/* ── VIDEO MODAL ────────────────────────────────────────────── */}
-      {videoModal && (
-        <div
-          onClick={() => setVideoModal(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(8px)',
-            zIndex: 99999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1rem',
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#121018',
-              border: '1px solid #332a42',
-              borderRadius: '14px',
-              width: '100%',
-              maxWidth: 540,
-              overflow: 'hidden',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
-            }}
-          >
-            <div
-              style={{
-                padding: '0.75rem 1rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottom: '1px solid #221d2d',
-              }}
-            >
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
-                Vídeo Demostración: {activeProduct.name}
-              </span>
-              <button
-                onClick={() => setVideoModal(null)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#a1a1aa',
-                  fontSize: '1.2rem',
-                  cursor: 'pointer',
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <div style={{ width: '100%', background: '#000000', minHeight: 260 }}>
-              <video
-                src={videoModal}
-                controls
-                autoPlay
-                playsInline
-                style={{ width: '100%', maxHeight: '60vh', display: 'block' }}
-              />
-            </div>
-            <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700 }}>
-                ✓ Anuncio viral listo para generar ventas
-              </span>
-              <Link
-                href="/dashboard"
-                style={{
-                  background: '#faae33',
-                  color: '#09080d',
-                  padding: '0.45rem 1rem',
-                  borderRadius: '6px',
-                  fontSize: '0.78rem',
-                  fontWeight: 800,
-                  textDecoration: 'none',
-                }}
-              >
-                Empezar &rarr;
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
