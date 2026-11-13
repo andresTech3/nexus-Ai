@@ -3,146 +3,177 @@ const path = require('path');
 const fs = require('fs');
 
 const HASH_MAP = {
-  tomas: '73dd2484',
-  leo: 'f4b39a70',
-  dora: 'a5391339',
+  ivan: 'c9887b42',
   valeria: 'a1ff5ace',
-  nora: 'a1ff5ace',
-  diego: 'a473a8e8',
-  sofia: '67337906',
   clara: 'd05652ab',
-  marta: 'd05652ab',
+  diego: 'a473a8e8',
   lucas: '4654e6fb',
   carlos: '4654e6fb',
+  leo: 'f4b39a70',
+  sofia: '67337906',
+  tomas: '73dd2484',
   mateo: 'cdce65d1',
   marco: 'cdce65d1',
-  ivan: 'c9887b42',
+  dora: 'a5391339',
 };
 
 const assetDir = path.join(__dirname, '..', 'assets', 'img agent');
 const publicDir = path.join(__dirname, '..', 'public', 'agents');
-
 const assetFiles = fs.readdirSync(assetDir);
 
 function findMatchingFile(hash) {
   return assetFiles.find((f) => f.includes(hash) && !f.includes('(1)'));
 }
 
-async function removeBg(inputPath, outputPathWebp, outputPathPng) {
+async function processImage(inputPath, outWebp, outPng) {
   const { data, info } = await sharp(inputPath).raw().toBuffer({ resolveWithObject: true });
   const { width, height, channels } = info;
-  const rgba = Buffer.alloc(width * height * 4);
-  const visited = new Uint8Array(width * height);
-  const queue = [];
+  const total = width * height;
+  const isBg = new Uint8Array(total);
+  const queue = new Int32Array(total);
+  let qHead = 0, qTail = 0;
 
-  function isBgColor(idx) {
-    const r = data[idx * channels];
-    const g = data[idx * channels + 1];
-    const b = data[idx * channels + 2];
-    return r > 235 && g > 235 && b > 235;
+  function checkPixel(idx) {
+    const pIdx = idx * channels;
+    const r = data[pIdx];
+    const g = data[pIdx + 1];
+    const b = data[pIdx + 2];
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    return min >= 235 && (max - min) <= 18;
   }
 
-  // Enqueue borders
   for (let x = 0; x < width; x++) {
-    queue.push(x, (height - 1) * width + x);
-    visited[x] = 1;
-    visited[(height - 1) * width + x] = 1;
+    const topIdx = x;
+    const botIdx = (height - 1) * width + x;
+    if (checkPixel(topIdx)) { isBg[topIdx] = 1; queue[qTail++] = topIdx; }
+    if (checkPixel(botIdx)) { isBg[botIdx] = 1; queue[qTail++] = botIdx; }
   }
   for (let y = 0; y < height; y++) {
-    queue.push(y * width, y * width + (width - 1));
-    visited[y * width] = 1;
-    visited[y * width + (width - 1)] = 1;
+    const leftIdx = y * width;
+    const rightIdx = y * width + (width - 1);
+    if (checkPixel(leftIdx)) { isBg[leftIdx] = 1; queue[qTail++] = leftIdx; }
+    if (checkPixel(rightIdx)) { isBg[rightIdx] = 1; queue[qTail++] = rightIdx; }
   }
 
-  let head = 0;
-  while (head < queue.length) {
-    const curr = queue[head++];
-    if (!isBgColor(curr)) continue;
-    visited[curr] = 2; // confirmed bg
-    const x = curr % width;
-    const y = Math.floor(curr / width);
+  while (qHead < qTail) {
+    const curr = queue[qHead++];
+    const cx = curr % width;
+    const cy = (curr / width) | 0;
 
-    const neighbors = [
-      y > 0 ? curr - width : -1,
-      y < height - 1 ? curr + width : -1,
-      x > 0 ? curr - 1 : -1,
-      x < width - 1 ? curr + 1 : -1,
-    ];
-
-    for (const n of neighbors) {
-      if (n !== -1 && !visited[n]) {
-        visited[n] = 1;
-        if (isBgColor(n)) {
-          queue.push(n);
-        }
-      }
+    if (cx > 0) {
+      const n = curr - 1;
+      if (!isBg[n] && checkPixel(n)) { isBg[n] = 1; queue[qTail++] = n; }
+    }
+    if (cx < width - 1) {
+      const n = curr + 1;
+      if (!isBg[n] && checkPixel(n)) { isBg[n] = 1; queue[qTail++] = n; }
+    }
+    if (cy > 0) {
+      const n = curr - width;
+      if (!isBg[n] && checkPixel(n)) { isBg[n] = 1; queue[qTail++] = n; }
+    }
+    if (cy < height - 1) {
+      const n = curr + width;
+      if (!isBg[n] && checkPixel(n)) { isBg[n] = 1; queue[qTail++] = n; }
     }
   }
 
+  const rgba = Buffer.alloc(width * height * 4);
   let minX = width, maxX = 0, minY = height, maxY = 0;
 
-  for (let i = 0; i < width * height; i++) {
-    const r = data[i * channels];
-    const g = data[i * channels + 1];
-    const b = data[i * channels + 2];
+  for (let i = 0; i < total; i++) {
+    const pIdx = i * channels;
     const outIdx = i * 4;
+    const r = data[pIdx];
+    const g = data[pIdx + 1];
+    const b = data[pIdx + 2];
     rgba[outIdx] = r;
     rgba[outIdx + 1] = g;
     rgba[outIdx + 2] = b;
 
-    if (visited[i] === 2) {
-      rgba[outIdx + 3] = 0; // Transparent
+    if (isBg[i]) {
+      rgba[outIdx + 3] = 0;
     } else {
-      const distFromWhite = Math.min(255 - r, 255 - g, 255 - b);
-      if (distFromWhite < 20 && (visited[i] === 1 || isBgColor(i))) {
-        rgba[outIdx + 3] = Math.round((distFromWhite / 20) * 255);
+      const x = i % width;
+      const y = (i / width) | 0;
+      let nearBg = false;
+      if ((x > 0 && isBg[i - 1]) || (x < width - 1 && isBg[i + 1]) ||
+          (y > 0 && isBg[i - width]) || (y < height - 1 && isBg[i + width])) {
+        nearBg = true;
+      }
+
+      if (nearBg) {
+        const brightness = (r + g + b) / 3;
+        if (brightness > 220) {
+          const alphaFactor = Math.max(0, Math.min(1, (255 - brightness) / 35));
+          rgba[outIdx + 3] = Math.round(alphaFactor * 255);
+        } else {
+          rgba[outIdx + 3] = 255;
+        }
       } else {
         rgba[outIdx + 3] = 255;
       }
-      const x = i % width;
-      const y = Math.floor(i / width);
-      if (x < minX) minX = x;
-      if (x > maxX) maxX = x;
-      if (y < minY) minY = y;
-      if (y > maxY) maxY = y;
+
+      if (rgba[outIdx + 3] > 10) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
     }
   }
 
-  const cropW = Math.max(1, maxX - minX);
-  const cropH = Math.max(1, maxY - minY);
-  const size = Math.max(cropW, cropH) + 60;
-  const padX = Math.round((size - cropW) / 2);
-  const padY = Math.round((size - cropH) / 2);
+  const pad = 24;
+  const top = Math.max(0, minY - pad);
+  const bottom = Math.min(height, maxY + pad);
+  const left = Math.max(0, minX - pad);
+  const right = Math.min(width, maxX + pad);
+  const cropW = right - left;
+  const cropH = bottom - top;
 
-  const pipeline = sharp(rgba, { raw: { width, height, channels: 4 } })
-    .extract({ left: minX, top: minY, width: cropW, height: cropH })
-    .extend({
-      top: padY,
-      bottom: size - cropH - padY,
-      left: padX,
-      right: size - cropW - padX,
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .resize(600, 600);
+  const charBuffer = await sharp(rgba, { raw: { width, height, channels: 4 } })
+    .extract({ left, top, width: cropW, height: cropH })
+    .resize(760, 760, { fit: 'inside' })
+    .png()
+    .toBuffer();
 
-  await pipeline.clone().webp({ quality: 92 }).toFile(outputPathWebp);
-  await pipeline.clone().png({ quality: 92 }).toFile(outputPathPng);
+  const finalPipeline = sharp({
+    create: {
+      width: 800,
+      height: 800,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 }
+    }
+  }).composite([{ input: charBuffer, gravity: 'center' }]);
+
+  await finalPipeline.clone().webp({ quality: 95 }).toFile(outWebp);
+  await finalPipeline.clone().png({ quality: 95 }).toFile(outPng);
 }
 
 async function main() {
-  for (const [agent, hash] of Object.entries(HASH_MAP)) {
+  for (const [name, hash] of Object.entries(HASH_MAP)) {
     const matched = findMatchingFile(hash);
     if (!matched) {
-      console.warn(`Could not find asset for ${agent} (${hash})`);
+      console.warn('No asset found for', name, hash);
       continue;
     }
-    const fullInput = path.join(assetDir, matched);
-    const outWebp = path.join(publicDir, `${agent}.webp`);
-    const outPng = path.join(publicDir, `${agent}.png`);
-    console.log(`Processing ${agent} from ${matched}...`);
-    await removeBg(fullInput, outWebp, outPng);
+    const inputPath = path.join(assetDir, matched);
+    const outWebp = path.join(publicDir, name + '.webp');
+    const outPng = path.join(publicDir, name + '.png');
+    console.log(`Processing ${name} from ${matched}...`);
+    await processImage(inputPath, outWebp, outPng);
   }
-  console.log('All transparent agent renders processed successfully!');
+
+  // Also create eva.webp
+  const sofiaWebp = path.join(publicDir, 'sofia.webp');
+  if (fs.existsSync(sofiaWebp)) {
+    fs.copyFileSync(sofiaWebp, path.join(publicDir, 'eva.webp'));
+    fs.copyFileSync(path.join(publicDir, 'sofia.png'), path.join(publicDir, 'eva.png'));
+    console.log('Done eva from sofia');
+  }
+
+  console.log('All 800x800 transparent agent cutouts generated successfully!');
 }
 
 main().catch(console.error);

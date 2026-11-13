@@ -154,10 +154,10 @@ const CSS =
   ".dsh-dot[aria-current] i{height:22px;opacity:.9}" +
   ".dsh-dot[aria-current]{height:26px}" +
   ".dsh-dot{transition:height .45s cubic-bezier(.3,.7,.2,1)}" +
-  ".dsh-plates{position:absolute;left:130px;top:82px;width:245px;height:245px;touch-action:pan-y}" +
+  ".dsh-plates{position:absolute;left:100px;top:55px;width:285px;height:295px;touch-action:pan-y}" +
   ".dsh-orbit{position:absolute;inset:0;transform-origin:69% -217%;visibility:hidden;will-change:transform}" +
-  ".dsh-orbit>img{display:block;width:245px;height:245px;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none;" +
-  "filter:drop-shadow(0 24px 32px rgba(0,0,0,.65)) drop-shadow(0 4px 12px rgba(0,0,0,.4))}" +
+  ".dsh-orbit>img{display:block;width:100%;height:100%;max-width:none;object-fit:contain;user-select:none;-webkit-user-drag:none;" +
+  "filter:drop-shadow(0 20px 32px rgba(0,0,0,.75)) drop-shadow(0 4px 12px rgba(0,0,0,.5))}" +
   ".dsh-head{position:absolute;left:388px;top:96px;width:330px;height:150px}" +
   ".dsh-hd{position:absolute;inset:0;visibility:hidden}" +
   ".dsh-eye{font-size:12.5px;font-weight:600;letter-spacing:.01em;margin:0 0 4px 2px}" +
@@ -484,7 +484,7 @@ export function DishOrbitCarousel({
         <div className="dsh-plates" onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => (swipe.current = null)}>
           {dishes.map((d, i) => (
             <div key={i} ref={(el) => { orbits.current[i] = el }} className="dsh-orbit" aria-hidden={i !== index}>
-              <img src={d.image} alt={d.alt ?? d.title + " " + d.subtitle} width={245} height={245} draggable={false} />
+              <img src={d.image} alt={d.alt ?? d.title + " " + d.subtitle} width={285} height={295} draggable={false} />
             </div>
           ))}
         </div>

@@ -64,7 +64,7 @@ export const AGENT_DISHES: Dish[] = [
     eyebrow: "AGENTE 05 · FINANZAS DETERMINISTAS",
     title: "Eva",
     subtitle: "CFO de Rentabilidad",
-    image: "/agents/eva.svg",
+    image: "/agents/eva.webp",
     label: "Eva · Finanzas",
     rating: 5.0,
     chef: "Cálculo Matemático de Ganancia Neta",
@@ -160,13 +160,14 @@ export const AGENT_DISHES: Dish[] = [
   },
 ]
 
-export function AgentOrbitCarousel({ className }: { className?: string }) {
+export function AgentOrbitCarousel({ className, height = "calc(100vh - 65px)", onPlay }: { className?: string; height?: string; onPlay?: (dish: Dish, index: number) => void }) {
   return (
     <div className={className} style={{ width: "100%", position: "relative" }}>
       <DishOrbitCarousel
         dishes={AGENT_DISHES}
-        height="640px"
+        height={height}
         loop={true}
+        onPlay={onPlay}
       />
     </div>
   )
