@@ -244,15 +244,25 @@ class OfficeScheduler {
     let office = store.offices[officeId]
     if (!office) return
 
-    const prodLower = (office.product.name + ' ' + office.product.niche).toLowerCase()
+    const prodLower = (office.product.name + ' ' + (office.product.niche || '')).toLowerCase()
     const isRing = prodLower.includes('anillo') || prodLower.includes('titanio')
-    const baseCost = isRing ? 18.50 : 4.10
-    const basePvp = isRing ? 89.90 : 32.90
+    const isLamp = prodLower.includes('luna') || prodLower.includes('lamp') || prodLower.includes('luz')
+    const isPet = prodLower.includes('mascota') || prodLower.includes('perro') || prodLower.includes('gato') || prodLower.includes('pet')
+    const isWatch = prodLower.includes('reloj') || prodLower.includes('watch')
+    const isPosture = prodLower.includes('postur') || prodLower.includes('espalda')
+
+    const baseCost = office.product.supplierPriceEur && office.product.supplierPriceEur > 0
+      ? office.product.supplierPriceEur
+      : isRing ? 18.50 : isLamp ? 9.80 : isPet ? 3.60 : isPosture ? 4.80 : isWatch ? 14.50 : 6.50
+
+    const basePvp = office.product.sellPriceEur && office.product.sellPriceEur > 0
+      ? office.product.sellPriceEur
+      : isRing ? 89.90 : isLamp ? 49.90 : isPet ? 24.90 : isPosture ? 29.90 : isWatch ? 59.90 : Math.max(29.90, Math.round(baseCost * 3.6 * 10) / 10)
 
     const economics = calculateUnitEconomics({
       costo_producto: baseCost,
       costo_envio: 3.80,
-      costo_packaging: isRing ? 2.20 : 1.20,
+      costo_packaging: baseCost > 15 ? 2.20 : 1.20,
       pvp: basePvp,
       comision_pct: 0.029,
       comision_fijo: 0.30,

@@ -134,16 +134,31 @@ export default function ProductHuntingCatalogPage() {
     fetchRealData(searchQuery, selectedGeo, { minP: '', maxP: '', minS: '', sort: 'profit' })
   }
 
-  const handleAdoptProduct = (product: { name: string; niche: string }) => {
+  const handleAdoptProduct = (product: {
+    name: string
+    niche?: string
+    supplierPriceEur?: number
+    sellPriceEur?: number
+    marginMultiple?: number
+    image?: string
+    sku?: string
+    category?: string
+  }) => {
     if (!activeOffice) return
 
     store.changeProduct(activeOffice.id, {
       name: product.name,
-      niche: product.niche || 'Dropshipping Ganador',
+      niche: product.niche || product.category || 'Dropshipping Ganador',
+      supplierPriceEur: product.supplierPriceEur,
+      sellPriceEur: product.sellPriceEur,
+      marginMultiple: product.marginMultiple,
+      image: product.image,
+      sku: product.sku,
+      category: product.category,
     })
 
     setSuccessMessage(
-      `¡Producto "${product.name}" asignado con éxito a "${currentOfficeName}"! Iván, Lucas, Dora, Eva, Carlos, Diego, Leo y Tomás ya tienen las fichas, creativos y análisis listos.`
+      `¡Producto "${product.name}" asignado con éxito a "${currentOfficeName}"! Iván, Lucas, Dora, Eva, Carlos, Diego, Leo y Tomás han recalculado costes, márgenes y creativos específicos.`
     )
 
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -1137,7 +1152,18 @@ export default function ProductHuntingCatalogPage() {
                             </div>
                           ) : (
                             <button
-                              onClick={() => handleAdoptProduct({ name: product.name, niche: product.category })}
+                              onClick={() =>
+                                handleAdoptProduct({
+                                  name: product.name,
+                                  niche: product.category,
+                                  supplierPriceEur: product.supplierPriceEur,
+                                  sellPriceEur: product.suggestedSellPriceEur,
+                                  marginMultiple: product.marginMultiple,
+                                  image: product.image,
+                                  sku: product.sku,
+                                  category: product.category,
+                                })
+                              }
                               style={{
                                 flex: 1,
                                 background: 'linear-gradient(135deg, #faae33, #d98216)',

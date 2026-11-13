@@ -47,3 +47,4 @@ agents.forEach(a => {
 });
 
 console.log('Successfully generated 11 agent SVGs in public/agents/');
+

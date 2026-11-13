@@ -36,7 +36,16 @@ interface OfficeStoreState {
   toggleOfficePower: (id: string) => void
   setTrafficMode: (id: string, mode: TrafficMode) => void
   setWorkflow: (id: string, workflow: WorkflowType) => void
-  changeProduct: (id: string, newProduct: { name: string; niche: string }) => void
+  changeProduct: (id: string, newProduct: {
+    name: string
+    niche?: string
+    supplierPriceEur?: number
+    sellPriceEur?: number
+    marginMultiple?: number
+    image?: string
+    sku?: string
+    category?: string
+  }) => void
   clearProduct: (id: string) => void
   undoProductChange: (id: string) => void
   duplicateOffice: (id: string) => string
@@ -358,8 +367,14 @@ export const useOfficeStore = create<OfficeStoreState>()(
           product: {
             ...office.product,
             name: newProduct.name,
-            niche: newProduct.niche,
+            niche: newProduct.niche || office.product.niche || 'Dropshipping Ganador',
             source: 'USER_PROVIDED',
+            supplierPriceEur: newProduct.supplierPriceEur ?? office.product.supplierPriceEur,
+            sellPriceEur: newProduct.sellPriceEur ?? office.product.sellPriceEur,
+            marginMultiple: newProduct.marginMultiple ?? office.product.marginMultiple,
+            image: newProduct.image ?? office.product.image,
+            sku: newProduct.sku ?? office.product.sku,
+            category: newProduct.category ?? office.product.category,
           },
           productHistory: [snapshot, ...office.productHistory],
           deliverables: {}, // reset deliverables for new product

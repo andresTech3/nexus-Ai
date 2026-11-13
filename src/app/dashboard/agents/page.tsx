@@ -174,25 +174,34 @@ export default function AgentsPage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div
                       style={{
-                        width: 34,
-                        height: 34,
-                        borderRadius: '6px',
-                        backgroundColor: '#1f1f24',
-                        border: '1px solid #2d2d34',
-                        color: '#f4f4f5',
-                        fontWeight: 700,
-                        fontSize: '0.8rem',
+                        width: 42,
+                        height: 42,
+                        borderRadius: '8px',
+                        backgroundColor: '#1a1824',
+                        border: `1.5px solid ${agent.avatarColor}50`,
+                        overflow: 'hidden',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                       }}
                     >
-                      {agent.avatarInitials}
+                      {agent.avatarImage ? (
+                        <img
+                          src={agent.avatarImage}
+                          alt={agent.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <span style={{ color: agent.avatarColor, fontWeight: 800, fontSize: '0.8rem' }}>
+                          {agent.avatarInitials}
+                        </span>
+                      )}
                     </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontWeight: 600, color: '#ffffff', fontSize: '0.875rem' }}>{agent.name}</span>
+                        <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.88rem' }}>{agent.name}</span>
                         <span
                           style={{
                             fontSize: '0.68rem',
@@ -205,7 +214,7 @@ export default function AgentsPage() {
                           {agent.department}
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#71717a' }}>{agent.role}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#a1a1aa' }}>{agent.role}</div>
                     </div>
                   </div>
 
@@ -247,28 +256,70 @@ export default function AgentsPage() {
             }}
           >
             {/* Agent Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.25rem',
+                marginBottom: '1.5rem',
+                backgroundColor: '#181622',
+                padding: '1rem',
+                borderRadius: '12px',
+                border: '1px solid #282336',
+              }}
+            >
               <div
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: '8px',
-                  backgroundColor: '#1f1f24',
-                  border: '1px solid #2d2d34',
-                  color: '#faae33',
-                  fontWeight: 800,
-                  fontSize: '1rem',
+                  width: 90,
+                  height: 90,
+                  borderRadius: '16px',
+                  backgroundColor: '#12101a',
+                  border: `2px solid ${selectedAgent.avatarColor}`,
+                  boxShadow: `0 8px 24px ${selectedAgent.avatarColor}30`,
+                  overflow: 'hidden',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  flexShrink: 0,
                 }}
               >
-                {selectedAgent.avatarInitials}
+                {selectedAgent.avatarImage ? (
+                  <img
+                    src={selectedAgent.avatarImage}
+                    alt={selectedAgent.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <span style={{ color: selectedAgent.avatarColor, fontWeight: 900, fontSize: '1.8rem' }}>
+                    {selectedAgent.avatarInitials}
+                  </span>
+                )}
               </div>
               <div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>{selectedAgent.name}</h2>
-                <div style={{ fontSize: '0.8rem', color: '#faae33', fontWeight: 500 }}>{selectedAgent.role}</div>
-                <div style={{ fontSize: '0.72rem', color: '#71717a' }}>Departamento: {selectedAgent.department}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '4px' }}>
+                  <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                    {selectedAgent.name}
+                  </h2>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      background: `${selectedAgent.avatarColor}20`,
+                      color: selectedAgent.avatarColor,
+                      fontWeight: 700,
+                      border: `1px solid ${selectedAgent.avatarColor}40`,
+                    }}
+                  >
+                    {selectedAgent.department}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.85rem', color: selectedAgent.avatarColor, fontWeight: 700 }}>
+                  {selectedAgent.role}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#71717a', marginTop: '3px' }}>
+                  Asistente IA Autónomo
+                </div>
               </div>
             </div>
 

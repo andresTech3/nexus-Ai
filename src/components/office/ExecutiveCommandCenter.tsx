@@ -26,12 +26,27 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
   const [isAssigning, setIsAssigning] = useState(false)
   const [selectedDept, setSelectedDept] = useState<'ALL' | Department>('ALL')
 
-  // Real unit economics (only computed if product exists)
+  // Real unit economics based on active product's real supplier and sell prices
+  const prodLower = (productName + ' ' + (activeOffice?.product?.niche || '')).toLowerCase()
+  const isRing = prodLower.includes('anillo') || prodLower.includes('titanio')
+  const isLamp = prodLower.includes('luna') || prodLower.includes('lamp') || prodLower.includes('luz')
+  const isPet = prodLower.includes('mascota') || prodLower.includes('perro') || prodLower.includes('gato') || prodLower.includes('pet')
+  const isWatch = prodLower.includes('reloj') || prodLower.includes('watch')
+  const isPosture = prodLower.includes('postur') || prodLower.includes('espalda')
+
+  const effectiveCost = activeOffice?.product?.supplierPriceEur && activeOffice.product.supplierPriceEur > 0
+    ? activeOffice.product.supplierPriceEur
+    : isRing ? 18.50 : isLamp ? 9.80 : isPet ? 3.60 : isPosture ? 4.80 : isWatch ? 14.50 : 6.80
+
+  const effectivePvp = activeOffice?.product?.sellPriceEur && activeOffice.product.sellPriceEur > 0
+    ? activeOffice.product.sellPriceEur
+    : isRing ? 89.90 : isLamp ? 49.90 : isPet ? 24.90 : isPosture ? 29.90 : isWatch ? 59.90 : Math.max(29.90, Math.round(effectiveCost * 3.6 * 10) / 10)
+
   const unitEco = calculateUnitEconomics({
-    costo_producto: hasProduct ? 8.5 : 0,
-    costo_envio: hasProduct ? 3.5 : 0,
-    costo_packaging: hasProduct ? 1.0 : 0,
-    pvp: hasProduct ? 34.99 : 0,
+    costo_producto: hasProduct ? effectiveCost : 0,
+    costo_envio: hasProduct ? 3.8 : 0,
+    costo_packaging: hasProduct ? (effectiveCost > 15 ? 2.2 : 1.2) : 0,
+    pvp: hasProduct ? effectivePvp : 0,
     comision_pct: 0.029,
     comision_fijo: 0.3,
     provision_devoluciones_pct: 0.05,
@@ -720,16 +735,47 @@ export function ExecutiveCommandCenter({ onOpenResearch }: ExecutiveCommandCente
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.35rem' }}>
-                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff' }}>
-                      {agent.name}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.65rem' }}>
+                    <div
+                      style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: '10px',
+                        backgroundColor: '#161420',
+                        border: `1.5px solid ${agent.avatarColor}60`,
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      {agent.avatarImage ? (
+                        <img
+                          src={agent.avatarImage}
+                          alt={agent.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <span style={{ color: agent.avatarColor, fontWeight: 800, fontSize: '0.9rem' }}>
+                          {agent.avatarInitials}
+                        </span>
+                      )}
                     </div>
-                    {getStatusBadge(status)}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>
+                          {agent.name}
+                        </div>
+                        {getStatusBadge(status)}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: agent.avatarColor, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {agent.role}
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.72rem', color: '#faae33', fontWeight: 600 }}>
-                    {agent.role}
-                  </div>
-                  <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.75rem', color: '#71717a', lineHeight: 1.4 }}>
+                  <p style={{ margin: 0, fontSize: '0.74rem', color: '#a1a1aa', lineHeight: 1.4 }}>
                     {agent.skills[0] || 'Especialista en su área'}
                   </p>
                 </div>

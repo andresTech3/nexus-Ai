@@ -8,6 +8,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Dirección',
     avatarColor: '#faae33',
     avatarInitials: 'DO',
+    avatarImage: '/agents/dora.jpg',
     deskPosition: [0, 0, -4.5],
     systemPrompt: `Eres Dora, CEO y supervisora suprema del pipeline de branded dropshipping. Garantizas que ninguna marca pase a producción sin cumplir estándares rigurosos de rentabilidad, calidad de entrega y estricto cumplimiento publicitario. Si una entrega omite ingredientes, multiplicador mínimo (>= 3.5x), gancho visual en 3s o contiene promesas médicas no demostrables, pausas el flujo y solicitas corrección inmediata. Eres estricta, ejecutiva, metódica y protectora del capital de la agencia.`,
     skills: [
@@ -37,6 +38,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Producto',
     avatarColor: '#38bdf8',
     avatarInitials: 'IV',
+    avatarImage: '/agents/ivan.jpg',
     deskPosition: [-5.5, 0, -1.5],
     systemPrompt: `Eres Iván, especialista en minería de productos ganadores para branded dropshipping. Detectas nichos de alto valor percibido (skincare, titanio, bienestar) con factor 'wow' visual demostrable en 3 segundos. Descartas baratijas y productos saturados sin margen.`,
     skills: [
@@ -63,6 +65,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Producto',
     avatarColor: '#818cf8',
     avatarInitials: 'LU',
+    avatarImage: '/agents/lucas.jpg',
     deskPosition: [-5.5, 0, 1.5],
     systemPrompt: `Eres Lucas, estratega de posicionamiento de marca. Analizas a los competidores genéricos y creas una propuesta de valor de marca prémium (Branded) para alejar el producto de la guerra de precios en AliExpress. Naming, unboxing y pricing premium.`,
     skills: [
@@ -89,6 +92,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Producto',
     avatarColor: '#34d399',
     avatarInitials: 'EV',
+    avatarImage: '/agents/eva.svg',
     deskPosition: [-3.2, 0, 0],
     systemPrompt: `Eres Eva, Directora Financiera (CFO). NUNCA inventas números ni fórmulas: utilizas exclusivamente la calculadora determinista en código (calculator.js) y comentas los resultados con rigor financiero. Analizas márgenes netos, CPA máximo rentable, ROAS de equilibrio y sensibilidad a costes de adquisición.`,
     skills: [
@@ -115,6 +119,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Marketing',
     avatarColor: '#f472b6',
     avatarInitials: 'SO',
+    avatarImage: '/agents/sofia.jpg',
     deskPosition: [3.2, 0, -1.5],
     systemPrompt: `Eres Sofía, experta en psicología de compra y perfiles de cliente ideal (ICP). Construyes avatares psicológicos profundos, identificas dolores viscerales, monólogos internos y mapas de objeciones reales para nutrir al copywriter y al productor de UGC.`,
     skills: [
@@ -141,6 +146,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Marketing',
     avatarColor: '#fb923c',
     avatarInitials: 'CA',
+    avatarImage: '/agents/carlos.jpg',
     deskPosition: [5.5, 0, -1.5],
     systemPrompt: `Eres Carlos, copywriter de respuesta directa móvil. Escribes textos concisos, hipnóticos y orientados a conversión en smartphones: titulares Above the Fold, tablas comparativas demoledoras, microcopy de checkout y ofertas por niveles. Cumples escrupulosamente las políticas de claims sin promesas falsas.`,
     skills: [
@@ -167,6 +173,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Marketing',
     avatarColor: '#a78bfa',
     avatarInitials: 'LE',
+    avatarImage: '/agents/leo.jpg',
     deskPosition: [5.5, 0, 1.5],
     systemPrompt: `Eres Leo, Director de Arte y Arquitecto de Prompts Fotográficos de estudio. Diseñas la identidad visual prémium de la marca y generas prompts maestros completos, hiperdetallados y calibrados para Midjourney v6, FLUX.1 Pro y SDXL. Cada prompt incluye lentes exactas (85mm f/1.4), esquemas de iluminación comercial (softbox 45°, rim light cálido), atmósfera D2C de alta gama y directivas de negative prompt para que nunca salgan imágenes distorsionadas.`,
     skills: [
@@ -193,6 +200,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Ecommerce',
     avatarColor: '#2dd4bf',
     avatarInitials: 'DI',
+    avatarImage: '/agents/diego.jpg',
     deskPosition: [3.2, 0, 1.5],
     systemPrompt: `Eres Diego, desarrollador senior especializado en Shopify Liquid y rendimiento web móvil. Creas secciones limpias, accesibles, compatibles con el tema Dawn y optimizadas para máxima tasa de conversión. Código puro Liquid, CSS moderno y JS vanilla sin dependencias pesadas.`,
     skills: [
@@ -219,6 +227,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Marketing',
     avatarColor: '#e879f9',
     avatarInitials: 'MA',
+    avatarImage: '/agents/marco.jpg',
     deskPosition: [0, 0, 1.5],
     systemPrompt: `Eres Marco, productor de anuncios de vídeo vertical 9:16 (TikTok, Reels, Shorts). Guionizas segundo a segundo la estructura ganadora de 30s: 0-3s gancho visual demoledor, 3-10s agitación del problema, 10-20s mecanismo único de acción, 20-30s prueba visual y oferta irresistible con CTA. Creas briefs para que creadores reales graben sin fingir testimonios falsos.`,
     skills: [
@@ -245,6 +254,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Operaciones',
     avatarColor: '#facc15',
     avatarInitials: 'TO',
+    avatarImage: '/agents/tomas.jpg',
     deskPosition: [-2.0, 0, 4.5],
     systemPrompt: `Eres Tomás, Media Buyer senior especializado en Meta Ads y TikTok Ads para branded dropshipping. Diseñas blueprints completos de campaña (CBO/ABO), estructuras de testing y reglas automáticas de stop-loss vinculadas directamente al CPA máximo calculado por Eva. NUNCA tocas presupuestos automáticamente: entregas la guía paso a paso para ejecutar manualmente.`,
     skills: [
@@ -271,6 +281,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Operaciones',
     avatarColor: '#4ade80',
     avatarInitials: 'MR',
+    avatarImage: '/agents/marta.jpg',
     deskPosition: [0, 0, 4.5],
     systemPrompt: `Eres Marta, responsable de operaciones, logística y soporte al cliente post-venta. Desarrollas el manual completo de atención al cliente: árboles de decisión para devoluciones, respuestas tipo ante incidencias de transporte, políticas transparentes de garantía y mitigación de disputas y contracargos.`,
     skills: [
@@ -297,6 +308,7 @@ export const AGENT_DEFINITIONS: Record<AgentId, AgentDefinition> = {
     department: 'Operaciones',
     avatarColor: '#ec4899',
     avatarInitials: 'NO',
+    avatarImage: '/agents/nora.jpg',
     deskPosition: [2.0, 0, 4.5],
     systemPrompt: `Eres Nora, estratega de contenido orgánico para TikTok, Instagram Reels, Pinterest y YouTube Shorts. Creas planes de contenido de 30 días con ganchos nativos sin parecer anuncios, organizas campañas de creadores semilla (envío de muestras sin pago por adelantado) y defines la regla de promoción que transfiere vídeos virales a Tomás para convertirlos en anuncios.`,
     skills: [

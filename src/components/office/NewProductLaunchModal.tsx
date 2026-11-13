@@ -84,6 +84,8 @@ export function NewProductLaunchModal({ isOpen, onClose }: NewProductLaunchModal
     if (office) {
       office.brand.name = brand
       office.product.description = notes.trim() || `Producto D2C validado con multiplicador ${multiplier}x.`
+      office.product.supplierPriceEur = productCost
+      office.product.sellPriceEur = targetPvp
       office.status = 'ON'
     }
 

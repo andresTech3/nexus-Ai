@@ -45,6 +45,7 @@ export interface AgentDefinition {
   department: Department
   avatarColor: string
   avatarInitials: string
+  avatarImage?: string
   deskPosition: [number, number, number] // [x, y, z] in Three.js coordinates
   systemPrompt: string
   skills: string[]
@@ -131,6 +132,12 @@ export interface ProductSnapshot {
     name: string
     niche: string
     source: DataSourceType
+    supplierPriceEur?: number
+    sellPriceEur?: number
+    marginMultiple?: number
+    image?: string
+    sku?: string
+    category?: string
   }
   brand: {
     name: string
@@ -148,6 +155,12 @@ export interface Office {
     niche: string
     source: DataSourceType
     description?: string
+    supplierPriceEur?: number
+    sellPriceEur?: number
+    marginMultiple?: number
+    image?: string
+    sku?: string
+    category?: string
   }
   brand: {
     name: string
