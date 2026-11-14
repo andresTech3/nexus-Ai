@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { AgentOrbitCarousel, AGENT_DISHES } from '@/components/ui/agent-orbit-carousel'
+import { NexusLogo } from '@/components/ui/NexusLogo'
 import type { Dish } from '@/components/ui/dish-orbit-carousel'
 
 interface AgentDetail {
@@ -204,35 +205,11 @@ export default function HomePage() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.65rem',
               textDecoration: 'none',
-              color: '#ffffff',
+              transition: 'opacity 0.15s ease',
             }}
           >
-            <div
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: '8px',
-                background: 'linear-gradient(135deg, #faae33, #d98216)',
-                color: '#09080d',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 900,
-                fontSize: '0.9rem',
-                boxShadow: '0 4px 12px rgba(250, 174, 51, 0.25)',
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#09080d" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                <polyline points="2 17 12 22 22 17" />
-                <polyline points="2 12 12 17 22 12" />
-              </svg>
-            </div>
-            <span style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
-              NEXUS <span style={{ color: '#faae33', fontWeight: 600 }}>OS</span>
-            </span>
+            <NexusLogo height={26} variant="dark" />
           </Link>
 
           {/* Nav links */}

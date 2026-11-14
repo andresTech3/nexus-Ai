@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { NexusLogo } from '@/components/ui/NexusLogo'
 
 export const metadata: Metadata = {
   title: 'Verifica tu correo — Nexus',
@@ -27,43 +28,11 @@ export default function VerifyEmailPage() {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.65rem',
             textDecoration: 'none',
             marginBottom: '0.75rem',
           }}
         >
-          <div
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: '7px',
-              backgroundColor: '#faae33',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                stroke="#090807"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-          <span
-            style={{
-              fontFamily: 'var(--font-display, inherit)',
-              fontSize: '1.25rem',
-              fontWeight: 800,
-              color: '#ffffff',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            NEXUS
-          </span>
+          <NexusLogo height={30} variant="dark" />
         </Link>
         <p style={{ fontSize: '0.825rem', color: '#71717a', margin: 0 }}>
           Verificación de Cuenta

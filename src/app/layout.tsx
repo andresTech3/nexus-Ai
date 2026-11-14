@@ -2,13 +2,20 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'NexusAI — Agencia de Inteligencia Artificial y Automatización',
+  title: 'NEXUS OS — Sistema Operativo Autónomo de E-Commerce & Dropshipping',
   description:
-    'Transformamos tu negocio con inteligencia artificial, automatización avanzada y marketing digital de vanguardia. Soluciones a medida para la era digital.',
-  keywords: ['agencia IA', 'inteligencia artificial', 'automatización', 'marketing digital', 'chatbot', 'agentes IA'],
+    'Oficina autónoma de agentes de IA para operar, validar y escalar marcas de dropshipping con CJ Dropshipping, Shopify Liquid y Meta Ads.',
+  keywords: ['NEXUS OS', 'agencia IA', 'dropshipping', 'inteligencia artificial', 'automatización', 'agentes IA', 'Shopify Liquid', 'CJ Dropshipping'],
+  icons: {
+    icon: [
+      { url: '/brand/nexus-app-icon.png', sizes: '192x192', type: 'image/png' },
+      { url: '/brand/nexus-icon.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/brand/nexus-app-icon.png',
+  },
   openGraph: {
-    title: 'NexusAI — Agencia de IA y Automatización',
-    description: 'Transformamos tu negocio con inteligencia artificial y automatización avanzada.',
+    title: 'NEXUS OS — Sistema Operativo Autónomo de E-Commerce',
+    description: 'Oficina autónoma de especialistas de IA para operar marcas de dropshipping.',
     type: 'website',
   },
 }

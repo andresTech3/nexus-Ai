@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { NexusLogo } from '@/components/ui/NexusLogo'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -26,29 +27,8 @@ export default function Navbar() {
         <div className="nav-inner">
           {/* Brand & Pill Nav Group */}
           <div className="nav-brand-group">
-            <Link href="/" className="nav-logo" id="nav-logo">
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 32,
-                  height: 32,
-                  borderRadius: '50%',
-                  background: 'var(--color-tiger-gold)',
-                  color: 'var(--color-charred-clove)',
-                  fontSize: '15px',
-                  fontWeight: 900,
-                  marginRight: 4,
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                  <polyline points="2 12 12 17 22 12"></polyline>
-                </svg>
-              </span>
-              NEXUS<span style={{ color: '#ffffff' }}>AI</span>
+            <Link href="/" className="nav-logo" id="nav-logo" style={{ display: 'inline-flex', alignItems: 'center' }}>
+              <NexusLogo height={26} variant="dark" />
             </Link>
 
             {/* Desktop Pill Menu */}

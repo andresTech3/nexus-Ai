@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { NexusLogo } from '@/components/ui/NexusLogo'
 
 // Clean bespoke SVG icons (zero emojis)
 function OverviewIcon({ className }: { className?: string }) {
@@ -284,52 +285,16 @@ export function Sidebar() {
             textDecoration: 'none',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <div
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: '6px',
-                background: '#faae33',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#090807',
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                  stroke="#090807"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span
-                style={{
-                  fontFamily: 'var(--font-display, inherit)',
-                  fontWeight: 700,
-                  fontSize: '1.05rem',
-                  color: '#ffffff',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                NEXUS
-              </span>
-            </div>
-          </div>
+          <NexusLogo height={22} variant="dark" />
           <span
             style={{
               fontSize: '0.625rem',
               background: '#1a1a1f',
-              color: '#a1a1aa',
-              border: '1px solid #27272e',
+              color: '#faae33',
+              border: '1px solid rgba(250, 174, 51, 0.25)',
               padding: '0.12rem 0.4rem',
               borderRadius: '4px',
-              fontWeight: 600,
+              fontWeight: 700,
               letterSpacing: '0.04em',
             }}
           >
